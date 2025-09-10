@@ -1,7 +1,6 @@
 import { campaigns_client } from "../campaigns_client"
 import type { UserResponse,LoginUser,RegisterUser } from "./types"
 
-
 export const auth_api={
     //register user
     register_user:async(data:RegisterUser):Promise<UserResponse>=>{
@@ -29,6 +28,8 @@ export const auth_api={
             throw new Error("An error occurred while logging in")
         }
     },
+    
+    //get current user
     get_current_user:async():Promise<UserResponse>=>{
         try {
             const user=await campaigns_client.get("/auth/user")

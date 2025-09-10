@@ -32,22 +32,24 @@ export function AuthProvider({children}:{children:React.ReactNode}){
         enabled:!!token
     });
 
+
     return(
        <AuthContext.Provider
-        value={{
+        
+       value={{
             user:user || null,
             token,
             updateToken,
             isLoading,
             isAuthenticated:!!token
         }}
+
        >
         {children}
        </AuthContext.Provider>
     )
 
 }
-
 
 export function useAuth(){
     const context=useContext(AuthContext)
@@ -56,3 +58,4 @@ export function useAuth(){
     }
     return context
 }
+

@@ -1,21 +1,26 @@
 
 export interface RegisterUser{
-    full_name:string;
+    first_name:string;
+    last_name:string;
     password:string;
     email:string;
-
 }
 
 export interface LoginUser{
     password:string;
-    email:string;
+    username:string;
 }
 
 export interface UserResponse{
     id:number;
+    first_name:string;
+    last_name:string;
     email:string;
-    full_name:string;
-    is_active:boolean;
+}
+
+export interface LoginResponse{
+    token:string;
+    token_type:string
 }
 
 export interface Token{

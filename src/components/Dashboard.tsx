@@ -1,8 +1,11 @@
-
 import React from 'react';
 import { Button, Text, Card, Group, Avatar, Stack } from '@mantine/core';
 import { LogOut, User, Mail } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import NavBar from './NavBar';
+import DMAPage from './DMAPage';
+import Campaigns from './Campaigns';
+import SideBar from './SideBar';
 
 export const Dashboard: React.FC = () => {
 

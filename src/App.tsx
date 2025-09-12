@@ -56,7 +56,7 @@ function App(){
           <Router>
             <Routes>
               <Route path="/auth" element={<AuthContainer/>}/>
-              <Route path="/"  element={<Dashboard />}/>
+              <Route path="/"  element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
             </Routes>
           </Router>
         </AuthProvider>

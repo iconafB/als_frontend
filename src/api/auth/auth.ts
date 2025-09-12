@@ -28,7 +28,6 @@ export const auth_api={
             throw new Error("An error occurred while logging in")
         }
     },
-
     //get current user
     get_current_user:async():Promise<UserResponse>=>{
         try {

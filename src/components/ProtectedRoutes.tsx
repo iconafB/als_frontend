@@ -1,12 +1,12 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/auth-context";
+import { useAuthContext } from "../contexts/auth-context";
 interface ProtectedRouteProps{
     children:React.ReactNode;
 }
 
 export function ProtectedRoute({children}:ProtectedRouteProps){
     
-    const {isAuthenticated,isLoading}=useAuth()
+    const {isAuthenticated,isLoading}=useAuthContext()
 
     const location=useLocation()
 
@@ -22,7 +22,8 @@ export function ProtectedRoute({children}:ProtectedRouteProps){
     }
     
     if(!isAuthenticated){
-        return <Navigate to="/" state={{from:location}} replace/>
+
+        return <Navigate to="/dashboard" state={{from:location}} replace/>
     }
 
     return <>{children}</>

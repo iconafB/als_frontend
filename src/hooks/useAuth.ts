@@ -17,7 +17,7 @@ export const useAuth=()=>{
         onSuccess:(data)=>{
             //set the access token on the localStorage
             localStorage.setItem('token',data.access_token);
-            navigate("/");
+            setTimeout(() => {navigate("/dashboard");}, 100);
             toast.success("logged in successfully");
         }
     });
@@ -26,15 +26,16 @@ export const useAuth=()=>{
     mutationFn: auth_api.register_user,
     onSuccess: (data) => {
       toast.success(`${data.first_name} registered`);
-      navigate("/auth");
     },
   });
+
 
    const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     queryClient.setQueryData(['user'], null);
   };
+
 
 
   
@@ -48,5 +49,7 @@ export const useAuth=()=>{
     registerError: registerMutation.error,
   };
   
+
+
 }
 

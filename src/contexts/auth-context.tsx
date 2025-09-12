@@ -4,9 +4,7 @@ import { auth_api } from "../api/auth/auth";
 import { useQuery } from "@tanstack/react-query";
 
 interface AuthContextType{
-    user:UserResponse | null;
     token:string | null;
-    isLoading:boolean;
     updateToken:(token:string | null)=>void;
     isAuthenticated:boolean;
 }
@@ -28,24 +26,14 @@ export function AuthProvider({children}:{children:React.ReactNode}){
         }
     };
 
-    const {data:user,isLoading}=useQuery({
-        queryKey:['user'],
-        queryFn:auth_api.get_current_user,
-        enabled:!!token
-    });
-
 
     return(
        <AuthContext.Provider
-        
-       value={{
-            user:user || null,
-            token,
-            updateToken,
-            isLoading,
-            isAuthenticated:!!token
-        }}
-
+            value={{
+                 token,
+                 updateToken,
+                 isAuthenticated:!!token
+             }}
        >
         {children}
        </AuthContext.Provider>
@@ -58,5 +46,8 @@ export function useAuthContext(){
     if(context===undefined){
         throw new Error("context error")
     }
+    console.log("print the context")
+    console.log(context)
+
     return context
 }

@@ -6,10 +6,11 @@ import { ToastContainer } from "react-toastify"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import { AuthProvider } from "./contexts/auth-context"
 import { ProtectedRoute } from "./components/ProtectedRoutes"
-
 import { AuthContainer } from "./components/AuthContainer"
 import { Dashboard } from "./components/Dashboard"
-import { useAuth } from "./hooks/useAuth"
+import { Notifications } from "@mantine/notifications"
+
+//import { useAuth } from "./hooks/useAuth"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +50,7 @@ function App(){
           },
         }} 
         >
+      <Notifications/>
       <ToastContainer/>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools  initialIsOpen={false}/>
@@ -56,7 +58,8 @@ function App(){
           <Router>
             <Routes>
               <Route path="/auth" element={<AuthContainer/>}/>
-              <Route path="/"  element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
+              <Route path="/" element={<AuthContainer/>}/>
+              <Route path="/dashboard"  element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
             </Routes>
           </Router>
         </AuthProvider>

@@ -8,10 +8,13 @@ import { toast } from "react-toastify";
 export const useAuth=()=>{
 
     const queryClient=useQueryClient();
+
     const loginMutation=useMutation({
         mutationFn:auth_api.login_user,
         onSuccess:(data)=>{
-            localStorage.setItem('token',data.token);
+            //set the access token on the localStorage
+            localStorage.setItem('token',data.access_token);
+            toast.success("logged in successfully");
         }
     });
 
@@ -21,8 +24,6 @@ export const useAuth=()=>{
       toast.success(`${data.first_name} registered`)
     },
   });
-
-  
 
    const logout = () => {
     localStorage.removeItem('token');

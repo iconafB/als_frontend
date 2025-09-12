@@ -20,7 +20,8 @@ export function AuthProvider({children}:{children:React.ReactNode}){
     const updateToken=(token:string|null)=>{
         setToken(token);
         if(token){
-            localStorage.setItem("token",token)
+           // localStorage.setItem("token",token)
+           
         }else{
             localStorage.removeItem("token")
         }

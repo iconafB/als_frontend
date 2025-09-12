@@ -22,11 +22,7 @@ export const auth_api={
             const response=await campaigns_client.post("/auth/login",formData,{headers:{
                 "Content-Type":"application/x-www-form-urlencoded"
             }})
-            const {access_token}=response.data
-
-            if(access_token){
-                localStorage.setItem("token",access_token)
-            }
+            
             return response.data
 
         } catch (error) {

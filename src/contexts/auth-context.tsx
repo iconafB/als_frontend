@@ -18,10 +18,11 @@ export function AuthProvider({children}:{children:React.ReactNode}){
     const [token, setToken] = useState<string|null>(localStorage.getItem("token"))
 
     const updateToken=(token:string|null)=>{
+
         setToken(token);
         if(token){
-           // localStorage.setItem("token",token)
-           
+           localStorage.setItem("token",token)
+
         }else{
             localStorage.removeItem("token")
         }
@@ -52,11 +53,10 @@ export function AuthProvider({children}:{children:React.ReactNode}){
 
 }
 
-export function useAuth(){
+export function useAuthContext(){
     const context=useContext(AuthContext)
     if(context===undefined){
         throw new Error("context error")
     }
     return context
 }
-

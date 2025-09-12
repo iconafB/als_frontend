@@ -1,4 +1,3 @@
-
 export interface RegisterUser{
     first_name:string;
     last_name:string;
@@ -18,13 +17,7 @@ export interface UserResponse{
     email:string;
 }
 
-export interface LoginResponse{
-    token:string;
-    token_type:string
-}
-
 export interface Token{
     access_token:string;
     token_type:string;
 }
-

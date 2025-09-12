@@ -1,5 +1,5 @@
 import { campaigns_client } from "../campaigns_client"
-import type { UserResponse,LoginUser,RegisterUser,LoginResponse,Token } from "./types"
+import type { UserResponse,LoginUser,RegisterUser,Token } from "./types"
 
 export const auth_api={
     //register user
@@ -18,11 +18,9 @@ export const auth_api={
             const formData=new FormData()
             formData.append("username",data.username)
             formData.append("password",data.password)
-            
             const response=await campaigns_client.post("/auth/login",formData,{headers:{
                 "Content-Type":"application/x-www-form-urlencoded"
-            }})
-            
+            }});
             return response.data
 
         } catch (error) {
@@ -30,6 +28,7 @@ export const auth_api={
             throw new Error("An error occurred while logging in")
         }
     },
+
     //get current user
     get_current_user:async():Promise<UserResponse>=>{
         try {

@@ -5,16 +5,17 @@ import {notifications} from '@mantine/notifications'
 
 // import { LogOut, User, Mail, Divide } from 'lucide-react';
 
-import {IconBell,IconDownload,IconRefresh,IconFilter,IconSearch,IconPlus ,IconBriefcase, IconCalendar, IconCalendarEvent, IconLogout, IconMenu2, IconSchool, IconSettings, IconUser} from '@tabler/icons-react'
+import {IconBell,IconDownload,IconRefresh,IconFilter,IconSearch,IconPlus ,IconBriefcase, IconCalendar, IconCalendarEvent, IconLogout, IconMenu2, IconSchool, IconSettings, IconUser, IconTable} from '@tabler/icons-react'
 
 import EducationPage from '../pages/EducationPage';
 import EventsPage from '../pages/EventsPage';
 import ProfilesPage from '../pages/ProfilesPage';
 import WorkPage from '../pages/WorkPage';
 
+import CampaignsTable from './CampaignsTable';
 
 
-type PageType='work'|'events'|'education'|'profiles'
+type PageType='work'|'events'|'education'|'profiles'|'campaigns'
 
 export const Dashboard: React.FC = () => {
 
@@ -61,6 +62,9 @@ export const Dashboard: React.FC = () => {
         return <EducationPage />;
       case 'profiles':
         return <ProfilesPage />;
+      case 'campaigns':
+        return <CampaignsTable/>;
+        
       default:
         return <WorkPage />;
     }
@@ -108,6 +112,9 @@ export const Dashboard: React.FC = () => {
                   <Tabs.Tab value='profiles' leftSection={<IconUser size={16}/>}>
                     Profiles
                   </Tabs.Tab>
+                  <Tabs.Tab value='campaigns' leftSection={<IconTable size={16}/>}>
+                    Campaigns Table
+                  </Tabs.Tab>
                 </Tabs.List>
               </Tabs>
               <Group gap="sm">
@@ -118,12 +125,14 @@ export const Dashboard: React.FC = () => {
                 </Tooltip>
                 <Menu shadow='md' width={200}>
                   <Menu.Target>
+
                      <Avatar
                         src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1"
                         alt="User Avatar"
                         size="sm"
                         style={{ cursor: 'pointer' }}
                       />
+                      
                   </Menu.Target>
                   <Menu.Dropdown>
                     <Menu.Label>
@@ -133,6 +142,7 @@ export const Dashboard: React.FC = () => {
                         Settings
                     </Menu.Item>
                     <Menu.Divider/>
+
                     <Menu.Item
                       color="red"
                       leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}

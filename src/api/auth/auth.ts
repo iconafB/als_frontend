@@ -8,6 +8,7 @@ export const auth_api={
             const response=await campaigns_client.post("/auth/register",data);
             return response.data
        } catch (error) {
+            console.log("error printed before")
             console.log(error);
             throw new Error(`error:${error}`)
        }

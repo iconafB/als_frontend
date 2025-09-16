@@ -6,11 +6,11 @@ interface ProtectedRouteProps{
 
 export function ProtectedRoute({children}:ProtectedRouteProps){
     
-    const {isAuthenticated,isLoading}=useAuthContext()
+    const {isAuthenticated}=useAuthContext()
 
     const location=useLocation()
 
-    if(isLoading){
+  /*   if(isLoading){
         return(
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
@@ -20,7 +20,7 @@ export function ProtectedRoute({children}:ProtectedRouteProps){
             </div>
         )
     }
-    
+     */
     if(!isAuthenticated){
 
         return <Navigate to="/dashboard" state={{from:location}} replace/>

@@ -1,5 +1,3 @@
-
-import React from 'react';
 import {
   Container,
   Title,
@@ -12,13 +10,12 @@ import {
   ActionIcon,
   Stack,
   Button,
-  Avatar,
   SimpleGrid,
   RingProgress,
   Center,
 } from '@mantine/core';
+
 import {
-  IconSchool,
   IconBook,
   IconCertificate,
   IconTrophy,
@@ -29,7 +26,11 @@ import {
   IconStar,
 } from '@tabler/icons-react';
 
+import DMARecordsTable from '../components/DMARecordsTable';
+
+
 const EducationPage = () => {
+
   const courses = [
     {
       title: 'Advanced React Development',
@@ -66,11 +67,12 @@ const EducationPage = () => {
     },
   ];
 
+
   const stats = [
-    { title: 'Courses Enrolled', value: '8', icon: IconBook, color: 'blue' },
-    { title: 'Certificates', value: '3', icon: IconCertificate, color: 'green' },
-    { title: 'Study Hours', value: '127', icon: IconClock, color: 'orange' },
-    { title: 'Achievements', value: '15', icon: IconTrophy, color: 'purple' },
+    { title: 'DMA Credits', value: '8', icon: IconBook, color: 'blue' },
+    { title: 'DMA WHAT WHAT', value: '3', icon: IconCertificate, color: 'green' },
+    { title: 'DMA WHAT WHAT', value: '127', icon: IconClock, color: 'orange' },
+    { title: 'DMA WHAT', value: '15', icon: IconTrophy, color: 'purple' },
   ];
 
   const achievements = [
@@ -80,6 +82,7 @@ const EducationPage = () => {
   ];
 
   const getStatusColor = (status: string) => {
+
     switch (status) {
       case 'completed': return 'green';
       case 'in-progress': return 'blue';
@@ -87,6 +90,7 @@ const EducationPage = () => {
       default: return 'gray';
     }
   };
+
 
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -97,24 +101,27 @@ const EducationPage = () => {
     }
   };
 
+
   return (
     <Container size="xl" px={0}>
+
       <Stack gap="xl">
         <div>
           <Group justify="space-between" mb="lg">
             <Title order={2} c="dark">
-              Education Center
+              DMA RECORDS SUMMARY
             </Title>
             <Button leftSection={<IconBook size={16} />}>
-              Browse Courses
+              SUBMIT DMA
             </Button>
           </Group>
-          <Text c="dimmed" size="sm">
-            Track your learning progress and discover new courses
+          <Text c="dimmed" size="md">
+            Track your DMA records
           </Text>
         </div>
 
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+
           {stats.map((stat) => (
             <Card key={stat.title} padding="md" radius="md" withBorder>
               <Group justify="space-between">
@@ -137,9 +144,10 @@ const EducationPage = () => {
               </Group>
             </Card>
           ))}
+
         </SimpleGrid>
 
-        <Grid>
+       {/*  <Grid>
           <Grid.Col span={{ base: 12, lg: 8 }}>
             <Card padding="lg" radius="md" withBorder>
               <Group justify="space-between" mb="md">
@@ -333,7 +341,10 @@ const EducationPage = () => {
               </Card>
             </Stack>
           </Grid.Col>
-        </Grid>
+
+        </Grid> */}
+
+        <DMARecordsTable/>
       </Stack>
     </Container>
   );

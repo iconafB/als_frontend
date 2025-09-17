@@ -7,7 +7,7 @@ import {notifications} from '@mantine/notifications'
 
 import {IconBell,IconDownload,IconRefresh,IconFilter,IconSearch,IconPlus ,IconBriefcase, IconCalendar, IconCalendarEvent, IconLogout, IconMenu2, IconSchool, IconSettings, IconUser, IconTable} from '@tabler/icons-react'
 
-import EducationPage from '../pages/EducationPage';
+import DMAPage from '../pages/DMARecordsPage';
 import EventsPage from '../pages/EventsPage';
 import ProfilesPage from '../pages/ProfilesPage';
 import WorkPage from '../pages/WorkPage';
@@ -35,11 +35,14 @@ export const Dashboard: React.FC = () => {
   }
 
    const handleSidebarAction = (action: string, page: PageType) => {
+    
     notifications.show({
       title: `${action} - ${page.charAt(0).toUpperCase() + page.slice(1)}`,
       message: `${action} action triggered for ${page} page`,
       color: 'green',
+    
     });
+    
   };
 
 
@@ -59,7 +62,7 @@ export const Dashboard: React.FC = () => {
       case 'events':
         return <EventsPage />;
       case 'education':
-        return <EducationPage />;
+        return <DMAPage />;
       case 'profiles':
         return <ProfilesPage />;
       case 'campaigns':

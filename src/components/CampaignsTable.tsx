@@ -1,21 +1,15 @@
 import {useState,useMemo,useEffect} from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Table,TextInput,Loader,Alert,Paper,Group,Text,Pill,Badge,Select, Pagination,Container, Button, Modal } from "@mantine/core"
+import { Table,TextInput,Loader,Alert,Paper,Group,Text,Badge,Select, Pagination,Container, Button, Modal } from "@mantine/core"
 import { AlertCircle,Plus, Search } from "lucide-react"
 import { useDisclosure } from "@mantine/hooks"
 import { fetchPeople } from "../api/mock_api"
-
 import { CreateCampaign } from "./CreateCampaign"
-
-
-
-
-//Pill styling 
-
 
 const CampaignsTable = () => {
 
     const [searchTerm, setSearchTerm] = useState('')
+
     const [nameFilter, setNameFilter] = useState('')
     const [secondNameFilter, setSecondNameFilter] = useState('')
     const [professionFilter, setProfessionFilter] = useState('')
@@ -45,6 +39,7 @@ const CampaignsTable = () => {
       return matchesSearch && matchesName && matchesSecondName && matchesProfession;
     });
   }, [people, searchTerm, nameFilter, secondNameFilter, professionFilter]);
+
 
     const paginatedPeople = useMemo(() => {
 
@@ -95,10 +90,16 @@ const CampaignsTable = () => {
 
     <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={person.id}>
         <Table.Td className="font-medium">
-            {person.name}
+            <Badge variant="light" color="purple" p={18}>
+                 {person.name}
+            </Badge>
+           
         </Table.Td>
         <Table.Td className="font-medium">
-            {person.secondName}
+            <Badge variant="light" color="green" p={18}>
+                {person.secondName}
+            </Badge>
+           
         </Table.Td>
         <Table.Td>
             <Badge variant="light" color="blue">
@@ -112,17 +113,25 @@ const CampaignsTable = () => {
         </Table.Td>
 
         <Table.Td>
-            <Pill className="bg-green-500">Loaded</Pill>
+            <Badge color="green" variant="light">
+                Loaded
+            </Badge>
         </Table.Td>
         <Table.Td>
-            <Pill>Today Baba</Pill>
+            <Badge color="red" variant="light" p={18}>
+                Today Baba
+            </Badge>
         </Table.Td>
     </Table.Tr>
  ));
+
+
+ 
   return (
     <div className="space-y-6">
         {/**Search filter section */}
         <Paper p="md" shadow="sm" className="bg-white">
+
             <Container className="flex justify-start items-start gap-2">
                 {/**Create Campaign Modal */}
                 <Modal 
@@ -144,52 +153,40 @@ const CampaignsTable = () => {
                     padding="lg"
                 >
                    <CreateCampaign/>
-
-                    {/* <div className="flex items-center justify-center mt-6 gap-6">
-                        <Button variant="outline" color="green">Create</Button>
-                        <Button className="ml-4" variant="outline" onClick={close}> Cancel</Button>
-                    </div> */}
-
                 </Modal>
 
                 <Button variant="default" onClick={open} leftSection={<Plus size={24} color="red"/>} color="red">
                     <Text className="font-medium text-6xl">CREATE CAMPAIGN</Text>
                 </Button>
+
             </Container>
+
             <Group mb="md" justify="space-between">
-
                 <Text size="lg" fw={600} mt="md" className="mt-8">Campaigns Table</Text>
-                
                 <Group gap="sm">
-
                     <Badge color="blue" variant="light" p={18}> 
                         {filteredPeople.length} of {people.length} Results
                     </Badge>
-
                     <Select
                         value={pageSize.toString()}
-
                         onChange={(value)=>{
                             setPageSize(Number(value));
                             setCurrentPage(1)
                         }}
-
                         data={[
                             {value:'5',label:'5 per page'},
                             {value:'10',label:'10 per page'},
                             {value:'25',label:'25 per page'},
                             {value:'50',label:'50 per page'}
                         ]}
-
                         size="sm"
                         w={180}
                     />
-
                 </Group>
-
             </Group>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
                 <TextInput
                     placeholder="search all campaign fields...."
                     leftSection={<Search size={16}/>}
@@ -215,6 +212,7 @@ const CampaignsTable = () => {
                     className="col-span-full lg:col-span-1"
                     label="Campaign Code"
                 />
+
                  <TextInput
                     placeholder="Fliter by Campaign Code"
                     leftSection={<Search size={16}/>}
@@ -240,13 +238,10 @@ const CampaignsTable = () => {
              )
             }
         </Paper>
-
         {/**Table section */}
         <Paper shadow="sm" className="overflow-hidden">
-
             <Table.ScrollContainer minWidth={500}>
                 <Table verticalSpacing="sm" highlightOnHover>
-
                     <Table.Thead>
                         <Table.Tr className="bg-gray-500">
                             <Table.Th className="font-semibold text-gray-500">
@@ -269,7 +264,6 @@ const CampaignsTable = () => {
                             </Table.Th>
                         </Table.Tr>
                     </Table.Thead>
-
                     <Table.Tbody>
                         {rows.length >0 ?
                         (rows):
@@ -285,7 +279,6 @@ const CampaignsTable = () => {
                             </Table.Tr>
                         )}
                     </Table.Tbody>
-                    
                 </Table>
             </Table.ScrollContainer>
             {/**Pagination Section */}
@@ -294,7 +287,7 @@ const CampaignsTable = () => {
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
                             <Text size="sm" c="dimmed">
-                                 showing {Math.min((currentPage - 1) * pageSize+1,filteredPeople.length)} to{''} {Math.min(currentPage * pageSize,filteredPeople.length)} of{filteredPeople.length} results
+                                 showing {Math.min((currentPage - 1) * pageSize+1,filteredPeople.length)} to{''} {Math.min(currentPage * pageSize,filteredPeople.length)} of {filteredPeople.length} results
                             </Text>
                         </div>
                         {totalPages > 1 && (

@@ -1,14 +1,10 @@
 import { useState,useMemo,useEffect } from "react"
-import { Loader, Paper, Table, TextInput,Text,Alert,Pill,Badge,Button,Pagination } from "@mantine/core"
-import { AlertCircle } from "lucide-react"
-
-import { useDisclosure } from "@mantine/hooks"
-
+import { Loader, Paper, Table,TextInput,Text,Alert,Badge,Button,Select,Group,Pagination } from "@mantine/core"
+import { AlertCircle, Search } from "lucide-react"
 import { fetchMockDMA } from "../api/dma_mock_api"
 import { useQuery } from "@tanstack/react-query"
 
 const DMARecordsTable = () => {
-
 
       const [searchTerm, setSearchTerm] = useState('')
 
@@ -18,7 +14,7 @@ const DMARecordsTable = () => {
 
       const [createdAtFilter, setCreatedAtFilter] = useState('')
 
-      const [isProcessedFilter,setIsProcessedFilter]=useState(false)
+      const [isProcessedFilter,setIsProcessedFilter]=useState('')
 
       const [currentPage, setCurrentPage] = useState(1);
 
@@ -28,40 +24,39 @@ const DMARecordsTable = () => {
   
       //Fetch dma records from the backend api
 
-      const {data:people=[],error,isLoading}=useQuery({
+      const {data:dma_records=[],error,isLoading}=useQuery({
           queryKey:['dma'],
           queryFn:fetchMockDMA
       })
   
-      const filteredPeople = useMemo(() => {
-          return people.filter((person) => {
+      const filteredRecords = useMemo(() => {
+          return dma_records.filter((record) => {
             const matchesSearch = searchTerm === '' || 
-              Object.values(person).some(value => 
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-              );
+              Object.values(record).some(value => value.toString().toLowerCase().includes(searchTerm.toLowerCase()));
       
-        const matchesAuditId = auditIdFilter === '' || person.audit_id.toLowerCase().includes(auditIdFilter.toLowerCase());
+        const matchesAuditId = auditIdFilter === '' || record.audit_id.toLowerCase().includes(auditIdFilter.toLowerCase());
         
-        const matchesNumberOfRecords = notificationEmailFilter === '' || person.notification_email.toLowerCase().includes(notificationEmailFilter.toLowerCase());
+        const matchesNumberOfRecords = notificationEmailFilter === '' || record.notification_email.toLowerCase().includes(notificationEmailFilter.toLowerCase());
         
-        const matchesNotificationEmail = createdAtFilter === '' || person.created_at.toLowerCase().includes(createdAtFilter.toLowerCase());
+        const matchesNotificationEmail = createdAtFilter === '' || record.created_at.toLowerCase().includes(createdAtFilter.toLowerCase());
 
-        const matchesIsProcessed = isProcessedFilter === false || person.is_processed;
+        const matchesIsProcessed = isProcessedFilter === '' || record.is_processed.toLowerCase().includes(isProcessedFilter.toLowerCase());
 
         return matchesSearch && matchesAuditId && matchesNumberOfRecords && matchesNotificationEmail && matchesIsProcessed;
       });
-    }, [people, searchTerm, auditIdFilter, notificationEmailFilter, createdAtFilter,isProcessedFilter]);
+    }, [dma_records, searchTerm, auditIdFilter, notificationEmailFilter, createdAtFilter,isProcessedFilter]);
 
-  
-      const paginatedPeople = useMemo(() => {
+
+      const paginatedRecords = useMemo(() => {
   
           const startIndex = (currentPage - 1) * pageSize;
           const endIndex = startIndex + pageSize;
-          return filteredPeople.slice(startIndex, endIndex);
+
+          return filteredRecords.slice(startIndex, endIndex);
   
-      },[filteredPeople, currentPage, pageSize]);
+      },[filteredRecords, currentPage, pageSize]);
   
-      const totalPages = Math.ceil(filteredPeople.length / pageSize);
+      const totalPages = Math.ceil(filteredRecords.length / pageSize);
       
      useEffect(() => {
       setCurrentPage(1);
@@ -69,72 +64,139 @@ const DMARecordsTable = () => {
   
   
     const clearFilters = () => {
-
       setSearchTerm('');
       setAuditIdFilter('');
       setNotificationEmailFilter('');
       setCreatedAtFilter('');
-      setIsProcessedFilter(false);
+      setIsProcessedFilter('');
       setCurrentPage(1);
 
     };
 
 
-     if(isLoading){
+  if(isLoading){
     
         return(
             <div className="flex justify-center items-center h-64">
                 <div className="text-center">
                     <Loader size="lg" color="green"/>
-                    <Text mt="md" c="dimmed">Loading Campaign Data....</Text>
+                    <Text mt="md" c="dimmed">Loading DMA Records Data....</Text>
                 </div>
             </div>
         )
     
-     }
-
-     
+   }
+ 
  if(error){
     return(
         <Alert icon={<AlertCircle size={16}/>} title="Error" color="red">
-            Failed To Load Campaign Data
+            Failed To Load DMA Records Data
         </Alert>
     )
  }
 
-  const rows=paginatedPeople.map((person)=>(
- 
-     <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={person.id}>
+ console.log(paginatedRecords)
+
+  const rows=paginatedRecords.map((record)=>(
+     <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={record.id}>
          <Table.Td className="font-medium">
-             {person.audit_id}
+          <Badge variant="light" color="blue" p={18}>
+             {record.audit_id}
+          </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-             {person.number_of_records}
-         </Table.Td>
-         <Table.Td>
-             <Badge variant="light" color="blue">
-                 {person.notification_email}
+             <Badge variant="light" color="purple" p={18}>
+                {record.number_of_records}
              </Badge>
          </Table.Td>
-         <Table.Td>
-            {person.is_processed}
+         <Table.Td className="foont-medium">
+             <Badge variant="light" color="blue" p={18}>
+                 {record.notification_email}
+             </Badge>
          </Table.Td>
- 
-         <Table.Td>
-            {person.created_at}
+         <Table.Td className="font-medium">
+          <Badge variant="light" color={record.is_processed=='Download Ready'?'green':'red'} p={18}>
+            {/**show colors based on the boolean variable */}
+              {record.is_processed}
+          </Badge>
          </Table.Td>
+
+         <Table.Td className="font-medium">
+           <Badge variant="light" color="blue" p={18}>
+              {record.created_at}
+           </Badge>
+         </Table.Td>
+
      </Table.Tr>
   ));
- 
 
   return (
-
     <div className="space-y-6">
+
         <Paper shadow="sm" className="overflow-hidden">
+          <Paper shadow="xs" p="xl">
+            <Group mb="mb" justify="space-between">
+              <div className="flex justify-between items-center">
 
-            <Table.ScrollContainer minWidth={500}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-xs">
+                    <TextInput
+                      label="Search Records"
+                leftSection={<Search size={16}/>}
+                className="col-span-full lg:col-span-1 -mt-0"
+                value={searchTerm}
+                onChange={(event)=>{
+                  console.log(event.currentTarget.value)
+                  setSearchTerm(event.currentTarget.value)
+                }}
+                placeholder="enter audit id,notification email, or created at"
+                      w={400}
+                    />
 
-                <Table verticalSpacing="sm" highlightOnHover>
+                </div>
+
+                <Group gap="sm" justify="space-between">
+                  <div className="flex gap-2 mt-6">
+                     <Badge variant="light" color="blue" p={18} w={160}>
+                      {filteredRecords.length} of {dma_records.length} records
+                    </Badge>
+                    <Select
+                      value={pageSize.toString()}
+                      onChange={(value)=>{
+                    setPageSize(Number(value))
+                    setCurrentPage(1)
+                        }}
+
+                      data={[
+                      {value:'5',label:'5 per page'},
+                      {value:'10',label:'10 per page'},
+                      {value:'25',label:'25 per page'},
+                      {value:'50',label:'50 per page'}
+                        ]}
+
+                        size="sm"
+                        w={180}
+                      />
+                  </div>
+                </Group>
+              </div>
+            </Group>
+
+            {(searchTerm && (
+              <Group mt="md" >
+                <Text size="sm" c="dimmed">
+                  Active Filter Applied
+                </Text>
+                <button className="text-blue-500 hover:text-blue-800 text-sm font-medium transition-colors -mt-1" onClick={clearFilters}>
+                  Clear Filter
+                </button>
+              </Group>
+            ))}
+          </Paper>
+
+          <Paper>
+              <Table.ScrollContainer minWidth={500}>
+
+                <Table verticalSpacing="sm" highlightOnHover mt={12}>
 
                     <Table.Thead>
                       <Table.Tr className="bg-gray-500">
@@ -142,13 +204,13 @@ const DMARecordsTable = () => {
                             AUDIT ID
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
-                          Number Of Records
+                          NUMBER OF RECORDS
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
                           NOTIFICATION EMAIL
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
-                          IS PROCESSED
+                          DEDUPE STATUS
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
                           CREATED AT
@@ -174,28 +236,29 @@ const DMARecordsTable = () => {
       
                 </Table>
 
-            </Table.ScrollContainer>
-            {/**Pagination Section */}
-              {filteredPeople.length > 0 && (
-              <div className="border-t border-gray-200 px-4 bg-gray-50">
+              </Table.ScrollContainer>
+              {/**Pagination Section */}
+                {filteredRecords.length > 0 && (
+              <div className="border-t border-gray-200 px-4 bg-gray-50 mt-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                    <div className="flex items-center gap-2">
-                                        <Text size="sm" c="dimmed">
-                                             showing {Math.min((currentPage - 1) * pageSize+1,filteredPeople.length)} to{''} {Math.min(currentPage * pageSize,filteredPeople.length)} of{filteredPeople.length} results
-                                        </Text>
+                      <Text size="sm" c="dimmed">
+                        showing {Math.min((currentPage - 1) * pageSize+1,filteredRecords.length)} to{''} {Math.min(currentPage * pageSize,filteredRecords.length)} of {filteredRecords.length} results
+                      </Text>
                    </div>
                    {totalPages > 1 && (
-                                        <Pagination
-                                            value={currentPage}
-                                            onChange={setCurrentPage}
-                                            total={totalPages}
-                                            withEdges
-                                            className="flex-shrink-0"
-                                        />
+                      <Pagination
+                          value={currentPage}
+                          onChange={setCurrentPage}
+                          total={totalPages}
+                          withEdges
+                          className="flex-shrink-0"
+                      />
                    )}
                 </div>
               </div>
-              )}
+                )}
+          </Paper>
 
         </Paper>
     </div>

@@ -86,9 +86,9 @@ export function CreateCampaign(){
                 </Stack>
 
                 <Group justify="center" mt="md">
-                        <Button type="submit" className="hover:bg-blue-100 transition-colors">
-                            CREATE CAMPAIGN
-                        </Button>
+                    <Button type="submit" variant="outline" className="hover:bg-blue-100 transition-colors">
+                        CREATE CAMPAIGN
+                    </Button>
                 </Group>
             </form>
         </Paper>

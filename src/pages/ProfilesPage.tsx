@@ -12,6 +12,7 @@ import {
   Button,
   Avatar,
   TextInput,
+  NumberInput,
   Select,
   SimpleGrid,
   Modal,
@@ -28,12 +29,14 @@ import {
   IconBriefcase,
   IconEdit,
   IconDots,
-  IconGraduationCap,
   IconCalendar,
 } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 
 const ProfilesPage = () => {
+
+  const [AssignOpened,{open:OpenAssign,close:CloseAssign}]=useDisclosure(false)
+
   const [opened, { open, close }] = useDisclosure(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState<string | null>(null);
@@ -120,10 +123,10 @@ const ProfilesPage = () => {
   ];
 
   const stats = [
-    { title: 'Total Profiles', value: '156', icon: IconUser, color: 'blue' },
-    { title: 'Active Members', value: '142', icon: IconUser, color: 'green' },
-    { title: 'Departments', value: '12', icon: IconBriefcase, color: 'orange' },
-    { title: 'New This Month', value: '8', icon: IconUserPlus, color: 'purple' },
+    { title: 'TOTAL RULES', value: '156', icon: IconUser, color: 'blue' },
+    { title: 'ASSIGNED RULES', value: '142', icon: IconUser, color: 'green' },
+    { title: 'UNASSIGNED RULES', value: '12', icon: IconBriefcase, color: 'orange' },
+    { title: 'CAMPAIGNS', value: '8', icon: IconUserPlus, color: 'purple' },
   ];
 
   const departments = [
@@ -148,20 +151,25 @@ const ProfilesPage = () => {
     return matchesSearch && matchesFilter;
   });
 
+
   return (
     <Container size="xl" px={0}>
       <Stack gap="xl">
         <div>
           <Group justify="space-between" mb="lg">
             <Title order={2} c="dark">
-              Team Profiles
+              CAMPAIGN RULES SUMMARY
             </Title>
             <Button leftSection={<IconUserPlus size={16} />} onClick={open}>
-              Add Member
+              CREATE CAMPAIGN RULE
             </Button>
+
+             <Button leftSection={<IconUserPlus size={16} />} onClick={OpenAssign}>
+              ASSIGN CAMPAIGN RULE
+              </Button>
           </Group>
           <Text c="dimmed" size="sm">
-            Manage team members and their profiles
+            MANAGE CAMPAIGN RULES
           </Text>
         </div>
 
@@ -190,175 +198,77 @@ const ProfilesPage = () => {
           ))}
         </SimpleGrid>
 
-        <Card padding="lg" radius="md" withBorder>
-          <Group mb="md" gap="md">
-            <TextInput
-              placeholder="Search profiles..."
-              leftSection={<IconSearch size={16} />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ flex: 1 }}
-            />
-            <Select
-              placeholder="Filter by department"
-              leftSection={<IconFilter size={16} />}
-              data={departments}
-              value={filterRole}
-              onChange={setFilterRole}
-              clearable
-              w={200}
-            />
-          </Group>
-
-          <Grid>
-            {filteredProfiles.map((profile) => (
-              <Grid.Col key={profile.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                <Card padding="lg" radius="md" withBorder h="100%">
-                  <Group justify="space-between" mb="md">
-                    <Badge
-                      color={getStatusColor(profile.status)}
-                      variant="light"
-                    >
-                      {profile.status}
-                    </Badge>
-                    <ActionIcon variant="subtle" color="gray">
-                      <IconDots size={16} />
-                    </ActionIcon>
-                  </Group>
-
-                  <Stack align="center" mb="md">
-                    <Avatar
-                      src={profile.avatar}
-                      size="lg"
-                      radius="md"
-                    />
-                    <div style={{ textAlign: 'center' }}>
-                      <Text fw={500} size="lg">
-                        {profile.name}
-                      </Text>
-                      <Text c="dimmed" size="sm">
-                        {profile.role}
-                      </Text>
-                      <Badge variant="outline" size="sm" mt="xs">
-                        {profile.department}
-                      </Badge>
-                    </div>
-                  </Stack>
-
-                  <Stack gap="xs" mb="md">
-                    <Group gap="xs">
-                      <IconMail size={14} />
-                      <Text size="xs" c="dimmed">
-                        {profile.email}
-                      </Text>
-                    </Group>
-                    <Group gap="xs">
-                      <IconPhone size={14} />
-                      <Text size="xs" c="dimmed">
-                        {profile.phone}
-                      </Text>
-                    </Group>
-                    <Group gap="xs">
-                      <IconMapPin size={14} />
-                      <Text size="xs" c="dimmed">
-                        {profile.location}
-                      </Text>
-                    </Group>
-                    <Group gap="xs">
-                      <IconCalendar size={14} />
-                      <Text size="xs" c="dimmed">
-                        Joined {new Date(profile.joinDate).toLocaleDateString()}
-                      </Text>
-                    </Group>
-                  </Stack>
-
-                  <div mb="md">
-                    <Text size="sm" fw={500} mb="xs">Skills</Text>
-                    <Group gap="xs">
-                      {profile.skills.map((skill) => (
-                        <Badge key={skill} variant="light" size="xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </Group>
-                  </div>
-
-                  <Group gap="xs" mt="auto">
-                    <Button
-                      variant="light"
-                      size="sm"
-                      leftSection={<IconEdit size={14} />}
-                      flex={1}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="light"
-                      size="sm"
-                      leftSection={<IconUser size={14} />}
-                      flex={1}
-                    >
-                      View
-                    </Button>
-                  </Group>
-                </Card>
-              </Grid.Col>
-            ))}
-          </Grid>
-
-          {filteredProfiles.length === 0 && (
-            <Text ta="center" c="dimmed" py="xl">
-              No profiles found matching your search criteria
-            </Text>
-          )}
-        </Card>
-
-        <Modal opened={opened} onClose={close} title="Add New Team Member" size="md">
+        <Modal opened={opened} onClose={close} title="ADD NEW CAMPAIGN RULE" size="md">
           <Stack gap="md">
             <Group gap="md">
               <TextInput
-                label="Full Name"
-                placeholder="Enter full name"
+                label="RULE CODE"
+                placeholder="ENTER RULE CODE"
                 flex={1}
                 required
               />
               <Select
-                label="Department"
-                placeholder="Select department"
+                label="CAMPAIGN CODE"
+                placeholder="CAMPAIGN CODE"
                 data={departments}
                 flex={1}
                 required
               />
             </Group>
-            
-            <TextInput
-              label="Role"
-              placeholder="Enter job title"
-              required
-            />
-            
+
             <Group gap="md">
-              <TextInput
-                label="Email"
-                placeholder="email@company.com"
+              <div className='flex gap-2'>
+                <NumberInput
+                label="MINIMUM SALARY"
+                placeholder="MINIMUM SALARY"
+                step={1000}
+                required
+                />
+                <NumberInput
+                label="MAXIMUM SALARY"
+                placeholder="MAXIMUM SALARY"
+                step={1000}
+                required
+               />
+              </div>
+            </Group>
+            <Group gap="md">
+              <NumberInput
+                label="ENTER MINIMUM AGE"
+                placeholder="MINIMUM AGE"
                 flex={1}
                 required
               />
-              <TextInput
-                label="Phone"
-                placeholder="+1 (555) 123-4567"
+              <NumberInput
+                label="MAXIMUM AGE"
+                required
+                placeholder="ENTER MAXIMUM AGE"
                 flex={1}
               />
             </Group>
-            
+
+            <Select
+              label="GENDER"
+              required
+              placeholder="Enter the city name"
+              data={['MALE','FEMALE']}
+            />
             <TextInput
-              label="Location"
-              placeholder="City, State"
+              label="CITY"
+              required
+              placeholder="Enter the city name"
+            />
+
+             <Select
+              label="PROVINCE"
+              required
+              placeholder="Enter Province"
+              data={['KWAZULU-NATAL','GAUTENG','WESTERN CAPE','FREE STATE','LIMPOPO','EASTERN CAPE','NORTH WEST','NORTHERN CAPE']}
             />
             
             <Textarea
-              label="Skills"
-              placeholder="List skills separated by commas"
+              label="COMMENTS"
+              placeholder="COMMENTS"
               rows={3}
             />
             
@@ -366,8 +276,45 @@ const ProfilesPage = () => {
               <Button variant="subtle" onClick={close}>
                 Cancel
               </Button>
-              <Button onClick={close}>
-                Add Member
+              <Button onClick={close} >
+                ADD RULE
+              </Button>
+            </Group>
+          </Stack>
+        </Modal>
+
+        <Modal opened={AssignOpened} onClose={CloseAssign} title="ASSIGN CAMPAIGN TO CAMPAIGN RULE">
+          <Stack gap="md">
+            <Group gap="md">
+               <TextInput
+                label="RULE CODE"
+                placeholder="ENTER RULE CODE"
+                flex={1}
+                required
+              />
+
+              <Select
+                label="CAMPAIGN CODE"
+                placeholder="CAMPAIGN CODE"
+                data={departments}
+                flex={1}
+                required
+              />
+              
+            </Group>
+             <Select
+                label="CAMPAIGN NAME"
+                placeholder="ENTER CAMPAIGN NAME"
+                data={departments}
+                flex={1}
+                required
+                />
+            <Group justify='center'>
+              <Button variant='outline' color='red' onClick={CloseAssign}>
+                Cancel
+              </Button>
+              <Button variant='outline' color='green'>
+                ASSIGN
               </Button>
             </Group>
           </Stack>

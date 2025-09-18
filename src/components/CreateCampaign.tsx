@@ -15,6 +15,7 @@ type CampaignFormData=z.infer<typeof campaignSchema>
 } */
 
 export function CreateCampaign(){
+
     const {control,handleSubmit,reset,formState:{errors}}=useForm<CampaignFormData>({
         defaultValues:{
             campaign_name:'',
@@ -37,10 +38,12 @@ export function CreateCampaign(){
     const handleFormSubmit=(data:CampaignFormData)=>{
         campaign_mutation.mutate(data)
     }
+    
     return(
 
         <Paper shadow="xs" p="xl">
             <form onSubmit={handleSubmit(handleFormSubmit)}>
+
                 <Stack align="stretch" justify="center" gap="md">
                     <Controller
                         name="campaign_name"

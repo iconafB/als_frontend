@@ -7,16 +7,13 @@ import { fetchPeople } from "../api/mock_api"
 import { CreateCampaign } from "./CreateCampaign"
 
 const CampaignsTable = () => {
-
     const [searchTerm, setSearchTerm] = useState('')
-
     const [nameFilter, setNameFilter] = useState('')
     const [secondNameFilter, setSecondNameFilter] = useState('')
     const [professionFilter, setProfessionFilter] = useState('')
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [opened,{open,close}]=useDisclosure(false)
-
     //Fetch Campaign from the backend api
     const {data:people=[],error,isLoading}=useQuery({
         queryKey:['people'],
@@ -124,14 +121,11 @@ const CampaignsTable = () => {
         </Table.Td>
     </Table.Tr>
  ));
-
-
  
   return (
     <div className="space-y-6">
         {/**Search filter section */}
         <Paper p="md" shadow="sm" className="bg-white">
-
             <Container className="flex justify-start items-start gap-2">
                 {/**Create Campaign Modal */}
                 <Modal 
@@ -155,12 +149,11 @@ const CampaignsTable = () => {
                    <CreateCampaign/>
                 </Modal>
 
-                <Button variant="default" onClick={open} leftSection={<Plus size={24} color="red"/>} color="red">
-                    <Text className="font-medium text-6xl">CREATE CAMPAIGN</Text>
+                <Button variant="green" onClick={open} leftSection={<Plus size={24}/>} color="red">
+                    CREATE CAMPAIGN
                 </Button>
 
             </Container>
-
             <Group mb="md" justify="space-between">
                 <Text size="lg" fw={600} mt="md" className="mt-8">Campaigns Table</Text>
                 <Group gap="sm">
@@ -184,7 +177,6 @@ const CampaignsTable = () => {
                     />
                 </Group>
             </Group>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
                 <TextInput
@@ -223,7 +215,6 @@ const CampaignsTable = () => {
                 />
 
             </div>
-
             {(searchTerm || nameFilter || secondNameFilter || professionFilter)
              &&
              (
@@ -239,6 +230,7 @@ const CampaignsTable = () => {
             }
         </Paper>
         {/**Table section */}
+
         <Paper shadow="sm" className="overflow-hidden">
             <Table.ScrollContainer minWidth={500}>
                 <Table verticalSpacing="sm" highlightOnHover>
@@ -306,6 +298,5 @@ const CampaignsTable = () => {
     </div>
   )
 }
-
 
 export default CampaignsTable

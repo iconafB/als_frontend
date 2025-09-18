@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
+
 import {
   Container,
   Title,
-  Grid,
   Card,
   Text,
   Badge,
@@ -10,7 +10,6 @@ import {
   ActionIcon,
   Stack,
   Button,
-  Avatar,
   TextInput,
   NumberInput,
   Select,
@@ -18,6 +17,7 @@ import {
   Modal,
   Textarea,
 } from '@mantine/core';
+
 import {
   IconUser,
   IconSearch,
@@ -31,13 +31,18 @@ import {
   IconDots,
   IconCalendar,
 } from '@tabler/icons-react';
+
+
 import { useDisclosure } from '@mantine/hooks';
+
+import CampaignRulesTable from '../components/CampaignRulesTables';
 
 const ProfilesPage = () => {
 
   const [AssignOpened,{open:OpenAssign,close:CloseAssign}]=useDisclosure(false)
+  const [changeRuleOpened,{open:ChangeRuleOpenAssign,close:ChangeRuleCloseAssign}]=useDisclosure(false)
 
-  const [opened, { open, close }] = useDisclosure(false);
+  const [openedCreateCampaign, { open:openCreateCampaign, close:closeCreateCampaign }] = useDisclosure(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState<string | null>(null);
 
@@ -139,19 +144,6 @@ const ProfilesPage = () => {
     'HR',
   ];
 
-  const getStatusColor = (status: string) => {
-    return status === 'active' ? 'green' : 'gray';
-  };
-
-  const filteredProfiles = profiles.filter(profile => {
-    const matchesSearch = profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         profile.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         profile.department.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = !filterRole || profile.department === filterRole;
-    return matchesSearch && matchesFilter;
-  });
-
-
   return (
     <Container size="xl" px={0}>
       <Stack gap="xl">
@@ -160,12 +152,15 @@ const ProfilesPage = () => {
             <Title order={2} c="dark">
               CAMPAIGN RULES SUMMARY
             </Title>
-            <Button leftSection={<IconUserPlus size={16} />} onClick={open}>
+            <Button leftSection={<IconUserPlus size={16} />} onClick={openCreateCampaign}>
               CREATE CAMPAIGN RULE
             </Button>
 
              <Button leftSection={<IconUserPlus size={16} />} onClick={OpenAssign}>
               ASSIGN CAMPAIGN RULE
+              </Button>
+              <Button leftSection={<IconUserPlus size={16}/>} onClick={ChangeRuleOpenAssign}>
+                CHANGE RULE
               </Button>
           </Group>
           <Text c="dimmed" size="sm">
@@ -174,6 +169,7 @@ const ProfilesPage = () => {
         </div>
 
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+
           {stats.map((stat) => (
             <Card key={stat.title} padding="md" radius="md" withBorder>
               <Group justify="space-between">
@@ -185,6 +181,7 @@ const ProfilesPage = () => {
                     {stat.value}
                   </Text>
                 </div>
+
                 <ActionIcon
                   color={stat.color}
                   variant="light"
@@ -194,14 +191,17 @@ const ProfilesPage = () => {
                   <stat.icon size={22} />
                 </ActionIcon>
               </Group>
+
             </Card>
           ))}
         </SimpleGrid>
 
-        <Modal opened={opened} onClose={close} title="ADD NEW CAMPAIGN RULE" size="md">
-          <Stack gap="md">
-            <Group gap="md">
-              <TextInput
+
+        <Modal opened={openedCreateCampaign} onClose={closeCreateCampaign} title="ADD NEW CAMPAIGN RULE" size="md">
+          <form>
+              <Stack gap="md">
+                  <Group gap="md">
+              <Select
                 label="RULE CODE"
                 placeholder="ENTER RULE CODE"
                 flex={1}
@@ -214,9 +214,9 @@ const ProfilesPage = () => {
                 flex={1}
                 required
               />
-            </Group>
+                  </Group>
 
-            <Group gap="md">
+                  <Group gap="md">
               <div className='flex gap-2'>
                 <NumberInput
                 label="MINIMUM SALARY"
@@ -231,8 +231,9 @@ const ProfilesPage = () => {
                 required
                />
               </div>
-            </Group>
-            <Group gap="md">
+                  </Group>
+            
+                  <Group gap="md">
               <NumberInput
                 label="ENTER MINIMUM AGE"
                 placeholder="MINIMUM AGE"
@@ -245,19 +246,19 @@ const ProfilesPage = () => {
                 placeholder="ENTER MAXIMUM AGE"
                 flex={1}
               />
-            </Group>
+                  </Group>
 
-            <Select
-              label="GENDER"
+                  <Select
+                    label="GENDER"
               required
               placeholder="Enter the city name"
-              data={['MALE','FEMALE']}
-            />
-            <TextInput
-              label="CITY"
+                    data={['MALE','FEMALE']}
+                  />
+                  <TextInput
+                    label="CITY"
               required
               placeholder="Enter the city name"
-            />
+                  />
 
              <Select
               label="PROVINCE"
@@ -273,22 +274,46 @@ const ProfilesPage = () => {
             />
             
             <Group justify="flex-end" mt="md">
-              <Button variant="subtle" onClick={close}>
-                Cancel
+              <Button variant="subtle" color='red' onClick={closeCreateCampaign}>
+                CANCEL
               </Button>
-              <Button onClick={close} >
+              <Button onClick={()=>{console.log("Add rule")}} variant='subtle'>
                 ADD RULE
               </Button>
             </Group>
           </Stack>
+          </form>
+        
+
         </Modal>
 
-        <Modal opened={AssignOpened} onClose={CloseAssign} title="ASSIGN CAMPAIGN TO CAMPAIGN RULE">
-          <Stack gap="md">
+        <Modal opened={AssignOpened} onClose={CloseAssign} title="ASSIGN CAMPAIGN TO CAMPAIGN RULE" size="auto">
+          {/**Assign form for campaign assignment */}
+          <form>
+            <Stack gap="md">
+            
             <Group gap="md">
-               <TextInput
+                <Select
+                label="BRANCH"
+                placeholder="ENTER CAMPAIGN NAME"
+                data={departments}
+                flex={1}
+                required
+                />
+               <Select
+                label="CAMPAIGN NAME"
+                placeholder="ENTER CAMPAIGN NAME"
+                data={departments}
+                flex={1}
+                required
+                />
+            </Group>
+            
+            <Group gap="md">
+               <Select
                 label="RULE CODE"
                 placeholder="ENTER RULE CODE"
+                data={['RULE1','RULE2','RULE3','RULE4','RULE5','RULE6','RULE7','RULE8']}
                 flex={1}
                 required
               />
@@ -302,26 +327,78 @@ const ProfilesPage = () => {
               />
               
             </Group>
-             <Select
-                label="CAMPAIGN NAME"
-                placeholder="ENTER CAMPAIGN NAME"
-                data={departments}
-                flex={1}
-                required
-                />
+
             <Group justify='center'>
-              <Button variant='outline' color='red' onClick={CloseAssign}>
-                Cancel
+              <Button variant='subtle' color='red' onClick={CloseAssign}>
+                CANCEL
               </Button>
-              <Button variant='outline' color='green'>
+              <Button variant='subtle' color='blue'>
                 ASSIGN
               </Button>
             </Group>
-          </Stack>
+            </Stack>
+          </form>
         </Modal>
+
+        <Modal opened={changeRuleOpened} onClose={ChangeRuleCloseAssign} title="CHANGE RULE FOR A CAMPAIGN" size="auto">
+          <form>
+            <Group>
+            <Select
+              label="Branch"
+              placeholder='enter the branch name'
+              data={['HQ','P3','INVNTDBN']}
+              required
+              flex={1}
+            />
+            <Select
+              label="Campaing Name"
+              placeholder='enter rule code'
+              data={['CAMP1','CAMP2','CAMP3','CAMP4','CAMP5','CAMP6','CAMP7','CAMP8']}
+              required
+              flex={1}
+
+            />
+            </Group>
+            <Group>
+             
+            <Select
+              label="Campaign Code"
+              placeholder='enter campaign code'
+              data={['CAMP1','CAMP2','CAMP3','CAMP4','CAMP5','CAMP6','CAMP7','CAMP8']}
+              required
+              flex={1}
+            />
+             
+            <Select
+              label="Rule Code"
+              placeholder='enter campaign code'
+              data={['RULE1','RULE2','RULE3','RULE4','RULE5','RULE6','RULE7','RULE8']}
+              required
+              flex={1}
+            />
+            </Group>
+            <div className='flex justify-center items-center mt-4'>
+            <Button variant='subtle' color='red' onClick={ChangeRuleCloseAssign}>
+              CANCEL
+            </Button>
+            <Button variant='subtle'>
+              CHANGE RULE
+            </Button>
+            </div>
+
+          </form>
+          
+        </Modal>
+
+      </Stack>
+
+      <Stack gap="xl">
+        <CampaignRulesTable/>
       </Stack>
     </Container>
   );
 };
+
+
 
 export default ProfilesPage;

@@ -1,6 +1,6 @@
 import axios from "axios";
-const token=localStorage.getItem('token')
 
+const token=localStorage.getItem('token')
 const campaigns_base_url="http://127.0.0.1:8000"
 
 export const campaigns_client=axios.create({
@@ -10,7 +10,6 @@ export const campaigns_client=axios.create({
         ...(token && {Authorization:`Bearer ${token}`})
     },
 });
-
 // Add a request interceptor to add the token to all requests
 campaigns_client.interceptors.request.use(
   (config) => {
@@ -28,9 +27,7 @@ campaigns_client.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 // Add a response interceptor to handle 401 errors
-
 campaigns_client.interceptors.response.use(
   (response) => response,
   (error) => {

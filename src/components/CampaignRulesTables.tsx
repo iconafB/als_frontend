@@ -1,32 +1,33 @@
 import { useState,useMemo,useEffect } from "react"
 import { Loader, Paper, Table,TextInput,Text,Alert,Badge,Select,Group,Pagination } from "@mantine/core"
 import { AlertCircle, Search } from "lucide-react"
-import { fetchMockDMA } from "../api/dma_mock_api"
+import { fetchMockRules } from "../api/campaign_rules_mock_api";
 import { useQuery } from "@tanstack/react-query"
 
-const DMARecordsTable = () => {
+
+const CampaignRulesTable = () => {
 
       const [searchTerm, setSearchTerm] = useState('')
-
-      const [auditIdFilter, setAuditIdFilter] = useState('')
-
-      const [notificationEmailFilter, setNotificationEmailFilter] = useState('')
-
+      const [ruleCodeFilter, setRuleCodeFilter] = useState('')
+      const [campCodeFilter, setCampCodeFilter] = useState('')
+      const [minSalaryFilter, setMinSalaryFilter] = useState(0)
+      const [maxSalaryFilter, setMaxSalaryFilter] = useState(0)
       const [createdAtFilter, setCreatedAtFilter] = useState('')
-
-      const [isProcessedFilter,setIsProcessedFilter]=useState('')
-
+      const [minAgeFilter,setMinAgeFilter] = useState(0)
+      const [maxAgeFilter, setMaxAgeFilter] = useState(0)
+      const [genderFilter, setGenderFilter] = useState('')
+      const [cityFilter, setCityFilter] = useState('')
+      const [provinceFilter, setProvinceFilter] = useState('')
       const [currentPage, setCurrentPage] = useState(1);
-
       const [pageSize, setPageSize] = useState(10);
 
       // [opened,{open,close}]=useDisclosure(false)
-  
+
       //Fetch dma records from the backend api
 
       const {data:dma_records=[],error,isLoading}=useQuery({
-          queryKey:['dma'],
-          queryFn:fetchMockDMA
+          queryKey:['rules'],
+          queryFn:fetchMockRules
       })
   
       const filteredRecords = useMemo(() => {
@@ -34,17 +35,30 @@ const DMARecordsTable = () => {
             const matchesSearch = searchTerm === '' || 
               Object.values(record).some(value => value.toString().toLowerCase().includes(searchTerm.toLowerCase()));
       
-        const matchesAuditId = auditIdFilter === '' || record.audit_id.toLowerCase().includes(auditIdFilter.toLowerCase());
+            const matchesRuleCode = ruleCodeFilter === '' || record.rule_code.toLowerCase().includes(ruleCodeFilter.toLowerCase());
         
-        const matchesNumberOfRecords = notificationEmailFilter === '' || record.notification_email.toLowerCase().includes(notificationEmailFilter.toLowerCase());
+            const matchesCampCode = campCodeFilter === '' || record.camp_code.toLowerCase().includes(campCodeFilter.toLowerCase());
         
-        const matchesNotificationEmail = createdAtFilter === '' || record.created_at.toLowerCase().includes(createdAtFilter.toLowerCase());
+            const matchesCreatedAt = createdAtFilter === '' || record.created_at.toLowerCase().includes(createdAtFilter.toLowerCase());
 
-        const matchesIsProcessed = isProcessedFilter === '' || record.is_processed.toLowerCase().includes(isProcessedFilter.toLowerCase());
+            const matchesMinSalary = minSalaryFilter === 0 || record.min_salary==minSalaryFilter;
+            
+            const matchesMaxSalary = maxSalaryFilter === 0 || record.max_salary==maxSalaryFilter;
+            
+            const matchesMinAge = maxAgeFilter === 0 || record.max_age==maxAgeFilter;
 
-        return matchesSearch && matchesAuditId && matchesNumberOfRecords && matchesNotificationEmail && matchesIsProcessed;
+            const matchesMaxAge = minAgeFilter === 0 || record.max_age==maxAgeFilter;
+
+            const matchesCity = cityFilter === '' || record.city.toLowerCase().includes(cityFilter.toLowerCase());
+
+            const matchesGender = genderFilter === '' || record.gender.toLowerCase().includes(genderFilter.toLowerCase());
+            
+            const matchesProvince = provinceFilter === '' || record.province.toLowerCase().includes(provinceFilter.toLowerCase());
+
+
+            return matchesSearch && matchesRuleCode && matchesCampCode && matchesCreatedAt && matchesMinSalary && matchesMaxSalary && matchesMinAge && matchesMaxAge && matchesCity && matchesGender && matchesProvince;
       });
-    }, [dma_records, searchTerm, auditIdFilter, notificationEmailFilter, createdAtFilter,isProcessedFilter]);
+    }, [dma_records, searchTerm, ruleCodeFilter, campCodeFilter, createdAtFilter,minSalaryFilter,maxSalaryFilter,minAgeFilter,maxAgeFilter,genderFilter,cityFilter,provinceFilter]);
 
 
       const paginatedRecords = useMemo(() => {
@@ -60,17 +74,21 @@ const DMARecordsTable = () => {
       
      useEffect(() => {
       setCurrentPage(1);
-    }, [searchTerm, auditIdFilter, notificationEmailFilter, createdAtFilter]);
+    }, [searchTerm, ruleCodeFilter, campCodeFilter, createdAtFilter,minSalaryFilter,maxSalaryFilter,minAgeFilter,maxAgeFilter,genderFilter,cityFilter,provinceFilter]);
   
   
     const clearFilters = () => {
       setSearchTerm('');
-      setAuditIdFilter('');
-      setNotificationEmailFilter('');
+      setRuleCodeFilter('');
+      setCampCodeFilter('');
+      setMinSalaryFilter(0);
+      setMaxSalaryFilter(0);
       setCreatedAtFilter('');
-      setIsProcessedFilter('');
-      setCurrentPage(1);
-
+      setMinAgeFilter(0)
+      setMaxAgeFilter(0);
+      setGenderFilter('');
+      setCityFilter('');
+      setProvinceFilter('');
     };
 
 
@@ -80,49 +98,80 @@ const DMARecordsTable = () => {
             <div className="flex justify-center items-center h-64">
                 <div className="text-center">
                     <Loader size="lg" color="green"/>
-                    <Text mt="md" c="dimmed">Loading DMA Records Data....</Text>
+                    <Text mt="md" c="dimmed">Loading Campaign rules....</Text>
                 </div>
             </div>
         )
     
    }
- 
+
+
  if(error){
     return(
         <Alert icon={<AlertCircle size={16}/>} title="Error" color="red">
-            Failed To Load DMA Records Data
+            Failed To Load Campaign Rules  Data
         </Alert>
     )
  }
 
   const rows=paginatedRecords.map((record)=>(
-
+    
      <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={record.id}>
          <Table.Td className="font-medium">
           <Badge variant="light" color="blue" p={18}>
-             {record.audit_id}
+             {record.id}
           </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
              <Badge variant="light" color="purple" p={18}>
-                {record.number_of_records}
+                {record.rule_code}
              </Badge>
          </Table.Td>
          <Table.Td className="foont-medium">
              <Badge variant="light" color="blue" p={18}>
-                 {record.notification_email}
+                 {record.camp_code}
              </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-          <Badge variant="light" color={record.is_processed=='Download Ready'?'green':'red'} p={18}>
-            {/**show colors based on the boolean variable */}
-              {record.is_processed}
-          </Badge>
+              <Badge variant="light" color="blue" p={18}>
+                 {record.min_salary}
+              </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-           <Badge variant="light" color="blue" p={18}>
-              {record.created_at}
-           </Badge>
+            <Badge variant="light" color="orange" p={18}>
+                 {record.max_salary}
+            </Badge>
+         </Table.Td>
+
+         <Table.Td className="font-medium">
+              <Badge variant="light" color="green" p={18}>
+                {record.min_age}
+              </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+             <Badge variant="light" color="red" p={18}>
+                 {record.max_age}
+             </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+             <Badge variant="light" color="purple" p={18}>
+                 {record.gender}
+             </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+             <Badge variant="light" color="green" p={18}>
+                 {record.city}
+             </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+             <Badge variant="light"  p={18}>
+                 {record.province}
+             </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+            <Badge variant="light" color="purple" p={20}>
+                {record.created_at}
+            </Badge>
          </Table.Td>
 
      </Table.Tr>
@@ -130,7 +179,6 @@ const DMARecordsTable = () => {
 
   return (
     <div className="space-y-6">
-
         <Paper shadow="sm" className="overflow-hidden">
           <Paper shadow="xs" p="xl">
             <Group mb="mb" justify="space-between">
@@ -193,25 +241,42 @@ const DMARecordsTable = () => {
 
           <Paper>
               <Table.ScrollContainer minWidth={500}>
-
                 <Table verticalSpacing="sm" highlightOnHover mt={12}>
 
                     <Table.Thead>
                       <Table.Tr className="bg-gray-500">
                         <Table.Th className="text-gray-500 font-semibold">
-                            AUDIT ID
+                            RULE ID
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
-                          NUMBER OF RECORDS
+                            RULE CODE
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
-                          NOTIFICATION EMAIL
+                            CAMPAIGN CODE
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
-                          DEDUPE STATUS
+                            MIN SALARY
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
-                          CREATED AT
+                            MAX SALARY
+                        </Table.Th>
+                        <Table.Th className="text-gray-500 font-semibold">
+                            MIN AGE
+                        </Table.Th>
+                        <Table.Th className="text-gray-500 font-semibold">
+                            MAX AGE
+                        </Table.Th>
+                        <Table.Th className="text-gray-500 font-semibold">
+                            GENDER
+                        </Table.Th>
+                        <Table.Th className="text-gray-500 font-semibold">
+                            CITY
+                        </Table.Th>
+                        <Table.Th className="text-gray-500 font-semibold">
+                            PROVINCE
+                        </Table.Th>
+                        <Table.Th className="text-gray-500 font-semibold">
+                            CREATED AT
                         </Table.Th>
                       </Table.Tr>
                     </Table.Thead>
@@ -233,7 +298,6 @@ const DMARecordsTable = () => {
                     </Table.Tbody>
       
                 </Table>
-
               </Table.ScrollContainer>
               {/**Pagination Section */}
                 {filteredRecords.length > 0 && (
@@ -263,4 +327,4 @@ const DMARecordsTable = () => {
   )
 }
 
-export default DMARecordsTable
+export default CampaignRulesTable

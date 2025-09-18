@@ -202,6 +202,7 @@ export const DmaPage: React.FC = () => {
               </div>
             ))}
           </div>
+
         </Card>
 
         <Card shadow="sm" padding="lg" radius="md">
@@ -233,7 +234,10 @@ export const DmaPage: React.FC = () => {
             </div>
           </div>
         </Card>
+
       </SimpleGrid>
     </div>
   );
+
 };
+

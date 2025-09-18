@@ -28,9 +28,7 @@ const AppContent: React.FC = () => {
 
 }; */
 
-
 function App(){
-
   return(
     <MantineProvider theme={{
           primaryColor: 'blue',

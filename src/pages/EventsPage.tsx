@@ -24,6 +24,7 @@ import {
   IconBuildingSkyscraper,
 } from '@tabler/icons-react';
 
+
 const EventsPage = () => {
   const upcomingEvents = [
     {
@@ -106,10 +107,16 @@ const EventsPage = () => {
         <div>
           <Group justify="space-between" mb="lg">
             <Title order={2} c="dark">
-              Events Calendar
+              DEDUPE CAMPAIGNS 
             </Title>
             <Button leftSection={<IconPlus size={16} />}>
-              Create Event
+              MANUAL DEDUPE FILE INSERT
+            </Button>
+            <Button leftSection={<IconPlus size={16}/>}>
+              INSERT DEDUPE LIST
+            </Button>
+            <Button leftSection={<IconPlus size={16}/>}>
+              INSERT ENRICHED DATA
             </Button>
           </Group>
           <Text c="dimmed" size="sm">

@@ -30,10 +30,7 @@ import { FilesIcon } from 'lucide-react';
 import DMARecordsTable from '../components/DMARecordsTable';
 
 const DMARecorsPage = () => {
-
   const [opened,{open,close}]=useDisclosure(false)
-
-
   const courses = [
     {
       title: 'Advanced React Development',
@@ -135,7 +132,7 @@ const DMARecorsPage = () => {
               </Paper>
             </Modal>
             <Button leftSection={<IconBook size={16} />} variant='outline' onClick={open}>
-              UPLOAD
+              UPLOAD DMA RECORDS
             </Button>
           </Group>
           <Text c="dimmed" size="md">
@@ -174,6 +171,7 @@ const DMARecorsPage = () => {
         </Group>
         <DMARecordsTable/>
       </Stack>
+
     </Container>
   );
 };

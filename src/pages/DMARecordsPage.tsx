@@ -26,7 +26,7 @@ import {
   IconTrophy,
   IconClock
 } from '@tabler/icons-react';
-import { FilesIcon } from 'lucide-react';
+import { FilesIcon,UploadIcon } from 'lucide-react';
 import DMARecordsTable from '../components/DMARecordsTable';
 
 const DMARecorsPage = () => {
@@ -131,7 +131,7 @@ const DMARecorsPage = () => {
                  </form>
               </Paper>
             </Modal>
-            <Button leftSection={<IconBook size={16} />} variant='outline' onClick={open}>
+            <Button leftSection={<UploadIcon size={16} />} variant='outline' onClick={open}>
               UPLOAD DMA RECORDS
             </Button>
           </Group>

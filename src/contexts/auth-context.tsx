@@ -46,8 +46,5 @@ export function useAuthContext(){
     if(context===undefined){
         throw new Error("context error")
     }
-    console.log("print the context")
-    console.log(context)
-
     return context
 }

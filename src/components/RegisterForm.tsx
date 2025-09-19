@@ -12,6 +12,7 @@ interface RegisterFormProps {
 }
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
+
   const { register: registerUser, isRegisterLoading, registerError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -40,7 +41,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
         <Text c="dimmed" size="sm">
-          Join us today and get started
+          Create an account on the als
         </Text>
       </div>
 
@@ -50,7 +51,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
             <TextInput
               {...register('first_name')}
               label="First Name"
-              placeholder="John"
+              placeholder="First Name"
               leftSection={<User size={16} />}
               error={errors.first_name?.message}
               size="md"
@@ -59,7 +60,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
             <TextInput
               {...register('last_name')}
               label="Last Name"
-              placeholder="Doe"
+              placeholder="Last Name"
               leftSection={<User size={16} />}
               error={errors.last_name?.message}
               size="md"
@@ -70,7 +71,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
           <TextInput
             {...register('email')}
             label="Email Address"
-            placeholder="john.doe@example.com"
+            placeholder="enter your email"
             leftSection={<Mail size={16} />}
             error={errors.email?.message}
             size="md"
@@ -139,3 +140,4 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
     </div>
   );
 };
+

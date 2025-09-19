@@ -30,43 +30,9 @@ import { FilesIcon,UploadIcon } from 'lucide-react';
 import DMARecordsTable from '../components/DMARecordsTable';
 
 const DMARecorsPage = () => {
-  const [opened,{open,close}]=useDisclosure(false)
-  const courses = [
-    {
-      title: 'Advanced React Development',
-      instructor: 'Dr. Sarah Wilson',
-      progress: 65,
-      duration: '12 weeks',
-      level: 'Advanced',
-      rating: 4.8,
-      enrolled: 1248,
-      status: 'in-progress',
-      image: 'https://images.pexels.com/photos/2102415/pexels-photo-2102415.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1',
-    },
-    {
-      title: 'Machine Learning Fundamentals',
-      instructor: 'Prof. Michael Chen',
-      progress: 0,
-      duration: '16 weeks',
-      level: 'Intermediate',
-      rating: 4.9,
-      enrolled: 2156,
-      status: 'not-started',
-      image: 'https://images.pexels.com/photos/8439093/pexels-photo-8439093.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1',
-    },
-    {
-      title: 'UI/UX Design Principles',
-      instructor: 'Emma Rodriguez',
-      progress: 100,
-      duration: '8 weeks',
-      level: 'Beginner',
-      rating: 4.7,
-      enrolled: 892,
-      status: 'completed',
-      image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1',
-    },
-  ];
 
+  const [opened,{open,close}]=useDisclosure(false);
+  //FETCH DMA RECORDS
 
   const stats = [
     { title: 'DMA Credits', value: '8', icon: IconBook, color: 'blue' },
@@ -75,37 +41,12 @@ const DMARecorsPage = () => {
     { title: 'DMA WHAT', value: '15', icon: IconTrophy, color: 'purple' },
   ];
 
-  const achievements = [
-    { title: 'Quick Learner', description: 'Complete 3 courses in a month', color: 'gold' },
-    { title: 'Consistent Student', description: '30-day learning streak', color: 'green' },
-    { title: 'Certificate Master', description: 'Earn 5 certificates', color: 'blue' },
-  ];
 
-  const getStatusColor = (status: string) => {
-
-    switch (status) {
-      case 'completed': return 'green';
-      case 'in-progress': return 'blue';
-      case 'not-started': return 'gray';
-      default: return 'gray';
-    }
-  };
-
-
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'Beginner': return 'green';
-      case 'Intermediate': return 'orange';
-      case 'Advanced': return 'red';
-      default: return 'gray';
-    }
-  };
 
   const ACCEPTED_FILE_TYPES = 'text/csv, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-
+  
   return (
     <Container size="xl" px={0}>
-
       <Stack gap="xl">
         <div>
           <Group justify="space-between" mb="lg">
@@ -139,7 +80,6 @@ const DMARecorsPage = () => {
             Track your DMA records
           </Text>
         </div>
-
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
 
           {stats.map((stat) => (
@@ -171,7 +111,6 @@ const DMARecorsPage = () => {
         </Group>
         <DMARecordsTable/>
       </Stack>
-
     </Container>
   );
 };

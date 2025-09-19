@@ -1,62 +1,86 @@
+import React from 'react';
 import {
   Container,
   Title,
   Grid,
   Card,
   Text,
+  Progress,
   Badge,
   Group,
   ActionIcon,
   Stack,
-  Button,
   Avatar,
-  Timeline,
+  Button,
   SimpleGrid,
-  Modal
 } from '@mantine/core';
-
-import { useDisclosure } from '@mantine/hooks';
 import {
-  IconCalendarEvent,
-  IconMapPin,
+  IconBriefcase,
   IconClock,
+  IconCircleCheck,
+  IconAlertCircle,
   IconUsers,
-  IconPlus,
-  IconVideo,
-  IconBuildingSkyscraper,
+  IconTrendingUp,
+  IconCalendar,
+  IconDots,
+  IconFiles
 } from '@tabler/icons-react';
 
-
-
-const EventsPage = () => {
+const HomePage = () => {
+  
+  const projects = [
+    {
+      name: 'Project Alpha',
+      description: 'Strategic initiative for Q1 2025',
+      progress: 75,
+      status: 'active',
+      team: 5,
+      deadline: '2025-03-15',
+      priority: 'high',
+    },
+    {
+      name: 'Website Redesign',
+      description: 'Complete overhaul of company website',
+      progress: 45,
+      status: 'active',
+      team: 8,
+      deadline: '2025-04-20',
+      priority: 'medium',
+    },
+    {
+      name: 'Data Migration',
+      description: 'Migrate legacy systems to cloud',
+      progress: 90,
+      status: 'review',
+      team: 3,
+      deadline: '2025-02-28',
+      priority: 'high',
+    },
+  ];
 
   const stats = [
-    { title: 'Dedupe Campaigns', value: '12', icon: IconCalendarEvent, color: 'blue' },
-    { title: '######', value: '4', icon: IconClock, color: 'green' },
-    { title: '########', value: '6', icon: IconVideo, color: 'purple' },
-    { title: '#######', value: '234', icon: IconUsers, color: 'orange' },
+    { title: 'Campaigns', value: '12', icon: IconBriefcase, color: 'blue' },
+    { title: 'dedupe campaigns', value: '148', icon: IconCircleCheck, color: 'green' },
+    { title: 'campaigns rules', value: '24', icon: IconUsers, color: 'orange' },
+    { title: 'DMA records', value: '7', icon: IconFiles, color: 'red' },
   ];
+
   
+
   return (
     <Container size="xl" px={0}>
       <Stack gap="xl">
         <div>
           <Group justify="space-between" mb="lg">
             <Title order={2} c="dark">
-              DEDUPE CAMPAIGNS 
+              ALS DASHBOARD
             </Title>
-            <Button leftSection={<IconPlus size={16} />}>
-              MANUAL DEDUPE FILE INSERT
-            </Button>
-            <Button leftSection={<IconPlus size={16}/>}>
-              INSERT DEDUPE LIST
-            </Button>
-            <Button leftSection={<IconPlus size={16}/>}>
-              INSERT ENRICHED DATA
+            <Button leftSection={<IconBriefcase size={16} />}>
+              New Project
             </Button>
           </Group>
           <Text c="dimmed" size="sm">
-            Manage and observe dedupe campaigns
+            Manage campaigns, set campaign rules and track dma records 
           </Text>
         </div>
 
@@ -85,9 +109,10 @@ const EventsPage = () => {
           ))}
         </SimpleGrid>
 
+        
       </Stack>
     </Container>
   );
 };
 
-export default EventsPage;
+export default HomePage;

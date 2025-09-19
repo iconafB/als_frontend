@@ -8,14 +8,14 @@ import {notifications} from '@mantine/notifications'
 import {IconBell,IconDownload,IconRefresh,IconFilter,IconSearch,IconPlus ,IconBriefcase, IconCalendar, IconCalendarEvent, IconLogout, IconMenu2, IconSchool, IconSettings, IconUser, IconTable} from '@tabler/icons-react'
 
 import DMAPage from '../pages/DMARecordsPage';
-import EventsPage from '../pages/EventsPage';
+import DedupeCampaignsPage from '../pages/DedupeCampaignsPage';
 import ProfilesPage from '../pages/ProfilesPage';
-import WorkPage from '../pages/WorkPage';
-
+import HomePage from '../pages/HomePage';
 import CampaignsTable from './CampaignsTable';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-
-type PageType='home'|'dedupe'|'education'|'profiles'|'campaigns'
+type PageType='home'|'dedupe'|'education'|'dma'|'campaigns'
 
 export const Dashboard: React.FC = () => {
 
@@ -23,15 +23,14 @@ export const Dashboard: React.FC = () => {
 
   const [activePage, setActivePage] = useState<PageType>('home')
 
+  const navigate=useNavigate()
 
   const handleLogout=()=>{
-
-    notifications.show({
-      title:'Logged Out',
-      message:'You have been logged out',
-      color: 'blue'
-    })
-
+    toast.success("Logout from the als dashboard")
+    localStorage.removeItem("token");
+    console.log("print the token from the localStorage")
+    console.log(localStorage.getItem("token"))
+    navigate("/")
   }
 
    const handleSidebarAction = (action: string, page: PageType) => {
@@ -58,18 +57,18 @@ export const Dashboard: React.FC = () => {
     const renderPage = () => {
     switch (activePage) {
       case 'home':
-        return <WorkPage />;
+        return <HomePage />;
       case 'dedupe':
-        return <EventsPage />;
+        return <DedupeCampaignsPage />;
       case 'education':
         return <DMAPage />;
-      case 'profiles':
+      case 'dma':
         return <ProfilesPage />;
       case 'campaigns':
         return <CampaignsTable/>;
         
       default:
-        return <WorkPage />;
+        return <HomePage />;
     }
     };
 
@@ -89,6 +88,7 @@ export const Dashboard: React.FC = () => {
           <div className='p-40'>
             <AppShell.Header>
               <Group h="100%" justify='space-between'>
+                <div className='px-18'>
                 <Group>
                   <ActionIcon variant='subtle' color='gray' onClick={toggle} hiddenFrom='sm'>
                     <IconMenu2 size={18}/>
@@ -97,6 +97,7 @@ export const Dashboard: React.FC = () => {
                       ALS Dashboard
                     </Text>
                 </Group>
+                </div>
               <Tabs
                 value={activePage}
                 onChange={(value)=>setActivePage(value as PageType)}
@@ -113,7 +114,7 @@ export const Dashboard: React.FC = () => {
                   <Tabs.Tab value='dedupe' leftSection={<IconCalendar size={16}/>} fz="lg" fw="bold">
                     DEDUPE CAMPAIGNS
                   </Tabs.Tab>
-                  <Tabs.Tab value='profiles' leftSection={<IconUser size={16}/>} fz="lg" fw="bold">
+                  <Tabs.Tab value='dma' leftSection={<IconUser size={16}/>} fz="lg" fw="bold">
                     CAMPAIGN RULES
                   </Tabs.Tab>
                   <Tabs.Tab value='education' leftSection={<IconSchool size={16}/>} fz="lg" fw="bold">
@@ -187,9 +188,6 @@ export const Dashboard: React.FC = () => {
                     fullWidth
                     >
                     DEDUPE CAMPAIGN
-                    <Badge size="xs" ml="auto">
-                      3
-                    </Badge>
                   </Button>
                   <Button
                     variant={activePage === 'education' ? 'filled' : 'subtle'}
@@ -201,10 +199,10 @@ export const Dashboard: React.FC = () => {
                     DMA
                   </Button>
                   <Button
-                    variant={activePage === 'profiles' ? 'filled' : 'subtle'}
+                    variant={activePage === 'dma' ? 'filled' : 'subtle'}
                     leftSection={<IconUser size={16} />}
                     justify="flex-start"
-                    onClick={() => setActivePage('profiles')}
+                    onClick={() => setActivePage('dma')}
                     fullWidth
                     >
                     CAMPAIGN RULES
@@ -233,13 +231,13 @@ export const Dashboard: React.FC = () => {
                 </Text>
                 <Stack gap="xs">
                   <Text size='xs' c="dimmed">
-                    Project Alpha Updated
+                    CAMPAIGNS LOADED
                   </Text>
                    <Text size='xs' c="dimmed">
-                    Meeting Scheduled
+                    DMA RECORDS READY
                   </Text>
                    <Text size='xs' c="dimmed">
-                    Course Completed
+                    DEDUPED CAMPAIGNS UPLOAD
                   </Text>
                 </Stack>
               </div>

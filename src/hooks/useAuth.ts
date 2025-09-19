@@ -13,9 +13,9 @@ export const useAuth=()=>{
     const navigate=useNavigate()
 
     const loginMutation=useMutation({
+      
         mutationFn:auth_api.login_user,
         onSuccess:(data)=>{
-            //set the access token on the localStorage
             localStorage.setItem('token',data.access_token);
             setTimeout(() => {navigate("/dashboard");}, 100);
             toast.success("logged in successfully");
@@ -32,6 +32,8 @@ export const useAuth=()=>{
 
    const logout = () => {
     localStorage.removeItem('token');
+     console.log("print the removed token")
+    console.log(localStorage.getItem('token'))
     localStorage.removeItem('user');
     queryClient.setQueryData(['user'], null);
   };

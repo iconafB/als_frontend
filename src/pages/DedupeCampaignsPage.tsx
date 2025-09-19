@@ -12,7 +12,8 @@ import {
   Avatar,
   Timeline,
   SimpleGrid,
-  Modal
+  Modal,
+  FileInput
 } from '@mantine/core';
 
 import { useDisclosure } from '@mantine/hooks';
@@ -23,6 +24,7 @@ import {
   IconUsers,
   IconPlus,
   IconVideo,
+  IconFile,
   IconBuildingSkyscraper,
 } from '@tabler/icons-react';
 
@@ -91,11 +93,37 @@ const DedupeCampaignsPage = () => {
 
       </Stack>
 
-      <Modal opened={manualOpened} onClose={manualDedupeInsertClose} title="MANUAL DEDUPE FILE INSERT">
-        Insert Files Manually
+      <Modal opened={manualOpened} onClose={manualDedupeInsertClose} title="MANUAL DEDUPE FILE INSERT" size="lg">
+        <form>
+          <Stack>
+            <FileInput
+              label="MANUAL DEDUPE FILE"
+              placeholder="enter manual dedupe file"
+              leftSection={<IconFile size={30}/>}
+              p={12}
+              clearable
+            />
+          </Stack>
+          <div className='flex justify-center items-center gap-15 mt-4'>
+            <Button type='submit' variant='subtle' justify='center'>
+            UPLOAD
+            </Button>
+            <Button variant='subtle' color='red' onClick={manualDedupeInsertClose}>
+            CANCEL
+            </Button>
+          </div>
+        </form>
       </Modal>
       <Modal opened={openedInsertDedupeList} onClose={closeInsertDedupeList} title="IMSERT DEDUPE LIST">
-
+        <form>
+          <Stack>
+            <FileInput
+              label="INSERT DEDUPE LIST"
+              placeholder="insert dedupe list"
+              leftSection={<IconFile size={24}/>}
+            />
+          </Stack>
+        </form>
       </Modal>
       
       <Modal opened={openedInsertEnrichedData} onClose={closeInsertEnrichedData} title="INSERT ENRICHED DATA">

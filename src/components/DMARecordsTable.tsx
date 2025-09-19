@@ -62,7 +62,7 @@ const DMARecordsTable = () => {
       setCurrentPage(1);
     }, [searchTerm, auditIdFilter, notificationEmailFilter, createdAtFilter]);
   
-  
+    
     const clearFilters = () => {
       setSearchTerm('');
       setAuditIdFilter('');
@@ -70,7 +70,6 @@ const DMARecordsTable = () => {
       setCreatedAtFilter('');
       setIsProcessedFilter('');
       setCurrentPage(1);
-
     };
 
 

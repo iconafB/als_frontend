@@ -16,13 +16,15 @@ type CampaignFormData=z.infer<typeof campaignSchema>
 
 export function CreateCampaign(){
 
+
     const {control,handleSubmit,reset,formState:{errors}}=useForm<CampaignFormData>({
         defaultValues:{
             campaign_name:'',
             campaign_code:'',
             branch:''
         }
-    })
+    });
+    
     //useMutation to create a campaign
     const campaign_mutation=useMutation({
         mutationFn:campaigns_api.create_campaign,
@@ -85,7 +87,6 @@ export function CreateCampaign(){
                             />
                         )}
                     />
-                    
                 </Stack>
 
                 <Group justify="center" mt="md">

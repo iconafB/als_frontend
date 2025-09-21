@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Container,
   Title,
@@ -14,6 +15,8 @@ import {
   Button,
   SimpleGrid,
 } from '@mantine/core';
+
+
 import {
   IconBriefcase,
   IconClock,
@@ -26,38 +29,9 @@ import {
   IconFiles
 } from '@tabler/icons-react';
 
+
 const HomePage = () => {
   
-  const projects = [
-    {
-      name: 'Project Alpha',
-      description: 'Strategic initiative for Q1 2025',
-      progress: 75,
-      status: 'active',
-      team: 5,
-      deadline: '2025-03-15',
-      priority: 'high',
-    },
-    {
-      name: 'Website Redesign',
-      description: 'Complete overhaul of company website',
-      progress: 45,
-      status: 'active',
-      team: 8,
-      deadline: '2025-04-20',
-      priority: 'medium',
-    },
-    {
-      name: 'Data Migration',
-      description: 'Migrate legacy systems to cloud',
-      progress: 90,
-      status: 'review',
-      team: 3,
-      deadline: '2025-02-28',
-      priority: 'high',
-    },
-  ];
-
   const stats = [
     { title: 'Campaigns', value: '12', icon: IconBriefcase, color: 'blue' },
     { title: 'dedupe campaigns', value: '148', icon: IconCircleCheck, color: 'green' },

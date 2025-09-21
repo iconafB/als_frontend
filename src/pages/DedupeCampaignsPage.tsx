@@ -16,7 +16,9 @@ import {
   FileInput
 } from '@mantine/core';
 
+
 import { useDisclosure } from '@mantine/hooks';
+
 import {
   IconCalendarEvent,
   IconMapPin,
@@ -44,6 +46,7 @@ const DedupeCampaignsPage = () => {
   const [openedInsertEnrichedData,{open:openInsertEnrichedData,close:closeInsertEnrichedData}]=useDisclosure(false)
   
   return (
+
     <Container size="xl" px={0}>
       <Stack gap="xl">
         <div>
@@ -95,6 +98,7 @@ const DedupeCampaignsPage = () => {
 
       <Modal opened={manualOpened} onClose={manualDedupeInsertClose} title="MANUAL DEDUPE FILE INSERT" size="lg">
         <form>
+          {/**Manual Dedupe file upload */}
           <Stack>
             <FileInput
               label="MANUAL DEDUPE FILE"
@@ -114,9 +118,12 @@ const DedupeCampaignsPage = () => {
           </div>
         </form>
       </Modal>
+
       <Modal opened={openedInsertDedupeList} onClose={closeInsertDedupeList} title="IMSERT DEDUPE LIST">
+        {/**insert dedupe list */}
         <form>
           <Stack>
+
             <FileInput
               label="INSERT DEDUPE LIST"
               placeholder="insert dedupe list"
@@ -124,14 +131,19 @@ const DedupeCampaignsPage = () => {
             />
           </Stack>
         </form>
+
       </Modal>
       
       <Modal opened={openedInsertEnrichedData} onClose={closeInsertEnrichedData} title="INSERT ENRICHED DATA">
-
+          <form>
+            <Stack>
+              
+            </Stack>
+          </form>
       </Modal>
-
     </Container>
   );
+
 };
 
 export default DedupeCampaignsPage;

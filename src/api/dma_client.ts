@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const token=localStorage.getItem('token')
-const dma_url=""
+const dma_url="http://127.0.0.1:8001"
+
+//create axios client for dma
 
 export const dma_client=axios.create({
     baseURL:dma_url,
@@ -10,8 +12,6 @@ export const dma_client=axios.create({
         ...(token && {Authorization:`Bearer ${token}`})
     },
 });
-
-
 // Add a request interceptor to add the token to all requests
 dma_client.interceptors.request.use(
   (config) => {
@@ -29,7 +29,6 @@ dma_client.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 // Add a response interceptor to handle 401 errors
 
 dma_client.interceptors.response.use(
@@ -42,5 +41,3 @@ dma_client.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-

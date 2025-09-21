@@ -7,17 +7,11 @@ import { useQuery } from "@tanstack/react-query"
 const DMARecordsTable = () => {
 
       const [searchTerm, setSearchTerm] = useState('')
-
       const [auditIdFilter, setAuditIdFilter] = useState('')
-
       const [notificationEmailFilter, setNotificationEmailFilter] = useState('')
-
       const [createdAtFilter, setCreatedAtFilter] = useState('')
-
       const [isProcessedFilter,setIsProcessedFilter]=useState('')
-
       const [currentPage, setCurrentPage] = useState(1);
-
       const [pageSize, setPageSize] = useState(10);
 
       // [opened,{open,close}]=useDisclosure(false)
@@ -62,7 +56,7 @@ const DMARecordsTable = () => {
       setCurrentPage(1);
     }, [searchTerm, auditIdFilter, notificationEmailFilter, createdAtFilter]);
   
-    
+
     const clearFilters = () => {
       setSearchTerm('');
       setAuditIdFilter('');
@@ -127,6 +121,7 @@ const DMARecordsTable = () => {
      </Table.Tr>
   ));
 
+  
   return (
     <div className="space-y-6">
 
@@ -138,14 +133,14 @@ const DMARecordsTable = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-xs">
                     <TextInput
                       label="Search Records"
-                leftSection={<Search size={16}/>}
-                className="col-span-full lg:col-span-1 -mt-0"
-                value={searchTerm}
-                onChange={(event)=>{
-                  console.log(event.currentTarget.value)
-                  setSearchTerm(event.currentTarget.value)
-                }}
-                placeholder="enter audit id,notification email, or created at"
+                      leftSection={<Search size={16}/>}
+                      className="col-span-full lg:col-span-1 -mt-0"
+                      value={searchTerm}
+                      onChange={(event)=>{
+                        setSearchTerm(event.currentTarget.value)
+                      }}
+                      
+                      placeholder="enter audit id,notification email, or created at"
                       w={400}
                     />
 
@@ -252,6 +247,7 @@ const DMARecordsTable = () => {
                           className="flex-shrink-0"
                       />
                    )}
+
                 </div>
               </div>
                 )}

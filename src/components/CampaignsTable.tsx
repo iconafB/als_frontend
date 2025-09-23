@@ -119,6 +119,7 @@ const CampaignsTable = () => {
                 Today Baba
             </Badge>
         </Table.Td>
+        
     </Table.Tr>
  ));
  
@@ -177,7 +178,7 @@ const CampaignsTable = () => {
                     />
                 </Group>
             </Group>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
                 <TextInput
                     placeholder="search all campaign fields...."
@@ -214,7 +215,7 @@ const CampaignsTable = () => {
                     label="Branch"
                 />
 
-            </div>
+                </div>
             {(searchTerm || nameFilter || secondNameFilter || professionFilter)
              &&
              (
@@ -230,6 +231,7 @@ const CampaignsTable = () => {
             }
         </Paper>
         {/**Table section */}
+
 
         <Paper shadow="sm" className="overflow-hidden">
             <Table.ScrollContainer minWidth={500}>
@@ -295,6 +297,7 @@ const CampaignsTable = () => {
                 </div>
             )}
         </Paper>
+       
     </div>
   )
 }

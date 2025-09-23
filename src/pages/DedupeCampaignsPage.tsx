@@ -36,9 +36,9 @@ const DedupeCampaignsPage = () => {
 
   const stats = [
     { title: 'Dedupe Campaigns', value: '12', icon: IconCalendarEvent, color: 'blue' },
-    { title: '######', value: '4', icon: IconClock, color: 'green' },
-    { title: '########', value: '6', icon: IconVideo, color: 'purple' },
-    { title: '#######', value: '234', icon: IconUsers, color: 'orange' },
+    { title: 'Manual Dedupes', value: '4', icon: IconClock, color: 'green' },
+    { title: 'Enriched Data', value: '6', icon: IconVideo, color: 'purple' },
+    { title: 'Dedupe List', value: '234', icon: IconUsers, color: 'orange' },
   ];
   
   const [manualOpened,{open:manualDedupeInsertOpen,close:manualDedupeInsertClose}]=useDisclosure(false)

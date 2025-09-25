@@ -154,9 +154,9 @@ const DMARecordsTable = () => {
                     <Select
                       value={pageSize.toString()}
                       onChange={(value)=>{
-                    setPageSize(Number(value))
-                    setCurrentPage(1)
-                        }}
+                      setPageSize(Number(value))
+                      setCurrentPage(1)
+                          }}
 
                       data={[
                       {value:'5',label:'5 per page'},

@@ -28,6 +28,7 @@ const DedupedCampaignTable = () => {
       })
   
       const filteredRecords = useMemo(() => {
+
           return dma_records.filter((record) => {
             const matchesSearch = searchTerm === '' || 
               Object.values(record).some(value => value.toString().toLowerCase().includes(searchTerm.toLowerCase()));
@@ -59,17 +60,19 @@ const DedupedCampaignTable = () => {
       const totalPages = Math.ceil(filteredRecords.length / pageSize);
       
      useEffect(() => {
-      setCurrentPage(1);
+      setCurrentPage(currentPage);
     }, [searchTerm, campaignNameFilter, campaignCodeFilter, createdAtFilter,branchFilter,leadsFilter]);
   
   
     const clearFilters = () => {
+
         setSearchTerm('');
         setCampaignNameFilter(''),
         setCampaignCodeFilter(''),
         setBranchFilter(''),
         setLeadsFilter(0),
         setCreatedAtFilter('')
+
     };
 
 
@@ -269,7 +272,7 @@ const DedupedCampaignTable = () => {
                 )}
           </Paper>
         </Paper>
-        <Modal opened={openedLoadCampaign} onClose={closeLoadCampaign} withCloseButton={false} title="LOAD CAMPAIGN" size="auto" styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}}>
+        <Modal opened={openedLoadCampaign} onClose={closeLoadCampaign} withCloseButton={false} title="LOAD CAMPAIGN" size="auto" styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}} centered>
             
             <form>
                 <Stack>
@@ -302,12 +305,20 @@ const DedupedCampaignTable = () => {
                     <Flex gap={{base:'sm'}}>
 
                         <NumberInput
-                            label="Salary"
-                            placeholder="enter salary"
+                            label="Minimum Salary"
+                            placeholder="enter minimum salary"
                             defaultValue={10000}
                             step={1000}
                             leftSection={<IconMoneybag color="green"/>}
                         />
+                        <NumberInput
+                            label="Maximum Salary"
+                            placeholder="enter maximum salary"
+                            defaultValue={10000}
+                            step={1000}
+                            leftSection={<IconMoneybag color="green"/>}
+                        />
+
                         <Select
                             label="Gender"
                             placeholder="enter gender"
@@ -330,7 +341,6 @@ const DedupedCampaignTable = () => {
                 </Stack>
 
                 <Flex justify="flex-end" align="center" gap={18} mt={30}>
-                  
                     <Button type="submit" variant="outline" onClick={()=>{console.log("Load Campaign")}}>
                         Load Campaign
                     </Button>

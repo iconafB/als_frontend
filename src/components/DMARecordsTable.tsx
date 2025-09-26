@@ -53,7 +53,8 @@ const DMARecordsTable = () => {
       const totalPages = Math.ceil(filteredRecords.length / pageSize);
       
      useEffect(() => {
-      setCurrentPage(1);
+      //this shit causes a race condition
+      setCurrentPage(currentPage);
     }, [searchTerm, auditIdFilter, notificationEmailFilter, createdAtFilter]);
   
 

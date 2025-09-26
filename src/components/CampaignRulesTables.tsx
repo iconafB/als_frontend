@@ -73,7 +73,7 @@ const CampaignRulesTable = () => {
       const totalPages = Math.ceil(filteredRecords.length / pageSize);
       
      useEffect(() => {
-      setCurrentPage(1);
+      setCurrentPage(currentPage);
     }, [searchTerm, ruleCodeFilter, campCodeFilter, createdAtFilter,minSalaryFilter,maxSalaryFilter,minAgeFilter,maxAgeFilter,genderFilter,cityFilter,provinceFilter]);
   
   

@@ -1,10 +1,11 @@
 import {useState,useMemo,useEffect} from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Table,TextInput,Loader,Alert,Paper,Group,Text,Badge,Select, Pagination,Container, Button, Modal } from "@mantine/core"
+import { Table,TextInput,Loader,Stack,Flex,Alert,Paper,Group,Text,Badge,Select, Pagination,Container, Button, Modal } from "@mantine/core"
 import { AlertCircle,Plus, Search } from "lucide-react"
 import { useDisclosure } from "@mantine/hooks"
 import { fetchPeople } from "../api/mock_api"
 import { CreateCampaign } from "./CreateCampaign"
+import { IconAd, IconBuilding } from "@tabler/icons-react"
 
 const CampaignsTable = () => {
     const [searchTerm, setSearchTerm] = useState('')
@@ -14,6 +15,10 @@ const CampaignsTable = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [opened,{open,close}]=useDisclosure(false)
+
+    const [openedLoadCampaign,{open:openLoadCampaign,close:closeLoadCampaign}]=useDisclosure(false)
+
+
     //Fetch Campaign from the backend api
     const {data:people=[],error,isLoading}=useQuery({
         queryKey:['people'],
@@ -49,7 +54,7 @@ const CampaignsTable = () => {
     const totalPages = Math.ceil(filteredPeople.length / pageSize);
     
    useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(currentPage);
   }, [searchTerm, nameFilter, secondNameFilter, professionFilter]);
 
 
@@ -104,7 +109,7 @@ const CampaignsTable = () => {
             </Badge>
         </Table.Td>
         <Table.Td>
-            <Button size="xs" variant="light" onClick={()=>{console.log("Load Campaign")}} className="hover:bg-blue-600">
+            <Button size="xs" variant="light" onClick={openLoadCampaign} className="hover:bg-blue-600">
                 Load Campaign
             </Button>
         </Table.Td>
@@ -125,6 +130,7 @@ const CampaignsTable = () => {
  
   return (
     <div className="space-y-6">
+
         {/**Search filter section */}
         <Paper p="md" shadow="sm" className="bg-white">
             <Container className="flex justify-start items-start gap-2">
@@ -298,8 +304,45 @@ const CampaignsTable = () => {
             )}
         </Paper>
        
+        <Modal opened={openedLoadCampaign} onClose={closeLoadCampaign} title="Load Campaign" withCloseButton={false} styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}} size="lg">
+            <form>
+                <Stack>
+                    <Select
+                        label="Branch"
+                        placeholder="enter branch name"
+                        leftSection={<IconBuilding color="green"/>} 
+                        required 
+                        data={['HQ','P3','INVNTDBN']}                  
+                    />
+                    <Select
+                        label="Campaign Name"
+                        placeholder="enter campaign name"
+                        required
+                        leftSection={<IconAd color="green"/>}
+                        data={['CAMP_NAME1','CAMP_NAME2','CAMP_NAME3','CAMP_NAME4','CAMP_NAME5']}
+                    />
+                    <Select
+                        label="Campaign Code"
+                        placeholder="enter campaign code"
+                        required
+                        leftSection={<IconAd color="green"/>}
+
+                        data={['CODE_1','CODE_2','CODE_3','CODE_4','CODE_5','CODE_6','CODE_7','CODE_9']}
+                    />
+                </Stack>
+                <Flex justify="end" align="center" gap={12} mt={26}>
+                    <Button variant="outline">
+                        Load
+                    </Button>
+                    <Button color="red" variant="outline" onClick={closeLoadCampaign}>
+                        Cancel
+                    </Button>
+                </Flex>
+            </form>
+        </Modal>
     </div>
   )
+  
 }
 
 export default CampaignsTable

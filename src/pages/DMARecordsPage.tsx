@@ -90,7 +90,6 @@ const DMARecorsPage = () => {
 
   //time update
   useEffect(()=>{
-
     const timeId=setInterval(()=>{
       setCurrentTime(new Date())
     },1000);

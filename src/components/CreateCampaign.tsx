@@ -5,7 +5,6 @@ import { Paper,Stack, TextInput,Select,Group,Button } from "@mantine/core"
 import type z from "zod"
 import { campaigns_api } from "../api/campaigns/campaigns"
 import { toast } from "react-toastify"
-
 type CampaignFormData=z.infer<typeof campaignSchema>
 
 /* interface CreateCampaignModalProps{
@@ -19,9 +18,9 @@ export function CreateCampaign(){
 
     const {control,handleSubmit,reset,formState:{errors}}=useForm<CampaignFormData>({
         defaultValues:{
-            campaign_name:'',
-            campaign_code:'',
-            branch:''
+            branch:'',
+            camp_code:'',
+            campaign_name:''
         }
     });
     
@@ -29,7 +28,7 @@ export function CreateCampaign(){
     const campaign_mutation=useMutation({
         mutationFn:campaigns_api.create_campaign,
         onSuccess:(data)=>{
-            toast.success(`campaign:${data.campaign_name} created at:${data.created_at}`)
+            toast.success(`campaign:${data.campaign_name} created at:${data.branch}`)
             reset();
         },
         onError:(error)=>{
@@ -61,7 +60,7 @@ export function CreateCampaign(){
                         )}
                     />
                     <Controller
-                        name="campaign_code"
+                        name="camp_code"
                         control={control}
                         render={({field})=>(
                             <TextInput
@@ -69,7 +68,7 @@ export function CreateCampaign(){
                                 label="Campaign Code"
                                 required
                                 placeholder="Enter Campaign Code"
-                                error={errors.campaign_code?.message}
+                                error={errors.camp_code?.message}
                             />
                         )}
                     />
@@ -98,3 +97,4 @@ export function CreateCampaign(){
         </Paper>
     )
 }
+

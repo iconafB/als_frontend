@@ -10,7 +10,6 @@ import { IconMoneybag,IconBuildingEstate,IconBadgeAd,IconX } from "@tabler/icons
 
 const DedupedCampaignTable = () => {
 
-
       const [searchTerm, setSearchTerm] = useState('')
       const [campaignNameFilter, setCampaignNameFilter] = useState('')
       const [campaignCodeFilter, setCampaignCodeFilter] = useState('')
@@ -45,6 +44,7 @@ const DedupedCampaignTable = () => {
 
             return matchesSearch && matchesCampaignName &&  matchesCampaignCode && matchesCreatedAt &&  matchesLeads &&  matchesBranch ;
       });
+
     }, [dma_records, searchTerm, campaignNameFilter,  campaignCodeFilter, createdAtFilter, leadsFilter, branchFilter]);
 
 
@@ -65,7 +65,6 @@ const DedupedCampaignTable = () => {
   
   
     const clearFilters = () => {
-
         setSearchTerm('');
         setCampaignNameFilter(''),
         setCampaignCodeFilter(''),
@@ -127,7 +126,6 @@ const DedupedCampaignTable = () => {
                 Load Campaign
            </Button>
          </Table.Td>
-
          <Table.Td className="font-medium">
               <Badge variant="light" color="green" p={18}>
                 {record.leads}
@@ -272,6 +270,7 @@ const DedupedCampaignTable = () => {
                 )}
           </Paper>
         </Paper>
+
         <Modal opened={openedLoadCampaign} onClose={closeLoadCampaign} withCloseButton={false} title="LOAD CAMPAIGN" size="auto" styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}} centered>
             
             <form>
@@ -350,8 +349,11 @@ const DedupedCampaignTable = () => {
                 </Flex>
             </form>
         </Modal>
+
+
     </div>
   )
+  
 }
 
 export default DedupedCampaignTable

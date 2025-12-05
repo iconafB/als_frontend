@@ -1,47 +1,47 @@
+// hooks/useAuth.ts
+// hooks/useAuth.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { auth_api } from "../api/auth/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import { useAuthContext } from "../contexts/auth-context"; // Import context
 
-//import type { LoginFormData,RegisterFormData,User } from "../types/auth";
+export const useAuth = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { updateToken } = useAuthContext(); // Use context to update token
 
-
-export const useAuth=()=>{
-
-    const queryClient=useQueryClient();
-
-    const navigate=useNavigate()
-
-    const loginMutation=useMutation({
-      
-        mutationFn:auth_api.login_user,
-        onSuccess:(data)=>{
-            localStorage.setItem('token',data.access_token);
-            setTimeout(() => {navigate("/dashboard");}, 100);
-            toast.success("logged in successfully");
-        }
-    });
-
-    const registerMutation = useMutation({
-    mutationFn: auth_api.register_user,
+  const loginMutation = useMutation({
+    mutationFn: auth_api.login_user,
     onSuccess: (data) => {
-      toast.success(`${data.first_name} registered`);
+      updateToken(data.access_token); // This updates both state AND localStorage
+      toast.success("Logged in successfully");
+      setTimeout(() => navigate("/dashboard"), 150);
+    },
+    onError: () => {
+      toast.error("Login failed. Please check your credentials.");
     },
   });
 
+  const registerMutation = useMutation({
+    mutationFn: auth_api.register_user,
+    onSuccess: (data) => {
+      toast.success(`${data.first_name} registered successfully`);
+      // Optionally auto-login after register?
+    },
+    onError: () => {
+      toast.error("Registration failed.");
+    },
+  });
 
-   const logout = () => {
-    localStorage.removeItem('token');
-     console.log("print the removed token")
-    console.log(localStorage.getItem('token'))
-    localStorage.removeItem('user');
-    queryClient.setQueryData(['user'], null);
-  };
+  const logout = useCallback(() => {
+    updateToken(null); // Clears token + localStorage
+    queryClient.clear();
+    navigate("/login");
+  }, [updateToken, queryClient, navigate]);
 
-
-
-  
-   return {
+  return {
     login: loginMutation.mutate,
     register: registerMutation.mutate,
     logout,
@@ -50,8 +50,4 @@ export const useAuth=()=>{
     loginError: loginMutation.error,
     registerError: registerMutation.error,
   };
-  
-
-
-}
-
+};

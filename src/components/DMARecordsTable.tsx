@@ -259,4 +259,5 @@ const DMARecordsTable = () => {
   )
 }
 
+
 export default DMARecordsTable

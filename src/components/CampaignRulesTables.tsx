@@ -183,18 +183,17 @@ const CampaignRulesTable = () => {
           <Paper shadow="xs" p="xl">
             <Group mb="mb" justify="space-between">
               <div className="flex justify-between items-center">
-
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-xs">
                     <TextInput
                       label="Search Records"
-                leftSection={<Search size={16}/>}
-                className="col-span-full lg:col-span-1 -mt-0"
-                value={searchTerm}
-                onChange={(event)=>{
-                  console.log(event.currentTarget.value)
-                  setSearchTerm(event.currentTarget.value)
-                }}
-                placeholder="enter audit id,notification email, or created at"
+                      leftSection={<Search size={16}/>}
+                      className="col-span-full lg:col-span-1 -mt-0"
+                      value={searchTerm}
+                      onChange={(event)=>{
+                        console.log(event.currentTarget.value)
+                        setSearchTerm(event.currentTarget.value)
+                      }}
+                      placeholder="enter audit id,notification email, or created at"
                       w={400}
                     />
 

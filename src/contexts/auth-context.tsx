@@ -1,22 +1,20 @@
-import React, { createContext, useContext, useState } from "react";
-import type { UserResponse } from "../api/auth/types";
-import { auth_api } from "../api/auth/auth";
-import { useQuery } from "@tanstack/react-query";
+import React, { createContext, useContext, useState,useCallback,useMemo,useEffect } from "react";
 
 interface AuthContextType{
     token:string | null;
+
     updateToken:(token:string | null)=>void;
+
     isAuthenticated:boolean;
 }
 
-const AuthContext=createContext<AuthContextType|undefined>(undefined)
+
+const AuthContext=createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({children}:{children:React.ReactNode}){
+    const [token, setToken] = useState<string | null>(localStorage.getItem("token"))
 
-    const [token, setToken] = useState<string|null>(localStorage.getItem("token"))
-
-    const updateToken=(token:string|null)=>{
-
+    const updateToken=useCallback((token: string| null)=>{
         setToken(token);
         if(token){
            localStorage.setItem("token",token)
@@ -24,16 +22,29 @@ export function AuthProvider({children}:{children:React.ReactNode}){
         }else{
             localStorage.removeItem("token")
         }
-    };
+    },[]);
 
+    const value=useMemo(()=>({
+        token,
+        updateToken,
+        isAuthenticated:!!token
+    }),[token,updateToken])
 
+    // handle token changes from other tabs or direct localStorage manipulation
+    useEffect(() => {
+        const handleStorageChange = () => {
+        const newToken = localStorage.getItem("token");
+        if (newToken !== token) {
+          setToken(newToken);
+        }
+  };
+
+  window.addEventListener("storage", handleStorageChange);
+  return () => window.removeEventListener("storage", handleStorageChange);
+}, [token]);
     return(
        <AuthContext.Provider
-            value={{
-                 token,
-                 updateToken,
-                 isAuthenticated:!!token
-             }}
+           value={value}
        >
         {children}
        </AuthContext.Provider>

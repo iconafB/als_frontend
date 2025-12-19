@@ -140,8 +140,17 @@ export interface AssignRuleToCampaignPayload{
   camp_code:string;
 }
 
-
 export interface DeleteCampaignRuleResponse{
   message:string;
   succes:boolean;
+}
+
+export interface AssignRuleToCampaignResponse{
+  success:boolean;
+  message:string;
+}
+
+
+export interface TotalNumberOfCampaignRulesResponse{
+  total_number_of_rules:number;
 }

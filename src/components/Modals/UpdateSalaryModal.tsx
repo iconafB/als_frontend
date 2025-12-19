@@ -82,7 +82,6 @@ export const UpdateSalaryModal=({opened,onClose,rule}:UpdateModalProps)=>{
                             />
                             {rule.salary.operator=="between" ? (
                                 <Flex>
-                               
                                     <Controller
                                         name="lower_limit_salary"
                                         control={control}

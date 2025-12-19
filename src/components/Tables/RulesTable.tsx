@@ -89,7 +89,7 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge>
+                  <Badge color='purple'>
                      {rule.gender??"None"}
                   </Badge>
                 </Table.Td>
@@ -99,7 +99,7 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge>
+                  <Badge  color='orange'>
                     {rule.salary?.operator=="between"?`R${rule.salary.lower} - R${rule.salary.upper}`:`R${rule.salary.value}`}
                   </Badge>
                 </Table.Td>
@@ -109,21 +109,20 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge>
-                    {rule?.derived_income?.operator=="between"?`R${rule?.derived_income?.lower}-R${rule?.derived_income?.upper}`:`R${rule?.derived_income?.value}`}
+                  <Badge color='red'>
+                    {rule?.derived_income?.operator=="between"?`R${rule?.derived_income?.lower} - R${rule?.derived_income?.upper}`:`R${rule?.derived_income?.value}`}
                   </Badge>
                 </Table.Td>
                 <Table.Td>
                   <Badge> 
-                    {rule.last_used} days
+                    {rule.last_used} days ago
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge>
+                  <Badge color='grape'>
                     {rule.records_loaded}
                   </Badge>
                   </Table.Td>
-                  
                 <Table.Td>
                   <Button variant='outline'>Actions
                     <Menu shadow="md" width={300} transitionProps={{transition:'pop-top-right',duration:400,timingFunction:'ease'}} trigger='hover'>

@@ -73,7 +73,6 @@ export const LoadCampaignModal=({ opened, onClose,row }:LoadCampaignModalProps) 
           <input className="border p-2 rounded w-full bg-gray-100 cursor-not-allowed"  {...register("branch")}  readOnly/>
           <div>
             <div style={{ height: 15 }} />
-            
           </div>
           <Text fw={600} size="sm">CAMPAIGN CODE</Text>
           <input className="border p-2 rounded w-full bg-gray-100 cursor-not-allowed" {...register("camp_code")} readOnly />

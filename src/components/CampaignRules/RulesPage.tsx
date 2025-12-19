@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useCallback,useMemo } from 'react';
 import { Button, TextInput, Container, Title, Group, Pagination, Stack } from '@mantine/core';
 import { Plus, Search } from 'lucide-react';
 import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
@@ -11,7 +11,7 @@ import { UpdateLeadsModal } from '../Modals/UpdateLeadsModal';
 import { UpdateSalaryModal } from '../Modals/UpdateSalaryModal';
 import { UpdateDerivedIncomeModal } from '../Modals/UpdateDerivedIncomeModal';
 import { useRules, useSearchRules } from '../../hooks/useRules';
-import type { Rule } from '../../api/campaign_rules/types';
+import type { Rule} from '../../api/campaign_rules/types';
 import { UpdateAgeModal } from '../Modals/UpdateAgeModal';
 
 
@@ -20,26 +20,30 @@ export const RulesPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
+  
   const [debouncedSearch] = useDebouncedValue(searchQuery, 500);
+
   const [createModalOpened, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false);
   const [updateModalOpened, { open: openUpdateModal, close: closeUpdateModal }] = useDisclosure(false);
   const [viewModalOpened, { open: openViewModal, close: closeViewModal }] = useDisclosure(false);
-  
   const [assignModalOpened, { open: openAssignModal, close: closeAssignModal }] = useDisclosure(false);
   //const [changeModalOpened, { open: openChangeModal, close: closeChangeModal }] = useDisclosure(false);
   const [updateLeadsOpened,{open:openUpdateLeadsModal,close:closeUpdateLeadsModal}]=useDisclosure(false);
   const [updateSalaryOpened,{open:openUpdateSalaryModal,close:closeUpdateSalaryModal}]=useDisclosure(false)
   const [updateDerivedIncomeOpened,{open:openDerivedIncomeModal,close:closeDerivedIncomeModal}]=useDisclosure(false)
-  
   const [updateAgeOpened,{open:openAgeModal,close:closeAgeModal}]=useDisclosure(false)
   const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
-
   const { data: rulesData, isLoading: isLoadingRules } = useRules(page, pageSize);
+  
+
   const { data: searchData, isLoading: isSearching } = useSearchRules(
     debouncedSearch,
     page,
     pageSize
   );
+
+
+  //campaign fetch rules
 
 
   const isSearching_ = debouncedSearch.length > 0;
@@ -50,6 +54,7 @@ export const RulesPage = () => {
     setPage(1);
   }, [debouncedSearch]);
 
+
   const handleViewRule = (rule: Rule) => {
     setSelectedRule(rule);
     openViewModal();
@@ -58,12 +63,13 @@ export const RulesPage = () => {
   const handleAgeUpdate=(rule:Rule)=>{
     setSelectedRule(rule);
     openAgeModal();
-  }
+  };
 
   const handleViewUpdateSalary=(rule:Rule)=>{
     setSelectedRule(rule);
     openUpdateSalaryModal()
-  }
+  };
+
   const handleUpdateLeads=(rule:Rule)=>{
     setSelectedRule(rule);
     openUpdateLeadsModal();
@@ -83,6 +89,9 @@ export const RulesPage = () => {
     setSelectedRule(rule);
     openAssignModal();
   };
+
+
+
 
   const totalPages = data ? Math.ceil(data.total / pageSize) : 0;
 

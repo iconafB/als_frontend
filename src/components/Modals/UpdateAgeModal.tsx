@@ -14,8 +14,7 @@ interface UpdateModalProps {
 
 export const UpdateAgeModal=({opened,onClose,rule}:UpdateModalProps)=>{
     if(!rule) return null;
-    console.log(rule);
-
+    
     const updateAge=useUpdateAge()
     const {control,handleSubmit,reset}=useForm<UpdateAgePayload>({
 
@@ -35,6 +34,7 @@ export const UpdateAgeModal=({opened,onClose,rule}:UpdateModalProps)=>{
             }))
         }
     },[rule,reset])
+
 
 
     const onSubmit=(data:UpdateAgePayload)=>{
@@ -65,6 +65,8 @@ export const UpdateAgeModal=({opened,onClose,rule}:UpdateModalProps)=>{
             }
            
         };
+
+
 
 
     return(

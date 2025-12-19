@@ -2,10 +2,13 @@ import { Modal, Button, TextInput, Select, Checkbox, NumberInput, Group, Stack,F
 import { useForm, Controller } from 'react-hook-form';
 import type { CreateRulePayload, LogicalOperator, NumericField } from '../../api/campaign_rules/types';
 import { useCreateRule } from '../../hooks/useRules';
+import { useEffect } from 'react';
 
 interface CreateRuleModalProps {
   opened: boolean;
   onClose: () => void;
+  onSuccess:(createdRule:any)=>void;
+  campaignCode:string;
 }
 
 const operatorOptions: { value: LogicalOperator; label: string }[] = [
@@ -18,11 +21,15 @@ const operatorOptions: { value: LogicalOperator; label: string }[] = [
   { value: 'between', label: 'Between' },
 ];
 
-export const CreateRuleModal = ({ opened, onClose }: CreateRuleModalProps) => {
+
+
+
+export const CreateRuleModal = ({ opened, onClose,campaignCode,onSuccess }: CreateRuleModalProps) => {
 
   const createRule = useCreateRule();
 
-  const { control, handleSubmit, watch, reset } = useForm<CreateRulePayload & { campaign_code: string; status: string }>({
+  const { control, handleSubmit, watch, reset,setValue } = useForm<CreateRulePayload & { campaign_code: string; status: string }>({
+    
     defaultValues: {
       campaign_code: '',
       is_deduped: false,
@@ -38,7 +45,7 @@ export const CreateRuleModal = ({ opened, onClose }: CreateRuleModalProps) => {
       },
       typedata: {
         operator: 'equal',
-        value: 'Status',
+        value: '',
       },
       is_active: {
         operator: 'equal',
@@ -65,21 +72,25 @@ export const CreateRuleModal = ({ opened, onClose }: CreateRuleModalProps) => {
         value: 0,
       },
     },
+
   });
 
+  //auto populate campaign_code when the modal open or campaignCode changes
 
-
+  useEffect(()=>{
+    if(campaignCode) setValue('campaign_code',campaignCode)
+  },[campaignCode]);
 
   const salaryOperator = watch('salary.operator');
   const ageOperator = watch('age.operator');
   const derivedIncomeOperator = watch('derived_income.operator');
 
-  const onSubmit = (data: CreateRulePayload & { campaign_code: string}) => {
+  const onSubmit = (data: CreateRulePayload &{campaign_code:string}) => {
+
     const { campaign_code, ...payload } = data;
 
     const sanitizeNumericFields=(field:NumericField)=>{
       if (field.operator==="between"){
-
         return {
           operator:field.operator,
           value:0,
@@ -91,8 +102,6 @@ export const CreateRuleModal = ({ opened, onClose }: CreateRuleModalProps) => {
       return field;
     }
 
-
-
     const sanitizedPayload={
       ...payload,
       salary: sanitizeNumericFields(payload.salary),
@@ -101,10 +110,11 @@ export const CreateRuleModal = ({ opened, onClose }: CreateRuleModalProps) => {
     }
 
     createRule.mutate(
-      { campaignCode: campaign_code, payload:sanitizedPayload },
+      { campaignCode: campaignCode, payload:sanitizedPayload },
       {
-        onSuccess: () => {
+        onSuccess: (rule) => {
           reset();
+          onSuccess(rule)
           onClose();
         },
       }
@@ -121,7 +131,7 @@ export const CreateRuleModal = ({ opened, onClose }: CreateRuleModalProps) => {
           <Controller
             name="campaign_code"
             control={control}
-            render={({ field }) => <TextInput label="Campaign Code" required {...field} />}
+            render={({ field }) => <TextInput label="Campaign Code" required {...field} readOnly />}
           />
           
           <Controller

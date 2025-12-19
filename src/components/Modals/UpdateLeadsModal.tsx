@@ -13,8 +13,7 @@ interface UpdateModalProps {
 
 export const UpdateLeadsModal=({opened,onClose,rule}:UpdateModalProps)=>{
     if(!rule) return null;
-
-    console.log(rule.rule_code);
+    
     const updateLeadsNumber=useUpdateLeadsNumber()
 
     const {control,handleSubmit,reset}=useForm<UpdateLeadsNumber>({

@@ -1,17 +1,19 @@
 import {Container,Title,Grid,Card,Text,Progress,Paper,Badge,Group,ActionIcon,Stack,Avatar,Button,SimpleGrid,} from '@mantine/core';
-
-
 import {IconBriefcase,IconClock,IconCircleCheck,IconAlertCircle,IconUsers,IconTrendingUp,IconCalendar,IconDots,IconFiles} from '@tabler/icons-react';
-
 import { ClipboardPlus, Filter, Settings, Target } from 'lucide-react';
+import { useFetchTotalCampaigns } from '../hooks/useCampaigns';
+import { useTotalCampaignRules } from '../hooks/useRules';
 
 
 const HomePage = () => {
-  
+
+  const totalCampaigns=useFetchTotalCampaigns()
+  const totalCampaignRules=useTotalCampaignRules()
+
   const stats = [
-    { title: 'Campaigns', value: '12', icon: IconBriefcase, color: 'blue' },
+    { title: 'Campaigns', value: totalCampaigns?.data?.total_number_of_campaigns, icon: IconBriefcase, color: 'blue' },
     { title: 'dedupe campaigns', value: '148', icon: IconCircleCheck, color: 'green' },
-    { title: 'campaigns rules', value: '24', icon: IconUsers, color: 'orange' },
+    { title: 'campaigns rules', value: totalCampaignRules?.data?.total_number_of_rules, icon: IconUsers, color: 'orange' },
     { title: 'DMA records', value: '7', icon: IconFiles, color: 'red' },
   ];
 

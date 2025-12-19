@@ -1,32 +1,33 @@
 import { useState, useMemo, useEffect } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import {Table, TextInput, Loader, Stack, Flex, Alert, Paper,Group, Text, Badge, Select, Pagination, Container, Button, Modal} from "@mantine/core";
+import {Table, TextInput, Loader, Alert, Paper,Group, Text, Badge, Select, Pagination, Container, Button, Modal} from "@mantine/core";
 import { AlertCircle, Plus, Search } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
-import { CreateCampaign } from "./CreateCampaign";
+import { CreateCampaignModal } from "./Modals/CreateCampaign";
 import { campaigns_api } from "../api/campaigns/campaigns";
 import type { get_all_campaigns,create_campaign } from "../api/campaigns/types";
 import { LoadCampaignModal } from "./Campaigns/LoadCampaignModal";
-
+import CreateCampaignsFlow from "./WizardModalForms/CreateCampaignsFlow";
 
 const Campaigns = () => {
+  
   const [campaignPage, setCampaignPage] = useState(1);
+
   const [pageSize, setPageSize] = useState(10);
-
-  const [campaignName, setcampaignName] = useState("")
-
-  const [campaignCode, setCampaignCode] = useState("")
-
   // Filters
   const [searchCampaigns, setSearchCampaigns] = useState("");
   const [campaignNameFilter, setCampaignNameFilter] = useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [campaignCodesFilter, setCampaignCodesFilter] = useState("");
-  const [openedCreate, { open: openCreate, close: closeCreate }]=useDisclosure(false);
+  //const [openedCreate, { open: openCreate, close: closeCreate }]=useDisclosure(false);
+
   //const [openedLoadCampaign,{ open: openLoadCampaign, close: closeLoadCampaign }] = useDisclosure(false);
   const [selectedRow, setSelectedRow] = useState<any>(null)
-
+  
   const [openCampaignLoadingModal, setOpenCampaignLoadingModal] = useState(false)
+
+  const [flowOpen, setFlowOpen] = useState(false)
+  const [modalOpen,setModalOpen] = useState(false)
 
   // Fetch campaigns
   const {
@@ -39,11 +40,9 @@ const Campaigns = () => {
     placeholderData: keepPreviousData,
   });
 
-
-  
-
   // Filter Logic
   const filteredCampaigns = useMemo(() => {
+
     if (!campaigns_data?.results) return [];
 
     return campaigns_data?.results.filter((campaign:create_campaign) => {
@@ -150,21 +149,18 @@ const Campaigns = () => {
           LOAD CAMPAIGN
         </Button>
       </Table.Td>
-      <Table.Td>
-        <Button>
-            ACTIONS
-        </Button>
-      </Table.Td>
     </Table.Tr>
   ));
 
   return (
+
     <div className="space-y-6">
       {/* Search & Create Section */}
       <Paper p="md" shadow="sm" className="bg-white">
         <Container className="flex justify-start items-start gap-2">
+
           {/* Create Campaign Modal */}
-          <Modal
+          {/* <Modal
             opened={openedCreate}
             onClose={closeCreate}
             title={
@@ -176,12 +172,35 @@ const Campaigns = () => {
             size="lg"
             radius={12}
           >
-            <CreateCampaign />
-          </Modal>
+            <CreateCampaignModal onClose={closeCreate}/>
+          </Modal> */}
 
-          <Button variant="green" onClick={openCreate} leftSection={<Plus />}>
-            CREATE CAMPAIGN
+          <Button onClick={()=>{
+                setModalOpen(true);
+                setFlowOpen(true);
+            }}
+
+            variant="filled" color="blue"
+            >
+            Create Campaign Flow
           </Button>
+
+          {/**Parent Modal */}
+
+          <Modal opened={modalOpen} onClose={()=>setModalOpen(false)}>
+            {/**Inside this modal, we start the flow */}
+             <CreateCampaignsFlow
+                opened={flowOpen} //starts the flow when modal opens
+                onClose={()=>{
+                  setFlowOpen(false); //close the flow
+                  setModalOpen(false); //close the parent modal
+                }}//closes the flow
+              />
+          </Modal>
+          {/* <Button variant="green" onClick={openCreate} leftSection={<Plus />}>
+            CREATE CAMPAIGN
+          </Button> */}
+
         </Container>
 
         {/* Filters */}
@@ -276,7 +295,6 @@ const Campaigns = () => {
                 <Table.Th>CAMPAIGN CODES</Table.Th>
                 <Table.Th>BRANCH</Table.Th>
                 <Table.Th>LOAD CAMPAIGN</Table.Th>
-                <Table.Th>ACTIONS</Table.Th>
               </Table.Tr>
             </Table.Thead>
 
@@ -323,6 +341,8 @@ const Campaigns = () => {
       {/* </Modal> */}
     </div>
   );
+
+
 };
 
 export default Campaigns;

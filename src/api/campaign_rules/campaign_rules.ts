@@ -1,9 +1,9 @@
 import { campaigns_client } from "../campaigns_client"
 import axios from "axios";
-import type { CreateRulePayload, PaginatedRulesResponse, Rule, UpdateRulePayload,ChangeRuleResponse,UpdateLeadsNumber, UpdateLeadsNumberResponse,UpdateSalaryPayload, UpdateDerivedIncomePayload,UpdateAgePayload,ChangeRulePayload,DeleteCampaignRuleResponse } from './types';
+import type { CreateRulePayload, PaginatedRulesResponse, Rule, UpdateRulePayload,ChangeRuleResponse,UpdateLeadsNumber, UpdateLeadsNumberResponse,UpdateSalaryPayload, UpdateDerivedIncomePayload,UpdateAgePayload,ChangeRulePayload,DeleteCampaignRuleResponse,AssignRuleToCampaignResponse, TotalNumberOfCampaignRulesResponse } from './types';
+
 
 export const ruleService = {
-
   createRule: async (campaignCode: string,payload: CreateRulePayload): Promise<Rule> => {
     const response = await campaigns_client.post('/campaign_rules', payload, {
       params: {
@@ -21,6 +21,7 @@ export const ruleService = {
       },
     });
     return response.data;
+
   },
 
   searchRules: async (
@@ -30,7 +31,7 @@ export const ruleService = {
   ): Promise<PaginatedRulesResponse> => {
     const response = await campaigns_client.get('/campaign_rules/search', {
       params: {
-        q: query,
+        rule_name: query,
         page,
         page_size: pageSize,
       },
@@ -58,12 +59,14 @@ export const ruleService = {
     return response.data;
   },
   assignRule:async(rule_code:number,camp_code:string):Promise<ChangeRuleResponse>=>{
+
     const response = await campaigns_client.put(`/campaign_rules/change_rule`,{
       params:{
         rule_code:rule_code,
         camp_code:camp_code
       }
     })
+
     return response.data
   },
 
@@ -128,19 +131,18 @@ export const ruleService = {
     }
   },
 
-  assignRuleToCampaign:async(payload:ChangeRulePayload):Promise<any>=>{
+  assignRuleToCampaign:async(payload:ChangeRulePayload):Promise<AssignRuleToCampaignResponse>=>{
     try {
-      const response=await campaigns_client.put('campaign_rules/change_rule',{params:{
+        const response=await campaigns_client.put('campaign_rules/als/change_rule',undefined,{params:{
         rule_code:payload.rule_code,
         camp_code:payload.camp_code
       }})
       return response.data
     } catch (error) {
       if(axios.isAxiosError(error)){
-        console.error(error?.response?.data)
-        console.error(error?.response?.request)
+        throw error
       }
-      throw new Error('An exception occurred while assigning rule to campaign')
+      throw error
     }
   },
   
@@ -149,10 +151,26 @@ export const ruleService = {
       const response=await campaigns_client.delete(`/campaign_rules/delete/${rule_code}`)
       return response.data
     } catch (error) {
-      console.error(error)
-      throw new Error("Rule deleted")
+      if(axios.isAxiosError(error)){
+        throw error
+      }
+      throw error
+    }
+  },
+
+  totalCampaignRules:async():Promise<TotalNumberOfCampaignRulesResponse>=>{
+    try {
+      const response=await campaigns_client.get<TotalNumberOfCampaignRulesResponse>("/campaign_rules/total")
+      return response?.data
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+        throw error
+      }
+      throw error
     }
   }
 
 };
+
+
 

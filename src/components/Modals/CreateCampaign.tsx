@@ -1,50 +1,49 @@
 import { useForm,Controller } from "react-hook-form"
-import { useMutation } from "@tanstack/react-query"
-import { campaignSchema } from "../schemas/campaignSchema"
+import { campaignSchema } from "../../schemas/campaignSchema"
 import { Paper,Stack, TextInput,Select,Group,Button } from "@mantine/core"
 import type z from "zod"
-import { campaigns_api } from "../api/campaigns/campaigns"
-import { toast } from "react-toastify"
+import { useCreateCampaign } from "../../hooks/useCampaigns"
+import type { create_campaign_response } from "../../api/campaigns/types"
+
 type CampaignFormData=z.infer<typeof campaignSchema>
 
-/* interface CreateCampaignModalProps{
+interface CreateCampaignInterface{
     opened:boolean;
     onClose:()=>void;
-    isLoading:boolean;
-} */
+    onSuccess:(data:create_campaign_response)=>void;
+}
 
-export function CreateCampaign(){
+
+// type CreateCampaignProps = {
+//   onClose: () => void; // Function to close the form
+//   opened:boolean;
+//   onSuccess:(data:create_campaign_response)=>void;
+// };
+
+
+
+export function CreateCampaignModal({opened,onClose,onSuccess}:CreateCampaignInterface){
 
 
     const {control,handleSubmit,reset,formState:{errors}}=useForm<CampaignFormData>({
+
         defaultValues:{
             branch:'',
             camp_code:'',
             campaign_name:''
         }
     });
-    
-    //useMutation to create a campaign
-    const campaign_mutation=useMutation({
-        mutationFn:campaigns_api.create_campaign,
-        onSuccess:(data)=>{
-            toast.success(`campaign:${data.campaign_name} created at:${data.branch}`)
-            reset();
-        },
-        onError:(error)=>{
-            toast.error(`${error.message} occurred while creating campaign`)
-        }
-    })
+    const createCampaign=useCreateCampaign()
 
-    const handleFormSubmit=(data:CampaignFormData)=>{
-        campaign_mutation.mutate(data)
+    const handleFormSubmit=async(data:CampaignFormData)=>{
+        const result= await createCampaign.mutateAsync({data})
+        onSuccess(result)
     }
     
     return(
 
         <Paper shadow="xs" p="xl">
             <form onSubmit={handleSubmit(handleFormSubmit)}>
-
                 <Stack align="stretch" justify="center" gap="md">
                     <Controller
                         name="campaign_name"

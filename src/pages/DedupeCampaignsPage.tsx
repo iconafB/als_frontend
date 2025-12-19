@@ -1,12 +1,24 @@
-import {Container,Title,Grid,Card,Text,Badge,Flex,Group,ActionIcon,Stack,Button,Avatar,Timeline,SimpleGrid,Modal,FileInput,TextInput} from '@mantine/core';
+import {Container,Title,Card,Text,Flex,Group,ActionIcon,Stack,Button,SimpleGrid,Modal,FileInput,TextInput, Center} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {IconCalendarEvent,IconClock,IconUsers,IconPlus,IconVideo,IconFile,IconX, IconList, IconDatabase, IconHandClick, IconUpload} from '@tabler/icons-react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-
+import {IconCalendarEvent,IconPlus,IconX, IconList, IconDatabase, IconHandClick, IconUpload, IconFileFilled, IconSpeakerphone, IconTarget} from '@tabler/icons-react';
 import DedupedCampaignTable from '../components/DedupeCampaignsTables';
 
+import { useUploadDedupeCampaignRecords,useAddDedupeList } from '../hooks/useDedupe';
+
+import { useForm,Controller } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 
+interface UploadFormValues{
+  campaign_name:string;
+  camp_code:string;
+  dedupe_file:File | null;
+}
+
+
+interface AddDedupeListInterface{
+  camp_code:string;
+}
 const DedupeCampaignsPage = () => {
 
   const stats = [
@@ -21,10 +33,39 @@ const DedupeCampaignsPage = () => {
   const [openedInsertEnrichedData,{open:openInsertEnrichedData,close:closeInsertEnrichedData}]=useDisclosure(false)
   const [createDedupeCampaignsOpened,{open:openDedupeCampaignModal,close:closeDedupeCampaignModal}]=useDisclosure(false)
 
+  const {control,register,handleSubmit,reset}=useForm<UploadFormValues>()
+  const addDedupeListForm=useForm<AddDedupeListInterface>()
+
+  const uploadMutation=useUploadDedupeCampaignRecords()
+
+  const addDedupeList=useAddDedupeList()
+
+
+  const onSubmit=(data:UploadFormValues)=>{
+    if (!data.dedupe_file){
+      toast.error("Please select a csv or excel file")
+      return
+    }
+
+    uploadMutation.mutate({
+      campaign_name:data?.campaign_name,
+      camp_code:data?.camp_code,
+      file_upload:{
+        dedupe_file: data.dedupe_file
+      }
+    })
+    reset()
+  }
+
+  const addDedupeListSubmit=(data:AddDedupeListInterface)=>{
+    addDedupeList.mutate({
+      camp_code:data.camp_code
+    })
+    reset()
+  }
 
 
   return (
-
     <Container size="xl" px={0}>
       <Stack gap="xl">
         <div>
@@ -33,17 +74,18 @@ const DedupeCampaignsPage = () => {
               DEDUPE CAMPAIGNS 
             </Title>
              <Button leftSection={<IconPlus size={16} />} onClick={openDedupeCampaignModal} variant='outline'>
-              CREATE DEDUPE CAMPAIGN
+              SUBMIT DEDUPE RETURN
             </Button>
             <Button leftSection={<IconPlus size={16} />} onClick={manualDedupeInsertOpen}>
               MANUAL DEDUPE FILE INSERT
             </Button>
             <Button leftSection={<IconList size={16}/>} onClick={openInsertDedupeList} variant='outline'>
-              INSERT DEDUPE LIST
+              ADD DEDUPE LIST
             </Button>
             <Button leftSection={<IconPlus size={16}/>} onClick={openInsertEnrichedData}>
-              INSERT ENRICHED DATA
+              UPLOAD DEDUPE RECORDS
             </Button>
+            
           </Group>
           <Text c="dimmed" size="sm">
             Manage and observe dedupe campaigns
@@ -80,6 +122,9 @@ const DedupeCampaignsPage = () => {
         <form>
           {/**Manual Dedupe file upload */}
           <Stack>
+            <TextInput
+              
+            />
             <FileInput
               label="MANUAL DEDUPE FILE"
               placeholder="enter manual dedupe file"
@@ -101,50 +146,69 @@ const DedupeCampaignsPage = () => {
         </form>
       </Modal>
 
-      <Modal opened={openedInsertDedupeList} onClose={closeInsertDedupeList} title="INSERT DEDUPE LIST" withCloseButton={false} size="lg" styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}} centered>
+      <Modal opened={openedInsertDedupeList} onClose={closeInsertDedupeList} title="ADD DEDUPE LIST" withCloseButton={false} size="lg" styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}} centered>
         {/**insert dedupe list */}
-        <form>
+        <form onSubmit={addDedupeListForm.handleSubmit(addDedupeListSubmit)}>
+
           <Stack>
-            <FileInput
-              label="INSERT DEDUPE LIST"
-              placeholder="insert dedupe list"
-              leftSection={<IconUpload size={24}/>}
-              accept='.csv'
+            <TextInput
+              label="ADD DEDUPE LIST"
+              placeholder="Enter the campaign code"
+              leftSection={<IconList size={24}/>}
+              {...addDedupeListForm.register("camp_code",{required:"Campaign code is required"})}
+              withAsterisk
             />
-            <Flex justify="end" align="center" gap={20}>
-              <Button variant='outline' onClick={()=>{console.log("Insert the dedupe list")}} leftSection={<IconList/>}>
-                INSERT DEDUPE LIST
-              </Button>
-              <Button variant='outline' color='red' leftSection={<IconX/>} onClick={closeInsertDedupeList}>
-                Cancel
-              </Button>
-            </Flex>
+            <Center mt={40}>
+
+              <Flex justify="end" align="center" gap={20}>
+                <Button variant='outline' type="submit" leftSection={<IconList/>} loading={addDedupeList?.isPending}>
+                  ADD DEDUPE LIST
+                </Button>
+                <Button variant='outline' color='red' leftSection={<IconX/>} onClick={closeInsertDedupeList}>
+                  CANCEL
+                </Button>
+              </Flex>
+            </Center>
           </Stack>
         </form>
-
       </Modal>
       
-      <Modal opened={openedInsertEnrichedData} onClose={closeInsertEnrichedData} title="INSERT ENRICHED DATA" withCloseButton={false} size="lg" styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}} centered>
-          <form>
+      <Modal opened={openedInsertEnrichedData} onClose={closeInsertEnrichedData} title="UPLOAD DEDUPE RECORDS" withCloseButton={false} size="lg" styles={{header:{justifyContent:'center',position:'relative'},title:{flex:1,textAlign:'center'}}} centered>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Stack>
-              <FileInput
-                label="ENRICHED DATA FILE"
-                placeholder="upload data file"
-                required
-                leftSection={<IconUpload size={30}/>}
-                accept='.csv,.xlsx,.xls'
-                mt="md"
-                p={20}
+              <TextInput label="Campaign Name" leftSection={<IconTarget/>} placeholder='enter campaign name' ml={10} {...register("campaign_name",{required:"Campaign name is required"})}/>
+              <TextInput label="Campaign Code" leftSection={<IconTarget/>} placeholder='enter campaign code' ml={10} {...register("camp_code",{required:"Campaign code is required"})}/>
+              <Controller
+                name='dedupe_file'
+                control={control}
+                rules={{required:"CSV or Excel file is required"}}
+                render={({field,fieldState})=>(
+                    <FileInput 
+                      value={field.value ?? null}
+                      onChange={(file)=>field.onChange(file)}
+                      label="Dedupe File" 
+                      withAsterisk 
+                      placeholder="upload dedupe campaign file with ids and cell numbers" 
+                      accept='.csv,.xls,.xlsx' 
+                      leftSection={<IconFileFilled size={30}/>} 
+                      p="md" 
+                      mr={30}
+                      clearable
+                      error={fieldState?.error?.message}
+                      />
+                )}
               />
             </Stack>
-            <Flex justify="end" align="enter" gap={20} mt={15}>
-              <Button variant='outline' color='blue'>
-                INSERT
-              </Button>
-              <Button variant='outline' color='red' onClick={closeInsertEnrichedData} leftSection={<IconX/>} p={12}>
-                CANCEL
-              </Button>
-            </Flex>
+            <Center mt={40}>
+              <Flex justify="end" align="enter" gap={20} mt={15}>
+                <Button variant='outline' color='blue' type='submit'>
+                  UPLOAD 
+                </Button>
+                <Button variant='outline' color='red' onClick={closeInsertEnrichedData} leftSection={<IconX/>} p={12}>
+                  CANCEL
+                </Button>
+              </Flex>
+            </Center>
           </form>
       </Modal>
 
@@ -179,8 +243,6 @@ const DedupeCampaignsPage = () => {
           </form>
         </Stack>
       </Modal>
-
-
     </Container>
   );
 

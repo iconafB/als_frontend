@@ -7,9 +7,8 @@ export interface create_campaign{
 export interface create_campaign_response{
     id:number;
     branch:string;
-    campaign_code:string;
+    camp_code:string;
     campaign_name:string;
-
 }
 
 
@@ -43,4 +42,9 @@ export interface LoadCampaignResponse{
     list_name:string;
     audit_id:string;
     records_processed:number;
+}
+
+
+export interface TotalNumberOfCampaignsResponse{
+    total_number_of_campaigns:number;
 }

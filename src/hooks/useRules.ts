@@ -4,18 +4,17 @@ import type { CreateRulePayload, UpdateRulePayload,UpdateLeadsNumber,UpdateSalar
 import { toast } from 'react-toastify';
 
 export const useRules = (page: number, pageSize: number) => {
-
   return useQuery({
     queryKey: ['rules', page, pageSize],
     queryFn: () => ruleService.getRules(page, pageSize),
   });
 };
 
-export const useSearchRules = (query: string, page: number, pageSize: number) => {
+export const useSearchRules = (rule_name: string, page: number, pageSize: number) => {
   return useQuery({
-    queryKey: ['rules', 'search', query, page, pageSize],
-    queryFn: () => ruleService.searchRules(query, page, pageSize),
-    enabled: query.length > 0,
+    queryKey: ['rules', 'search', rule_name, page, pageSize],
+    queryFn: () => ruleService.searchRules(rule_name, page, pageSize),
+    enabled: rule_name.length > 0,
   });
 };
 
@@ -37,17 +36,15 @@ export const useCreateRule = () => {
       campaignCode: string;
       payload: CreateRulePayload;
     }) => ruleService.createRule(campaignCode, payload),
-    onSuccess: () => {
+    onSuccess: (data:any) => {
       queryClient.invalidateQueries({ queryKey: ['rules'] });
-      toast.success('Rule created successfully');
+      toast.success(`rule ${data?.rule_name} created successfully with rule code:${data?.rule_code}`);
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Failed to create rule');
+      toast.error(error?.response?.data?.detail || 'Failed to create rule');
     },
   });
 };
-
-
 
 
 export const useUpdateLeadsNumber = () => {
@@ -64,7 +61,7 @@ export const useUpdateLeadsNumber = () => {
       toast.success('leads number successfully updated');
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data || 'Failed to update total leads');
+      toast.error(error?.response?.detail || 'Failed to update total leads');
       console.log(error)
     },
   });
@@ -73,23 +70,19 @@ export const useUpdateLeadsNumber = () => {
 export const useAssignRuleToCampaign=()=>{
   const queryClient=useQueryClient();
   return useMutation({
-
     mutationFn:({payload}:{payload:AssignRuleToCampaignPayload})=>ruleService.assignRuleToCampaign(payload),
-    onSuccess:()=>{
+    onSuccess:(data):any=>{
       queryClient.invalidateQueries({queryKey:['rules']})
-      toast.success('Campaign rule assigned to campaign')
+      toast.success(`message:${data.message}`)
     },
-
     onError:(error:any)=>{
-      toast.error(error?.response?.data || 'Failed to assign campaign rule to campaign')
+      toast.error(error?.response?.data?.detail || 'Failed to assign campaign rule to campaign')
     }
   })
 }
 
 export const useUpdateSalary = () => {
-
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       payload,
@@ -100,17 +93,14 @@ export const useUpdateSalary = () => {
       queryClient.invalidateQueries({ queryKey: ['rules'] });
       toast.success('salary successfully updated');
     },
-
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Failed to update salary');
-      console.log(error)
+      toast.error(error?.response?.data?.detail || 'Failed to update salary');
     },
   });
 };
 
 export const useUpdateDerivedIncome=()=>{
   const queryClient=useQueryClient()
-
   return useMutation({
   mutationFn:({payload}:{payload:UpdateDerivedIncomePayload})=>ruleService.updateDerivedIncome(payload),
   onSuccess:()=>{
@@ -118,9 +108,7 @@ export const useUpdateDerivedIncome=()=>{
     toast.success("Derived income updated successfully")
   },
   onError:(error:any)=>{
-    toast.error(error?.response?.data?.message || 'Failed to update derived income')
-    console.log("Print the error response from the api")
-    console.log(error)
+    toast.error(error?.response?.data?.detail || 'Failed to update derived income')
   }
  })
 };
@@ -134,12 +122,13 @@ export const useUpdateAge=()=>{
       toast.success("Age updated successfully")
     },
     onError:(error:any)=>{
-      toast.error(error?.response?.data?.message||'Failed to update age')
+      toast.error(error?.response?.data?.detail ||'Failed to update age')
     }
   })
 }
 
 export const useUpdateRule = () => {
+  
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ ruleCode, payload }: { ruleCode: number; payload: UpdateRulePayload }) =>
@@ -149,7 +138,7 @@ export const useUpdateRule = () => {
       toast.success('Rule updated successfully');
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Failed to update rule');
+      toast.error(error?.response?.data?.detail || 'Failed to update rule');
     },
   });
 };
@@ -164,7 +153,7 @@ export const useActivateRule = () => {
       toast.success('Rule activated successfully');
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Failed to activate rule');
+      toast.error(error?.response?.data?.detail || 'Failed to activate rule');
     },
   });
 };
@@ -178,11 +167,10 @@ export const useDeactivateRule = () => {
       toast.success('Rule deactivated successfully');
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Failed to deactivate rule');
+      toast.error(error?.response?.data?.detail || 'Failed to deactivate rule');
     },
   });
 };
-
 
 export const useDeleteCampaignRule=()=>{
   const queryClient=useQueryClient()
@@ -192,11 +180,18 @@ export const useDeleteCampaignRule=()=>{
       queryClient.invalidateQueries({queryKey:['rules']})
       toast.success(`${data.message}`)
     },
-    onError:(data:any)=>{
-      toast.error(`${data}`)
+    onError:(error:any)=>{
+      toast.error(error?.response?.data?.detail || 'Failed to delete campaign rule from the system')
     }
   })
 }
 
 
 
+export const useTotalCampaignRules=()=>{
+       return useQuery({
+          queryKey:['rules'],
+          queryFn: ()=>ruleService.totalCampaignRules()
+      })
+  }
+  

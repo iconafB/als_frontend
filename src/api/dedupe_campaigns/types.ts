@@ -10,15 +10,10 @@ export interface AddDedupeListResponse{
 
 
 export interface SubmitDedupeReturn{
-    camp_name:string;
     camp_code:string;
-    code:string
+    dedupe_code:string
 }
 
-
-export interface UploadPayloadSubmitDedupeReturn extends SubmitDedupeReturn{
-    file:File;
-}
 
 export  interface SubmitDedupeReturnResponse{
     success:boolean;

@@ -22,8 +22,6 @@ campaigns_client.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.log("print the interceptors error")
-    console.log(error)
     return Promise.reject(error);
   }
 );

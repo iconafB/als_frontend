@@ -48,3 +48,17 @@ export interface LoadCampaignResponse{
 export interface TotalNumberOfCampaignsResponse{
     total_number_of_campaigns:number;
 }
+
+export interface SearchCampaignParams{
+    page?:number;
+    page_size?:number;
+    campaign_name?:string;
+    branch?:string;
+    camp_code?:string;
+}
+
+
+export interface SearchOptions{
+    debouncedMs?:number;
+    minLength?:number;
+}

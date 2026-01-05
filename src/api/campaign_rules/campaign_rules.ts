@@ -29,6 +29,7 @@ export const ruleService = {
     page: number = 1,
     pageSize: number = 10
   ): Promise<PaginatedRulesResponse> => {
+    
     const response = await campaigns_client.get('/campaign_rules/search', {
       params: {
         rule_name: query,

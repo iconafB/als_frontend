@@ -1,11 +1,12 @@
 import React,{useState} from 'react';
-import { Button, Text, Group, Avatar, Stack,AppShell, ActionIcon,Tabs,Tooltip,Menu, rem,Badge, Divider } from '@mantine/core';
+import { Button, Text, Group, Stack,AppShell, ActionIcon,Tabs,Tooltip, Divider } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {notifications} from '@mantine/notifications'
-import {IconBell,IconDownload,IconRefresh,IconFilter,IconSearch,IconPlus ,IconBriefcase, IconCalendar, IconCalendarEvent, IconLogout, IconMenu2, IconSchool, IconSettings, IconUser, IconTable} from '@tabler/icons-react'
+import {IconDownload,IconRefresh,IconFilter,IconPlus,IconCalendar, IconLogout, IconMenu2,IconTable} from '@tabler/icons-react'
 import { ScaleIcon, ArchiveRestoreIcon,House } from 'lucide-react';
 import DMARecordsPage from '../pages/DMARecordsPage';
 import DedupeCampaignsPage from '../pages/DedupeCampaignsPage';
+
 import CampaignRulesPage from '../pages/CampaignsRulePage';
 import HomePage from '../pages/HomePage';
 import Campaigns from './Campaigns';
@@ -27,8 +28,6 @@ export const Dashboard: React.FC = () => {
   const handleLogout=()=>{
     toast.success("Logout from the als dashboard")
     localStorage.removeItem("token");
-    console.log("print the token from the localStorage")
-    console.log(localStorage.getItem("token"))
     navigate("/")
   }
 
@@ -53,15 +52,17 @@ export const Dashboard: React.FC = () => {
 
     const renderPage = () => {
 
+
     switch (activePage) {
       case 'home':
-        return <HomePage />;
+        return <HomePage />
+
       case 'campaigns':
         return <Campaigns/>
       case 'dedupe campaigns':
         return <DedupeCampaignsPage/>
-      case 'rules':
-        return <CampaignRulesPage/>
+      /* case 'rules':
+        return <CampaignRulesPage/> */
       case 'dma':
         return <DMARecordsPage/>
       case 'campaign-rules':
@@ -69,6 +70,7 @@ export const Dashboard: React.FC = () => {
       default:
         return <HomePage />;
     }
+
     };
 
   return (
@@ -111,16 +113,16 @@ export const Dashboard: React.FC = () => {
                     CAMPAIGNS
                   </Tabs.Tab>
                   <Tabs.Tab value='dedupe campaigns' leftSection={<IconCalendar size={16}/>} fz="lg" fw="bold">
-                    DEDUPE CAMPAIGNS
+                    DEDUPE CAMPAIGNS OVERVIEW
                   </Tabs.Tab>
-                  <Tabs.Tab value='rules' leftSection={<ScaleIcon size={16}/>} fz="lg" fw="bold">
+                 {/*  <Tabs.Tab value='rules' leftSection={<ScaleIcon size={16}/>} fz="lg" fw="bold">
                     CAMPAIGN RULES
-                  </Tabs.Tab>
+                  </Tabs.Tab> */}
                   <Tabs.Tab value='dma' leftSection={<ArchiveRestoreIcon size={16}/>} fz="lg" fw="bold">
-                    DMA
+                    DMA OVERVIEW
                   </Tabs.Tab>
-                  <Tabs.Tab value='campaign-rules' leftSection={<ArchiveRestoreIcon size={16}/>} fz="lg" fw="bold">
-                    RULES
+                  <Tabs.Tab value='campaign-rules' leftSection={<ScaleIcon size={16}/>} fz="lg" fw="bold">
+                    CAMPAIGN RULES
                   </Tabs.Tab>
                 </Tabs.List>
               </Tabs>
@@ -154,6 +156,7 @@ export const Dashboard: React.FC = () => {
                     HOME
                   </Button>
 
+
                   <Button
                     variant={activePage === 'campaigns' ? 'filled' : 'subtle'}
                     leftSection={<IconTable size={16} />}
@@ -161,7 +164,7 @@ export const Dashboard: React.FC = () => {
                     onClick={() => setActivePage('campaigns')}
                     fullWidth
                     >
-                    Campaigns
+                    CAMPAIGNS
                   </Button>
                   <Button
                     variant={activePage === 'dedupe campaigns' ? 'filled' : 'subtle'}
@@ -170,17 +173,9 @@ export const Dashboard: React.FC = () => {
                     onClick={() => setActivePage('dedupe campaigns')}
                     fullWidth
                   >
-                    Dedupe Campaigns
+                    DEDUPE CAMPAIGNS OVERVIEW
                   </Button>
-                  <Button
-                    variant={activePage === 'rules' ? 'filled' : 'subtle'}
-                    leftSection={<ScaleIcon size={16} />}
-                    justify="flex-start"
-                    onClick={() => setActivePage('rules')}
-                    fullWidth
-                    >
-                    CAMPAIGN RULES
-                  </Button>
+                 
                   <Button
                     variant={activePage ==='dma'?'filled':'subtle'}
                     leftSection={<ArchiveRestoreIcon size={16}/>}
@@ -188,12 +183,21 @@ export const Dashboard: React.FC = () => {
                     onClick={()=>setActivePage('dma')}
                     fullWidth
                   >
-                    DMA 
+                    DMA OVERVIEW
+                  </Button>
+                   <Button
+                    variant={activePage === 'campaign-rules' ? 'filled' : 'subtle'}
+                    leftSection={<ScaleIcon size={16} />}
+                    justify="flex-start"
+                    onClick={() => setActivePage('campaign-rules')}
+                    fullWidth
+                    >
+                    CAMPAIGN RULES
                   </Button>
                 </Stack>
               </div>
               <Divider/>
-
+{/* 
               <div>
                 <Text size='sm' fw={500} c="dimmed" mb="xs">
                   QUCIK ACTIONS
@@ -208,7 +212,9 @@ export const Dashboard: React.FC = () => {
                   }
                 </Stack>
               </div>
-              <Divider/>
+               */}
+
+              {/* <Divider/> */}
               <div>
                 <Text size="sm" fw={500} c="dimmed" mb="xs">
                   Recent Activity

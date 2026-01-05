@@ -1,111 +1,90 @@
 import { useState, useMemo, useEffect } from "react";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import {Table, TextInput, Loader, Alert, Paper,Group, Text, Badge, Select, Pagination, Container, Button, Modal} from "@mantine/core";
-import { AlertCircle, Plus, Search } from "lucide-react";
-import { useDisclosure } from "@mantine/hooks";
-import { CreateCampaignModal } from "./Modals/CreateCampaign";
-import { campaigns_api } from "../api/campaigns/campaigns";
-import type { get_all_campaigns,create_campaign } from "../api/campaigns/types";
+import {Table,TextInput,Loader,Alert,Paper,Group,Text,Badge,Select,Pagination,Container,Button,Modal, Stack,} from "@mantine/core";
+import { AlertCircle, Search } from "lucide-react";
+import { useFetchCampaigns,useSearchCampaigns } from "../hooks/useCampaigns";
+import type { create_campaign, get_all_campaigns } from "../api/campaigns/types";
 import { LoadCampaignModal } from "./Campaigns/LoadCampaignModal";
 import CreateCampaignsFlow from "./WizardModalForms/CreateCampaignsFlow";
 
 const Campaigns = () => {
-  
-  const [campaignPage, setCampaignPage] = useState(1);
 
+  const [campaignPage, setCampaignPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  // Filters
-  const [searchCampaigns, setSearchCampaigns] = useState("");
   const [campaignNameFilter, setCampaignNameFilter] = useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [campaignCodesFilter, setCampaignCodesFilter] = useState("");
-  //const [openedCreate, { open: openCreate, close: closeCreate }]=useDisclosure(false);
 
-  //const [openedLoadCampaign,{ open: openLoadCampaign, close: closeLoadCampaign }] = useDisclosure(false);
-  const [selectedRow, setSelectedRow] = useState<any>(null)
-  
-  const [openCampaignLoadingModal, setOpenCampaignLoadingModal] = useState(false)
+  const allCampaignsQuery = useFetchCampaigns(campaignPage, pageSize);
 
-  const [flowOpen, setFlowOpen] = useState(false)
-  const [modalOpen,setModalOpen] = useState(false)
+  const search = useSearchCampaigns(
+    {
+      page: campaignPage,
+      page_size: pageSize,
+      campaign_name: campaignNameFilter,
+      branch: branchFilter,
+      camp_code: campaignCodesFilter,
+    },
+    { debouncedMs: 500, minLength: 1 }
+  );
 
-  // Fetch campaigns
-  const {
-    data: campaigns_data,
-    isLoading: isLoadingCampaigns,
-    error: allCampaignsError,
-  } = useQuery<get_all_campaigns, Error>({
-    queryKey: ["campaigns", campaignPage, pageSize],
-    queryFn: () => campaigns_api.get_all_campaigns(campaignPage, pageSize),
-    placeholderData: keepPreviousData,
-  });
+  const activeQuery = search.shouldSearch ? search.query : allCampaignsQuery;
 
-  // Filter Logic
-  const filteredCampaigns = useMemo(() => {
+  const { data, isLoading, error } = activeQuery as unknown as {
+    data: get_all_campaigns | undefined;
+    isLoading: boolean;
+    error: Error | null;
+  };
 
-    if (!campaigns_data?.results) return [];
-
-    return campaigns_data?.results.filter((campaign:create_campaign) => {
-      const fullText = Object.values(campaign).join(" ").toLowerCase();
-
-      const matchSearch =
-        !searchCampaigns ||
-        fullText.includes(searchCampaigns.toLowerCase());
-
-      const matchName =
-        !campaignNameFilter ||
-        campaign.campaign_name
-          .toLowerCase()
-          .includes(campaignNameFilter.toLowerCase());
-
-      const matchBranch =
-        !branchFilter ||
-        campaign.branch.toLowerCase().includes(branchFilter.toLowerCase());
-
-      const matchCode =
-        !campaignCodesFilter ||
-        campaign.camp_code
-          .toLowerCase()
-          .includes(campaignCodesFilter.toLowerCase());
-
-      return matchSearch && matchName && matchBranch && matchCode;
-    });
-  }, [
-    campaigns_data,
-    searchCampaigns,
-    campaignNameFilter,
-    branchFilter,
-    campaignCodesFilter,
-  ]);
-
-  // Reset page when filters change
   useEffect(() => {
-    setCampaignPage(1);
-  }, [searchCampaigns, campaignNameFilter, branchFilter, campaignCodesFilter]);
+    if (search.shouldSearch) setCampaignPage(1);
+  }, [
+    search.debounced.campaign_name,
+    search.debounced.branch,
+    search.debounced.camp_code,
+    search.shouldSearch,
+  ]);
+  
+  const campaigns = data?.results ?? [];
+
+  const totalPages = useMemo(() => {
+    const totalRecords = data?.total ?? 0;
+    return Math.max(1, Math.ceil(totalRecords / pageSize));
+  }, [data?.total, pageSize]);
 
   const clearCamapignsFilters = () => {
-    setSearchCampaigns("");
     setCampaignNameFilter("");
     setCampaignCodesFilter("");
     setBranchFilter("");
     setCampaignPage(1);
   };
 
+  const hasFilters =
+    !!campaignNameFilter.trim() ||
+    !!branchFilter.trim() ||
+    !!campaignCodesFilter.trim();
 
+  // Modals / UI state
+  const [selectedRow, setSelectedRow] = useState<any>(null);
+  const [openCampaignLoadingModal, setOpenCampaignLoadingModal] =
+    useState(false);
 
+  const [flowOpen, setFlowOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  if (isLoadingCampaigns) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader size="lg" color="green" />
-        <Text mt="md" c="dimmed">
-          Loading Campaign Data...
-        </Text>
+        <Stack>
+          <Loader size="lg" color="green" />
+          {/* <Text mt="md" c="dimmed">
+            Loading Campaign Data...
+          </Text> */}
+        </Stack>
       </div>
     );
   }
 
-  if (allCampaignsError) {
+  if (error) {
     return (
       <Alert icon={<AlertCircle size={16} />} title="Error" color="red">
         Failed To Load Campaigns
@@ -113,7 +92,7 @@ const Campaigns = () => {
     );
   }
 
-  const rows = filteredCampaigns.map((campaign) => (
+  const rows = campaigns.map((campaign: create_campaign) => (
     <Table.Tr
       key={campaign.camp_code}
       className="hover:bg-gray-50 transition-colors"
@@ -137,15 +116,18 @@ const Campaigns = () => {
       </Table.Td>
 
       <Table.Td>
-        <Button size="xs" variant="light" onClick={()=>{ 
-          setSelectedRow({
-            branch:campaign.branch,
-            camp_code:campaign.camp_code,
-            campaign_name:campaign.campaign_name
-          })
-          setOpenCampaignLoadingModal(true)
-
-          }}>
+        <Button
+          size="xs"
+          variant="light"
+          onClick={() => {
+            setSelectedRow({
+              branch: campaign.branch,
+              camp_code: campaign.camp_code,
+              campaign_name: campaign.campaign_name,
+            });
+            setOpenCampaignLoadingModal(true);
+          }}
+        >
           LOAD CAMPAIGN
         </Button>
       </Table.Td>
@@ -153,65 +135,43 @@ const Campaigns = () => {
   ));
 
   return (
-
     <div className="space-y-6">
+
       {/* Search & Create Section */}
       <Paper p="md" shadow="sm" className="bg-white">
         <Container className="flex justify-start items-start gap-2">
-
-          {/* Create Campaign Modal */}
-          {/* <Modal
-            opened={openedCreate}
-            onClose={closeCreate}
-            title={
-              <Text size="xl" c="green" fw={500}>
-                CREATE CAMPAIGN
-              </Text>
-            }
-            centered
-            size="lg"
-            radius={12}
-          >
-            <CreateCampaignModal onClose={closeCreate}/>
-          </Modal> */}
-
-          <Button onClick={()=>{
-                setModalOpen(true);
-                setFlowOpen(true);
-            }}
-
-            variant="filled" color="blue"
-            >
-            Create Campaign Flow
-          </Button>
-
-          {/**Parent Modal */}
-
-          <Modal opened={modalOpen} onClose={()=>setModalOpen(false)}>
-            {/**Inside this modal, we start the flow */}
-             <CreateCampaignsFlow
-                opened={flowOpen} //starts the flow when modal opens
-                onClose={()=>{
-                  setFlowOpen(false); //close the flow
-                  setModalOpen(false); //close the parent modal
-                }}//closes the flow
-              />
+          {/* Parent Modal */}
+          <Modal opened={modalOpen} onClose={() => setModalOpen(false)}>
+            <CreateCampaignsFlow
+              opened={flowOpen}
+              onClose={() => {
+                setFlowOpen(false);
+                setModalOpen(false);
+              }}
+            />
           </Modal>
-          {/* <Button variant="green" onClick={openCreate} leftSection={<Plus />}>
-            CREATE CAMPAIGN
-          </Button> */}
-
         </Container>
 
-        {/* Filters */}
+        {/* Header + Controls */}
         <Group mb="md" justify="space-between">
           <Text size="lg" fw={600}>
             Campaigns Table
           </Text>
 
+          <Button
+            onClick={() => {
+              setModalOpen(true);
+              setFlowOpen(true);
+            }}
+            variant="filled"
+            color="blue"
+          >
+            CREATE CAMPAIGN AND CAMPAIGN RULE
+          </Button>
+
           <Group gap="sm">
             <Badge color="blue" variant="light" p={18}>
-              {filteredCampaigns.length} Results
+              {data?.total ?? 0} Total
             </Badge>
 
             <Select
@@ -232,45 +192,41 @@ const Campaigns = () => {
           </Group>
         </Group>
 
-        {/* Filters Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <TextInput
-            placeholder="Search all fields..."
-            leftSection={<Search size={16} />}
-            value={searchCampaigns}
-            onChange={(e) => setSearchCampaigns(e.target.value)}
-            label="Search All Fields"
-          />
-
-          <TextInput
-            placeholder="Filter by Campaign Name"
+            placeholder="Search by Campaign Name"
             leftSection={<Search size={16} />}
             value={campaignNameFilter}
-            onChange={(e) => setCampaignNameFilter(e.target.value)}
+            onChange={(e) => setCampaignNameFilter(e.currentTarget.value)}
             label="Campaign Name"
+            size="md"
+            radius="md"
           />
 
           <TextInput
-            placeholder="Filter by Branch"
-            leftSection={<Search size={16} />}
-            value={branchFilter}
-            onChange={(e) => setBranchFilter(e.target.value)}
-            label="Branch"
-          />
-
-          <TextInput
-            placeholder="Filter by Campaign Code"
+            placeholder="Search by Campaign Code"
             leftSection={<Search size={16} />}
             value={campaignCodesFilter}
-            onChange={(e) => setCampaignCodesFilter(e.target.value)}
+            onChange={(e) => setCampaignCodesFilter(e.currentTarget.value)}
             label="Campaign Code"
+            size="md"
+            radius="md"
           />
+
+           <TextInput
+            placeholder="Search by Branch"
+            leftSection={<Search size={16} />}
+            value={branchFilter}
+            onChange={(e) => setBranchFilter(e.currentTarget.value)}
+            label="Branch"
+            size="md"
+            radius="md"
+          />
+
         </div>
 
-        {(searchCampaigns ||
-          campaignNameFilter ||
-          branchFilter ||
-          campaignCodesFilter) && (
+        {hasFilters && (
           <Group mt="md" justify="space-between">
             <Text size="sm" c="dimmed">
               Active Filters Applied
@@ -312,37 +268,34 @@ const Campaigns = () => {
           </Table>
         </Table.ScrollContainer>
 
+
+
         {/* Pagination Footer */}
-        <div className="border-t border-gray-200 px-4 bg-gray-50 py-3">
-          <div className="flex flex-col sm:flex-row justify-between items-center">
-            <div className="flex justify-center w-full">
-                <Pagination
-                  value={campaignPage}
-                  onChange={setCampaignPage}
-                  total={campaigns_data?.total ?? 1}
-                  withEdges
-                />
-            </div>
+
+        <div className="border-t border-gray-200 px-4 py-3">
+
+          <div className="flex justify-center w-full">
+            <Pagination
+              value={campaignPage}
+              onChange={setCampaignPage}
+              total={totalPages}
+              withEdges
+            />
+
           </div>
+
         </div>
+
       </Paper>
 
       {/* Load Campaign Modal */}
-      {/* <Modal
-        opened={openedLoadCampaign}
-        onClose={closeLoadCampaign}
-        title="Load Campaign"
-        size="lg"
-        withCloseButton={false}
-      > */}
-
-       <LoadCampaignModal opened={openCampaignLoadingModal} onClose={()=>setOpenCampaignLoadingModal(false)} row={selectedRow}/>
-
-      {/* </Modal> */}
+      <LoadCampaignModal
+        opened={openCampaignLoadingModal}
+        onClose={() => setOpenCampaignLoadingModal(false)}
+        row={selectedRow}
+      />
     </div>
   );
-
-
 };
 
 export default Campaigns;

@@ -1,21 +1,23 @@
-import {Container,Title,Grid,Card,Text,Progress,Paper,Badge,Group,ActionIcon,Stack,Avatar,Button,SimpleGrid,} from '@mantine/core';
-import {IconBriefcase,IconClock,IconCircleCheck,IconAlertCircle,IconUsers,IconTrendingUp,IconCalendar,IconDots,IconFiles} from '@tabler/icons-react';
+import {Container,Title,Card,Text,Group,ActionIcon,Stack,SimpleGrid,} from '@mantine/core';
+import {IconBriefcase,IconUsers,IconFiles} from '@tabler/icons-react';
 import { ClipboardPlus, Filter, Settings, Target } from 'lucide-react';
 import { useFetchTotalCampaigns } from '../hooks/useCampaigns';
 import { useTotalCampaignRules } from '../hooks/useRules';
-
+import { useGetTotalNumberOfDMARecords } from '../hooks/dmaHooks';
 
 const HomePage = () => {
 
-  const totalCampaigns=useFetchTotalCampaigns()
-  const totalCampaignRules=useTotalCampaignRules()
+  const totalCampaigns=useFetchTotalCampaigns();
+  const totalCampaignRules=useTotalCampaignRules();
+  const totalDMARecords=useGetTotalNumberOfDMARecords();
+
 
   const stats = [
     { title: 'Campaigns', value: totalCampaigns?.data?.total_number_of_campaigns, icon: IconBriefcase, color: 'blue' },
-    { title: 'dedupe campaigns', value: '148', icon: IconCircleCheck, color: 'green' },
     { title: 'campaigns rules', value: totalCampaignRules?.data?.total_number_of_rules, icon: IconUsers, color: 'orange' },
-    { title: 'DMA records', value: '7', icon: IconFiles, color: 'red' },
+    { title: 'DMA records', value: totalDMARecords?.data?.total_number_of_records, icon: IconFiles, color: 'red' },
   ];
+
 
    const features = [
     {
@@ -63,12 +65,13 @@ const HomePage = () => {
             </Title>
            
           </Group>
-          <Text c="dimmed" size="sm">
+          {/* <Text c="dimmed" size="sm">
             Manage campaigns, set campaign rules and track dma records 
-          </Text>
+          </Text> */}
         </div>
 
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+
           {stats.map((stat) => (
             <Card key={stat.title} padding="md" radius="md" withBorder>
               <Group justify="space-between">
@@ -92,6 +95,7 @@ const HomePage = () => {
             </Card>
           ))}
         </SimpleGrid>
+
         <section className='py-16 bg-white'>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
             <div className='text-center mb-12'>
@@ -140,6 +144,7 @@ const HomePage = () => {
       </Stack>
     </Container>
   );
+
 };
 
 export default HomePage;

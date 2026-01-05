@@ -178,6 +178,7 @@ const CampaignRulesTable = () => {
   ));
 
   return (
+    
     <div className="space-y-6">
         <Paper shadow="sm" className="overflow-hidden">
           <Paper shadow="xs" p="xl">

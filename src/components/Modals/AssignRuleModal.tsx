@@ -10,7 +10,7 @@ interface UpdateModalProps {
   opened: boolean;
   onClose: () => void;
   rule: Rule | null;
-  onSuccess:(data:any)=>void;
+  onSuccess?:(data:any)=>void;
 }
 
 
@@ -19,13 +19,11 @@ export const AssignRuleToCampaignModal=({opened,onClose,rule,onSuccess}:UpdateMo
     const assignRuleToCampaign=useAssignRuleToCampaign()
 
     const {control,handleSubmit,reset}=useForm<AssignRuleToCampaignPayload>({
-
         defaultValues:{
             rule_code:0,
             camp_code:''
         }
     })
-
 
     useEffect(()=>{
 
@@ -48,7 +46,7 @@ export const AssignRuleToCampaignModal=({opened,onClose,rule,onSuccess}:UpdateMo
             assignRuleToCampaign.mutate({payload},{
                 onSuccess:(res)=>{
                     reset();
-                    onSuccess(res);
+                    onSuccess?.(res);
                     onClose();
                 }
             })
@@ -62,11 +60,6 @@ export const AssignRuleToCampaignModal=({opened,onClose,rule,onSuccess}:UpdateMo
             size="lg" 
             centered 
             withCloseButton={false}
-            title={
-                <Text ta="center" fw={600} size="lg" c="green" w="100%">
-                    ASSIGN CAMPAIGN RULE TO CAMPAIGN
-                </Text>
-            }
             >
             <form onSubmit={handleSubmit(onSubmit)}>
                  <Container size={800}>
@@ -116,12 +109,10 @@ export const AssignRuleToCampaignModal=({opened,onClose,rule,onSuccess}:UpdateMo
                                     size="sm"
                                 >
                                     CANCEL ASSIGN
-
                                 </Button>
                             </Flex>
                         </Box>
                </Container>
-
             </form>
         </Modal>
 

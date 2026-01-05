@@ -8,8 +8,6 @@ import type { PaginatedInfiniteResponse } from "../../api/campaigns/types";
 import { showNotification } from "@mantine/notifications";
 import type { create_campaign } from "../../api/campaigns/types";
 import type { LoadCampaign } from "../../api/campaigns/types";
-
-
 interface LoadCampaignModalProps {
   opened: boolean;
   onClose: () => void;
@@ -29,9 +27,6 @@ export const LoadCampaignModal=({ opened, onClose,row }:LoadCampaignModalProps) 
       camp_code: row?.camp_code,
     },
   });
-
-
-  console.log(row)
 
   useEffect(()=>{
     if(row){
@@ -64,7 +59,7 @@ export const LoadCampaignModal=({ opened, onClose,row }:LoadCampaignModalProps) 
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={<Text fw={600} c="green">LOAD CAMPAIGN: {row?.campaign_name}</Text>} size="lg" centered withCloseButton={false}>
+    <Modal opened={opened} onClose={onClose} size="lg" centered withCloseButton={false}>
       <form
         onSubmit={handleSubmit(onSubmit)}
       >
@@ -77,7 +72,7 @@ export const LoadCampaignModal=({ opened, onClose,row }:LoadCampaignModalProps) 
           <Text fw={600} size="sm">CAMPAIGN CODE</Text>
           <input className="border p-2 rounded w-full bg-gray-100 cursor-not-allowed" {...register("camp_code")} readOnly />
           {/* Actions */}
-          <Flex justify="end" gap="sm" mt="md">
+          <Flex justify="center" align="center" gap="sm" mt="md">
             <Button type="submit">
               LOAD CAMPAIGN
             </Button>

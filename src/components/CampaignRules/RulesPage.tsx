@@ -20,10 +20,10 @@ export const RulesPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const [debouncedSearch] = useDebouncedValue(searchQuery, 500);
 
-  const [createModalOpened, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false);
+  //const [createModalOpened, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false);
   const [updateModalOpened, { open: openUpdateModal, close: closeUpdateModal }] = useDisclosure(false);
   const [viewModalOpened, { open: openViewModal, close: closeViewModal }] = useDisclosure(false);
   const [assignModalOpened, { open: openAssignModal, close: closeAssignModal }] = useDisclosure(false);
@@ -33,8 +33,11 @@ export const RulesPage = () => {
   const [updateDerivedIncomeOpened,{open:openDerivedIncomeModal,close:closeDerivedIncomeModal}]=useDisclosure(false)
   const [updateAgeOpened,{open:openAgeModal,close:closeAgeModal}]=useDisclosure(false)
   const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
+
   const { data: rulesData, isLoading: isLoadingRules } = useRules(page, pageSize);
   
+
+
 
   const { data: searchData, isLoading: isSearching } = useSearchRules(
     debouncedSearch,
@@ -49,6 +52,8 @@ export const RulesPage = () => {
   const isSearching_ = debouncedSearch.length > 0;
   const data = isSearching_ ? searchData : rulesData;
   const isLoading = isSearching_ ? isSearching : isLoadingRules;
+
+
 
   useEffect(() => {
     setPage(1);
@@ -100,23 +105,10 @@ export const RulesPage = () => {
     <Container size="xl" py="xl">
       <Stack gap="lg">
         <Group justify="space-between" align="center">
-          <Title order={1}>Rules Management</Title>
-          <Group gap="sm">
-            <Button leftSection={<Plus size={16} />} onClick={openCreateModal} variant='outline'>
-              Create Rule
-            </Button>
-            {/* <Button variant="default" onClick={openAssignModal}>
-              Assign Rule
-            </Button>
-            <Button variant="default" onClick={openChangeModal}>
-              Change Rule
-            </Button> */}
-
-          </Group>
+          <Title order={1}>CAMPAIGN RULES MANAGEMENT</Title>
         </Group>
-
         <TextInput
-          placeholder="Search by rule name, salary, or derived income..."
+          placeholder="Search by campaign codes"
           leftSection={<Search size={16} />}
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.currentTarget.value)}
@@ -142,7 +134,7 @@ export const RulesPage = () => {
           </Group>
         )}
       </Stack>
-      <CreateRuleModal opened={createModalOpened} onClose={closeCreateModal} />
+      {/* <CreateRuleModal opened={createModalOpened} onClose={closeCreateModal} /> */}
       {selectedRule && (
         <>
           <UpdateRuleModal

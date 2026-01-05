@@ -1,5 +1,5 @@
 import { campaigns_client } from "../campaigns_client"
-import type { AddDedupeListResponse,UploadPayloadSubmitDedupeReturn,SubmitDedupeReturnResponse,AddManualDedupeList,AddManualDedupeListResponse,UploadDedupeCampaignRecords,UploadDedupeCampaignRecordsResponse,PaginatedAggegatedCountResponse} from "./types"
+import type { AddDedupeListResponse,SubmitDedupeReturn,SubmitDedupeReturnResponse,AddManualDedupeList,AddManualDedupeListResponse,UploadDedupeCampaignRecords,UploadDedupeCampaignRecordsResponse,PaginatedAggegatedCountResponse} from "./types"
 import axios from 'axios'
 
 export const dedupe_service={
@@ -23,13 +23,11 @@ export const dedupe_service={
 
     },
 
-    submit_dedupe_return:async(payload:UploadPayloadSubmitDedupeReturn):Promise<SubmitDedupeReturnResponse>=>{
+    submit_dedupe_return:async(payload:SubmitDedupeReturn,dedupe_file:File):Promise<SubmitDedupeReturnResponse>=>{
         try {
             const formData=new FormData();
-            formData.append("file",payload.file)
-            formData.append("camp_name",payload.camp_name);
-            formData.append("camp_code",payload.camp_code);
-            formData.append("code",payload.code)
+            formData.append("dedupe_file",dedupe_file)
+            formData.append("data",JSON.stringify(payload))
             const response=await campaigns_client.post("/dedupes/submit-dedupe-return",formData,{headers:{
                 "Content-Type":"multipart/form-data"
             }})
@@ -53,16 +51,13 @@ export const dedupe_service={
         }
 
     },
-
     upload_dedupe_campaign_file:async(campaign_name:string,camp_code:string,file_upload:UploadDedupeCampaignRecords):Promise<UploadDedupeCampaignRecordsResponse>=>{
         try {
             const formData=new FormData()
             formData.append("dedupe_file",file_upload.dedupe_file)
             const response=await campaigns_client.post<UploadDedupeCampaignRecordsResponse>("/dedupes/load_dedupe_tracker",formData,{params:{campaign_name,camp_code},headers:{"Content-Type":"multipart/form-data"}})
-
             return response?.data
         } catch (error) {
-
             if(axios.isAxiosError(error)){
                 throw error
             }

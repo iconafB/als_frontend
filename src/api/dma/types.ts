@@ -12,3 +12,29 @@ export interface UploadDMARecordsResponse{
     is_processed:boolean;
     created_at:string;
 }
+
+
+export interface DMARecordBaseInterface{
+    id:number;
+    audit_id:string;
+    number_of_records:number;
+    notification_email:string;
+    camp_code:string;
+    created_at:string;
+}
+
+export interface PaginatedDMARecordInterface{
+    page:number;
+    page_size:number;
+    total:number;
+    results:DMARecordBaseInterface[];
+}
+
+export interface TotalNumberOfDMARecords{
+    total_number_of_records:number
+}
+
+export interface DeleteRecordResponse{
+    message:string;
+    message_status:boolean;
+}

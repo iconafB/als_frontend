@@ -252,8 +252,8 @@ export const CreateRuleModal = ({ opened, onClose,campaignCode,onSuccess }: Crea
               <Select
                 label="GENDER"
                 data={[
-                  { value: 'MALE', label: 'Male' },
-                  { value: 'FEMALE', label: 'Female' },
+                  { value: 'MALE', label: 'MALE' },
+                  { value: 'FEMALE', label: 'FEMALE' },
                   {value:'BOTH',label: 'BOTH'}
                 ]}
                 {...field}
@@ -266,7 +266,7 @@ export const CreateRuleModal = ({ opened, onClose,campaignCode,onSuccess }: Crea
             control={control}
             render={({ field }) => (
               <Select
-                label="TYPEDATA"
+                label="TYPE OF DATA TO USE"
                 data={[
                   { value: 'STATUS', label: 'STATUS' },
                   { value: 'ENRICHED', label: 'ENRICHED' }
@@ -291,13 +291,19 @@ export const CreateRuleModal = ({ opened, onClose,campaignCode,onSuccess }: Crea
           <Controller
             name="last_used.value"
             control={control}
-            render={({ field }) => <NumberInput label="LAST USED" {...field} />}
+            render={({ field }) => <NumberInput label="NUMBER OF DAYS DATA WAS LAST USED" {...field} />}
           />
 
           <Controller
             name="number_of_records.value"
             control={control}
-            render={({ field }) => <NumberInput label="RECORDS TO SEND FOR DMA" {...field} />}
+            render={({ field }) => <NumberInput 
+              label="MAXIMUM NUMBER OF RECORDS TO SEND FOR DMA IS 5000" 
+              {...field} 
+              min={100} 
+              max={5000} 
+
+              />}
           />
 
           <Group justify="flex-end" mt="md">
@@ -307,6 +313,7 @@ export const CreateRuleModal = ({ opened, onClose,campaignCode,onSuccess }: Crea
             <Button type="submit" loading={createRule.isPending} variant='outline'>
               CREATE RULE
             </Button>
+
           </Group>
         </Stack>
       </form>

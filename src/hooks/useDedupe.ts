@@ -1,16 +1,19 @@
-
-
 import { useMutation,useQuery,useQueryClient } from "@tanstack/react-query";
-import type { AddDedupeListResponse,UploadPayloadSubmitDedupeReturn,SubmitDedupeReturnResponse,AddManualDedupeList,AddManualDedupeListResponse} from "../api/dedupe_campaigns/types";
-
+import type { AddDedupeListResponse,SubmitDedupeReturn,SubmitDedupeReturnResponse,AddManualDedupeList,AddManualDedupeListResponse} from "../api/dedupe_campaigns/types";
 import { toast } from "react-toastify";
 import { dedupe_service } from "../api/dedupe_campaigns/dedupe_campaigns";
 import type { UploadDedupeCampaignRecords,UploadDedupeCampaignRecordsResponse,AddManualDedupeList2Response } from "../api/dedupe_campaigns/types";
+import type { AxiosError } from "axios";
 
+type SubmitReturnVars = {
+  payload: SubmitDedupeReturn;
+  dedupe_file: File;
+};
 
 export const useAddDedupeList=()=>{
     
     const queryClient=useQueryClient();
+
     return useMutation({
         mutationFn:({camp_code}:{camp_code:string})=>dedupe_service.add_dedupe_list(camp_code),
         onSuccess:(data:AddDedupeListResponse)=>{
@@ -28,17 +31,19 @@ export const useSubmitDedupeReturn=()=>{
 
     const queryClient=useQueryClient();
 
-    return useMutation({
-        mutationFn:({payload}:{payload:UploadPayloadSubmitDedupeReturn})=>dedupe_service.submit_dedupe_return(payload),
-        onSuccess:(data:SubmitDedupeReturnResponse)=>{
-            queryClient.invalidateQueries({queryKey:['add-dedupe-list']})
-            toast.success(`success:${data.success},deleted pending ids on campaign_dedupe table:${data?.deleted_pending_ids_from_campaign_dedupe_table} and updated ids on the main table:${data?.updated_ids_from_info_tbl}`)
+    return useMutation<SubmitDedupeReturnResponse,AxiosError,SubmitReturnVars>({
+        mutationKey:["submit-return"],
+        mutationFn:({payload,dedupe_file}:{payload:SubmitDedupeReturn,dedupe_file:File})=>dedupe_service.submit_dedupe_return(payload,dedupe_file),
+        onSuccess:()=>{
+            queryClient.invalidateQueries({queryKey:["dedupes"]})
+            toast.success("Successfully submitted")
         },
-        onError:(error:any)=>{
-            toast.error(error?.response?.data?.detail || 'Failed to a dedupe list on the system')
+        onError:()=>{
+            toast.error("An error occurred while submitting a dedupe file")
         }
     })
-}
+};
+
 
 export const useAddManualDedupeList=()=>{
     return useMutation({
@@ -72,11 +77,10 @@ export const useGetDedupeAggregatedCount=(page:number,page_size:number)=>{
         queryKey:['dedupe',page,page_size],
         queryFn:()=>dedupe_service.get_aggregated_count(page,page_size)
     })
-}
-
-
+};
 
 export const useAddManualDedupeList2=()=>{
+
     const queryClient=useQueryClient()
     return useMutation({
         mutationFn:({camp_code,upload_file}:{camp_code:string,upload_file:File})=>dedupe_service.add_manual_dedupe_list2(camp_code,upload_file),
@@ -89,4 +93,5 @@ export const useAddManualDedupeList2=()=>{
             toast.error(error?.response?.data?.detail || 'Failed to add a manual dedupe')
         }
     })
-}
+};
+

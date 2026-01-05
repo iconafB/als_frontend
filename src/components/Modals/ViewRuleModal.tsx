@@ -1,4 +1,5 @@
 import { Modal, Stack, Text, Badge, Group,Container } from '@mantine/core';
+
 import type { Rule } from '../../api/campaign_rules/types';
 
 interface ViewRuleModalProps {

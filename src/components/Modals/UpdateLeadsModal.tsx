@@ -1,4 +1,4 @@
-import { Modal,Flex,Button,Group,NumberInput,Box } from "@mantine/core"
+import { Modal,Flex,Button,Group,NumberInput,Box,Center } from "@mantine/core"
 import type { Rule } from '../../api/campaign_rules/types';
 import { useUpdateLeadsNumber } from "../../hooks/useRules";
 import type { UpdateLeadsNumber } from "../../api/campaign_rules/types";
@@ -48,10 +48,10 @@ export const UpdateLeadsModal=({opened,onClose,rule}:UpdateModalProps)=>{
 
 
     return(
-        <Modal title="UPADTE NUMBER OF LEADS" opened={opened} onClose={onClose} size="md" centered >
+        <Modal opened={opened} onClose={onClose} size="md" centered withCloseButton={false}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                 <Group>
-                        <Flex justify="center" direction="row" gap="md">
+                 <Group justify="center">
+                        <Flex justify="center" direction="row" gap="md" mt={15}>
                             <Controller
                                 name="rule_code"
                                 control={control}
@@ -63,7 +63,7 @@ export const UpdateLeadsModal=({opened,onClose,rule}:UpdateModalProps)=>{
                                 render={({ field }) => <NumberInput label="Total Leads" required {...field} />}
                             />
                         </Flex>
-                        <Box>
+                        <Center>
                             <Flex justify="center" align="center" gap={20}>
                                 <Button c="orange" variant="light" loading={updateLeadsNumber.isPending} type="submit">
                                     UPDATE
@@ -72,8 +72,7 @@ export const UpdateLeadsModal=({opened,onClose,rule}:UpdateModalProps)=>{
                                     CANCEL
                                 </Button>
                             </Flex>
-                        </Box>
-
+                        </Center>
                </Group>
             </form>
         </Modal>

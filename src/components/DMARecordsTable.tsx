@@ -4,19 +4,27 @@ import { AlertCircle, Search } from "lucide-react"
 import { fetchMockDMA } from "../api/dma_mock_api"
 import { useQuery } from "@tanstack/react-query"
 
+import { useGetDMARecords,useGetTotalNumberOfDMARecords,useGetDMARecordsByCampaignCode } from "../hooks/dmaHooks"
+
+
 const DMARecordsTable = () => {
 
       const [searchTerm, setSearchTerm] = useState('')
       const [auditIdFilter, setAuditIdFilter] = useState('')
+
       const [notificationEmailFilter, setNotificationEmailFilter] = useState('')
       const [createdAtFilter, setCreatedAtFilter] = useState('')
       const [isProcessedFilter,setIsProcessedFilter]=useState('')
+
       const [currentPage, setCurrentPage] = useState(1);
       const [pageSize, setPageSize] = useState(10);
 
       // [opened,{open,close}]=useDisclosure(false)
   
       //Fetch dma records from the backend api
+
+      const dmaRecords=useGetDMARecords(currentPage,pageSize);
+
 
       const {data:dma_records=[],error,isLoading}=useQuery({
           queryKey:['dma'],
@@ -89,6 +97,39 @@ const DMARecordsTable = () => {
     )
  }
 
+ const dmaRows=dmaRecords?.data?.results.map((record)=>(
+
+   <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={record.id}>
+         <Table.Td className="font-medium">
+          <Badge variant="light" color="blue" p={18}>
+             {record.audit_id}
+          </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+             <Badge variant="light" color="purple" p={18}>
+                {record.number_of_records}
+             </Badge>
+         </Table.Td>
+         <Table.Td className="foont-medium">
+             <Badge variant="light" color="blue" p={18}>
+                 {record.notification_email}
+             </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+          <Badge variant="light" p={18}>
+            {/**show colors based on the boolean variable */}
+              {record?.camp_code}
+          </Badge>
+         </Table.Td>
+         <Table.Td className="font-medium">
+           <Badge variant="light" color="blue" p={18}>
+              {record.created_at}
+           </Badge>
+         </Table.Td>
+
+     </Table.Tr>
+ ))
+
   const rows=paginatedRecords.map((record)=>(
 
      <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={record.id}>
@@ -120,6 +161,7 @@ const DMARecordsTable = () => {
          </Table.Td>
 
      </Table.Tr>
+
   ));
 
   
@@ -141,7 +183,7 @@ const DMARecordsTable = () => {
                         setSearchTerm(event.currentTarget.value)
                       }}
                       
-                      placeholder="enter audit id,notification email, or created at"
+                      placeholder="search by audit id,campaign codes or notification email"
                       w={400}
                     />
 
@@ -149,9 +191,10 @@ const DMARecordsTable = () => {
 
                 <Group gap="sm" justify="space-between">
                   <div className="flex gap-2 mt-6">
-                     <Badge variant="light" color="blue" p={18} w={160}>
+                     {/* <Badge variant="light" color="blue" p={18} w={160}>
                       {filteredRecords.length} of {dma_records.length} records
-                    </Badge>
+                    </Badge> */}
+                    
                     <Select
                       value={pageSize.toString()}
                       onChange={(value)=>{
@@ -194,7 +237,7 @@ const DMARecordsTable = () => {
                     <Table.Thead>
                       <Table.Tr className="bg-gray-500">
                         <Table.Th className="text-gray-500 font-semibold">
-                            AUDIT ID
+                          AUDIT ID
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
                           NUMBER OF RECORDS
@@ -203,7 +246,7 @@ const DMARecordsTable = () => {
                           NOTIFICATION EMAIL
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
-                          DEDUPE STATUS
+                          CAMPAIGN CODES
                         </Table.Th>
                         <Table.Th className="text-gray-500 font-semibold">
                           CREATED AT
@@ -211,8 +254,8 @@ const DMARecordsTable = () => {
                       </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                        {rows.length >0 ?
-                        (rows):
+                        {dmaRecords?.data?.results?.length >0 ?
+                        (dmaRows):
                         (
                         <Table.Tr>
                             <Table.Tr>
@@ -231,27 +274,16 @@ const DMARecordsTable = () => {
 
               </Table.ScrollContainer>
               {/**Pagination Section */}
-                {filteredRecords.length > 0 && (
-              <div className="border-t border-gray-200 px-4 bg-gray-50 mt-4">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                   <div className="flex items-center gap-2">
-                      <Text size="sm" c="dimmed">
-                        showing {Math.min((currentPage - 1) * pageSize+1,filteredRecords.length)} to{''} {Math.min(currentPage * pageSize,filteredRecords.length)} of {filteredRecords.length} results
-                      </Text>
-                   </div>
-                   {totalPages > 1 && (
-                      <Pagination
-                          value={currentPage}
-                          onChange={setCurrentPage}
-                          total={totalPages}
-                          withEdges
-                          className="flex-shrink-0"
-                      />
-                   )}
-
+              <div className="border-t border-gray-200 px-4 py-3">
+                <div className="flex justify-center w-full">
+                   <Pagination
+                            value={currentPage}
+                            onChange={setCurrentPage}
+                            total={totalPages}
+                            withEdges
+                    />
                 </div>
               </div>
-                )}
           </Paper>
 
         </Paper>

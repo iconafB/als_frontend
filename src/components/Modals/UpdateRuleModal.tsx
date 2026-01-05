@@ -1,4 +1,4 @@
-import { Modal, Button, TextInput, Select, NumberInput, Group, Stack } from '@mantine/core';
+import { Modal, Button, TextInput, Select, NumberInput, Group, Stack,Flex } from '@mantine/core';
 import { useForm, Controller } from 'react-hook-form';
 import type { LogicalOperator, NumericField, UpdateRulePayload } from '../../api/campaign_rules/types';
 import { useUpdateRule } from '../../hooks/useRules';
@@ -78,7 +78,7 @@ export const UpdateRuleModal = ({ opened, onClose, ruleCode, initialData }: Upda
 
   return (
 
-    <Modal opened={opened} onClose={onClose} title="Update Rule" size="xl">
+    <Modal opened={opened} onClose={onClose} size="xl" withCloseButton={false}>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap="md">
@@ -187,14 +187,15 @@ export const UpdateRuleModal = ({ opened, onClose, ruleCode, initialData }: Upda
             </Group>
           </div>
 
-          <Group justify="flex-end" mt="md">
+          <Flex justify="center" align='center' mt="md" gap={30}>
             <Button variant="outline" onClick={onClose}>
-              Cancel
+              CANCEL
             </Button>
             <Button type="submit" loading={updateRule.isPending}>
-              Update Rule
+              UPDATE RULE
             </Button>
-          </Group>
+          </Flex>
+
         </Stack>
                 
       </form>

@@ -70,27 +70,27 @@ export const UpdateSalaryModal=({opened,onClose,rule}:UpdateModalProps)=>{
 
 
     return(
-        <Modal title="UPADTE SALARY" opened={opened} onClose={onClose} size="md" centered >
+        <Modal  opened={opened} onClose={onClose} size="md" centered withCloseButton={false}>
             
             <form onSubmit={handleSubmit(onSubmit)}>
-                 <Group>
-                        <Flex justify="center" direction="row" gap="md">
+                 <Flex direction="column">
+                        <Flex justify="center" direction="column" gap="md">
                             <Controller
                                 name="rule_code"
                                 control={control}
-                                render={({ field }) => <NumberInput label="Rule Code" required {...field} />}
+                                render={({ field }) => <NumberInput label="RULE CODE" required {...field} />}
                             />
                             {rule.salary.operator=="between" ? (
                                 <Flex>
                                     <Controller
                                         name="lower_limit_salary"
                                         control={control}
-                                        render={({field})=><NumberInput label="Salary Upper Limit" required {...field}/>}
+                                        render={({field})=><NumberInput mr={20} label="SALARY UPPER LIMIT" required {...field}/>}
                                     />
                                     <Controller
                                       name="upper_limit_salary"
                                       control={control}
-                                      render={({field})=><NumberInput label="Salary Lower Limit" required {...field}/>}
+                                      render={({field})=><NumberInput label="SALARY LOWER LIMIT" required {...field}/>}
                                     />
                                 </Flex>
 
@@ -103,7 +103,8 @@ export const UpdateSalaryModal=({opened,onClose,rule}:UpdateModalProps)=>{
                             )}
 
                         </Flex>
-                        <Box>
+                        
+                        <Box mt={25}>
                             <Flex justify="center" align="center" gap={20}>
                                 <Button c="orange" variant="light" loading={updateSalary.isPending} type="submit">
                                     UPDATE SALARY
@@ -113,7 +114,7 @@ export const UpdateSalaryModal=({opened,onClose,rule}:UpdateModalProps)=>{
                                 </Button>
                             </Flex>
                         </Box>
-               </Group>
+               </Flex>
             </form>
         </Modal>
     )

@@ -3,9 +3,12 @@ import { useDisclosure } from '@mantine/hooks';
 import {IconCalendarEvent,IconPlus,IconX, IconList, IconDatabase, IconHandClick, IconUpload, IconFileFilled, IconSpeakerphone, IconTarget} from '@tabler/icons-react';
 import DedupedCampaignTable from '../components/DedupeCampaignsTables';
 
-import { useUploadDedupeCampaignRecords,useAddDedupeList } from '../hooks/useDedupe';
+import { useUploadDedupeCampaignRecords,useAddDedupeList,useSubmitDedupeReturn } from '../hooks/useDedupe';
 
-import { useForm,Controller } from 'react-hook-form';
+import type { SubmitDedupeReturn } from '../api/dedupe_campaigns/types';
+
+import { useForm,Controller, type SubmitHandler } from 'react-hook-form';
+
 import { toast } from 'react-toastify';
 
 
@@ -14,6 +17,13 @@ interface UploadFormValues{
   camp_code:string;
   dedupe_file:File | null;
 }
+
+type FormValues={
+  camp_code:string;
+  dedupe_code:string;
+  dedupe_file:File | null;
+}
+
 
 
 interface AddDedupeListInterface{
@@ -34,11 +44,49 @@ const DedupeCampaignsPage = () => {
   const [createDedupeCampaignsOpened,{open:openDedupeCampaignModal,close:closeDedupeCampaignModal}]=useDisclosure(false)
 
   const {control,register,handleSubmit,reset}=useForm<UploadFormValues>()
-  const addDedupeListForm=useForm<AddDedupeListInterface>()
 
-  const uploadMutation=useUploadDedupeCampaignRecords()
+  const addDedupeListForm=useForm<AddDedupeListInterface>();
 
-  const addDedupeList=useAddDedupeList()
+   const {
+    control:submitDedupeControl,
+    register:submitDedupeRegister,
+    handleSubmit:submitHandleSubmit,
+    reset:submitDedupeReset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      camp_code: "",
+      dedupe_code: "",
+      dedupe_file: null,
+    },
+    mode: "onSubmit",
+  });
+
+  const uploadMutation=useUploadDedupeCampaignRecords();
+
+  const addDedupeList=useAddDedupeList();
+
+  const submitDedupeReturn=useSubmitDedupeReturn();
+
+
+   const onSubmitDedupeReturn:SubmitHandler<FormValues>=(values:FormValues) => {
+
+    if (!values.dedupe_file) return;
+
+    submitDedupeReturn.mutate({
+      payload: {
+        camp_code: values.camp_code.trim(),
+        dedupe_code: values.dedupe_code.trim(),
+      },
+      dedupe_file: values.dedupe_file,
+    }, {
+      onSuccess: () => {
+        submitDedupeReset(); // clears inputs + file
+      },
+    });
+  };
+
+
 
 
   const onSubmit=(data:UploadFormValues)=>{
@@ -70,9 +118,7 @@ const DedupeCampaignsPage = () => {
       <Stack gap="xl">
         <div>
           <Group justify="space-between" mb="lg" className='md:'>
-            <Title order={2} c="dark">
-              DEDUPE CAMPAIGNS 
-            </Title>
+            
              <Button leftSection={<IconPlus size={16} />} onClick={openDedupeCampaignModal} variant='outline'>
               SUBMIT DEDUPE RETURN
             </Button>
@@ -87,11 +133,9 @@ const DedupeCampaignsPage = () => {
             </Button>
             
           </Group>
-          <Text c="dimmed" size="sm">
-            Manage and observe dedupe campaigns
-          </Text>
+         
         </div>
-        <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+       {/*  <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
           {stats.map((stat) => (
             <Card key={stat.title} padding="md" radius="md" withBorder>
               <Group justify="space-between">
@@ -114,7 +158,11 @@ const DedupeCampaignsPage = () => {
               </Group>
             </Card>
           ))}
-        </SimpleGrid>
+        </SimpleGrid> */}
+        
+        <Title order={2} c="dark">
+              DEDUPE CAMPAIGNS TABLE OVERVIEW
+        </Title>
         <DedupedCampaignTable/>
       </Stack>
 
@@ -212,34 +260,84 @@ const DedupeCampaignsPage = () => {
           </form>
       </Modal>
 
-      <Modal opened={createDedupeCampaignsOpened} onClose={closeDedupeCampaignModal} title="CREATE DEDUPE CAMPAIGN" centered withCloseButton={false}>
+      <Modal opened={createDedupeCampaignsOpened} onClose={closeDedupeCampaignModal} title="SUBMIT DEDUPE RETURN" centered withCloseButton={false}>
         <Stack>
-          <form>
-            <Stack>
-              <TextInput
-                label='Branch'
-                placeholder='Enter Branch name'
-                required
-              />
-              <TextInput
-                label="Campaign Name"
-                placeholder='Enter Campaign Name'
-                required
-              />
-              <TextInput 
-                label="Camapign Code"
-                placeholder='Enter Campaign Code'
-                required
-              />
-            </Stack>
-            <Flex gap="xl" justify="center" align="center" mt={20}>
-            <Button variant='outline'>
-              CREATE CAMPAIGN
-            </Button>
-            <Button variant='outline' color='red' leftSection={<IconX/>} onClick={closeDedupeCampaignModal}>
-              CANCEL 
-            </Button>
-            </Flex>
+          <form onSubmit={submitHandleSubmit(onSubmitDedupeReturn)}>
+              <Stack gap="sm">
+                <TextInput
+                  label="Campaign code"
+                  placeholder="e.g. CMP-001"
+                  withAsterisk
+                  error={errors.camp_code?.message}
+                  {...submitDedupeRegister("camp_code", {
+                    required: "Campaign code is required",
+                    validate: (v) => (v.trim().length ? true : "Campaign code is required"),
+                 })}
+                />
+
+                <TextInput
+                  label="Dedupe code"
+                  placeholder="e.g. DED-2025-01"
+                  withAsterisk
+                  error={errors.dedupe_code?.message}
+                  {...submitDedupeRegister("dedupe_code", {
+                    required: "Dedupe code is required",
+                    validate: (v) => (v.trim().length ? true : "Dedupe code is required"),
+                  })}
+                />
+
+                <Controller
+                  name="dedupe_file"
+                  control={submitDedupeControl}
+                  rules={{ required: "Please upload the dedupe file" }}
+                  render={({ field }) => (
+                    <FileInput
+                      label="Dedupe file"
+                      placeholder="Choose file"
+                      withAsterisk
+                      clearable
+                      accept=".csv,.txt,.xlsx"
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.dedupe_file?.message}
+                    />
+                  )}
+                />
+
+                <Group justify="center" mt="xs">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() =>submitDedupeReset()}
+                    disabled={submitDedupeReturn.isPending}
+                  >
+                    Clear
+                  </Button>
+
+                  <Button type="submit" loading={submitDedupeReturn.isPending}>
+                    Submit Dedupe Return
+                  </Button>
+                  <Button type='button' color='red' variant='outline' onClick={closeDedupeCampaignModal}>
+                    Close
+                  </Button>
+              </Group>
+
+                {submitDedupeReturn.isError && (
+                  <Text size="sm" c="red">
+                    {String(
+                      submitDedupeReturn.error?.response?.data ??
+                        submitDedupeReturn.error?.message ??
+                        "Upload failed"
+                    )}
+                  </Text>
+                )}
+
+                {submitDedupeReturn.isSuccess && (
+                  <Text size="sm" c="green">
+                    SUCCESSFULLY UPLOADED.
+                  </Text>
+                )}
+              </Stack>
           </form>
         </Stack>
       </Modal>

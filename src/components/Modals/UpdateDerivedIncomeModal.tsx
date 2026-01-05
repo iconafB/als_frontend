@@ -70,21 +70,6 @@ export const UpdateDerivedIncomeModal=({opened,onClose,rule}:UpdateModalProps)=>
 
     return(
         <Modal 
-             title={
-                    <Text ta="center" fw={600} size="lg" w="100%" c="green">
-                        UPDATE AGE FOR CAMPAIGN RULE
-                    </Text>
-                    } 
-            styles={{
-                header:{
-                    justifyContent:'center'
-                },
-                title:{
-                    width:"100%",
-                    textAlign:"center",
-                    marginRight:"auto"
-                }
-            }}
             opened={opened} 
             onClose={onClose} 
             size="lg" 
@@ -93,13 +78,14 @@ export const UpdateDerivedIncomeModal=({opened,onClose,rule}:UpdateModalProps)=>
 
             >
             <form onSubmit={handleSubmit(onSubmit)}>
-                 <Group>
-                        <Flex justify="center" direction="row" gap="md">
+                 <Flex direction="column">
+
+                        <Flex justify="center" direction="column" gap="md">
+
                             <Controller
                                 name="rule_code"
                                 control={control}
                                 render={({ field }) => <NumberInput label="Rule Code" required {...field} />}
-
                             />
 
                             {rule.derived_income.operator=="between" ? (
@@ -114,7 +100,7 @@ export const UpdateDerivedIncomeModal=({opened,onClose,rule}:UpdateModalProps)=>
                                     <Controller
                                       name="upper_limit_derived_income"
                                       control={control}
-                                      render={({field})=><NumberInput label="Derived Income Lower Limit" required {...field}/>}
+                                      render={({field})=><NumberInput label="Derived Income Lower Limit" required {...field} ml={20}/>}
                                     />
                                 </Flex>
 
@@ -122,25 +108,25 @@ export const UpdateDerivedIncomeModal=({opened,onClose,rule}:UpdateModalProps)=>
                                 <Controller 
                                     name="derived_income_value"
                                     control={control}
-                                    render={({field})=><NumberInput label="DERIVED INCOME" required {...field}/>}
+                                    render={({field})=><NumberInput label="DERIVED INCOME" required {...field} />}
                                 />
                             )}
 
                         </Flex>
 
-                        <Center mt={25}>
-                            <Box>
-                                <Flex gap={10}>
-                                <Button c="orange" variant="light" loading={updateSalary.isPending} type="submit">
-                                    UPDATE DERIVED INCOME
-                                </Button>
-                                <Button onClick={onClose} c="red" variant="light">
-                                    CANCEL UPDATE
-                                </Button>
-                                </Flex>
-                            </Box>
-                        </Center>
-               </Group>
+                        
+                        <Box mt={20}>
+                            <Flex justify="center" align="center" gap={10}>
+                            <Button c="orange" variant="light" loading={updateSalary.isPending} type="submit">
+                                UPDATE DERIVED INCOME
+                            </Button>
+                            <Button onClick={onClose} c="red" variant="light">
+                                CANCEL UPDATE
+                            </Button>
+                            </Flex>
+                        </Box>
+               </Flex>
+
             </form>
         </Modal>
     )

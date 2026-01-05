@@ -1,18 +1,17 @@
 //submit data for dma
 //check credits for dma
 //read dma 
+import axios from "axios";
 import { dma_client } from "../dma_client"
-import type { CreditsResponse, UploadDMARecordsResponse } from "./types"
+import { campaigns_client } from "../campaigns_client"
+
+import type { CreditsResponse, UploadDMARecordsResponse,PaginatedDMARecordInterface,TotalNumberOfDMARecords,DMARecordBaseInterface,DeleteRecordResponse } from "./types"
 
 export const dma_api={
     //check credits
     check_credits:async():Promise<CreditsResponse>=>{
         try {
            const credits=await dma_client.get<CreditsResponse>('/dma/check-credits');
-           console.log("print credits")
-           console.log(credits.data.credits)
-           console.log("print message")
-           console.log(credits.data.message)
            return credits.data
         } catch (error) {
             console.error(error)
@@ -24,7 +23,6 @@ export const dma_api={
         try {
             const formData=new FormData();
             formData.append('file',file);
-            
             const response=await dma_client.post<UploadDMARecordsResponse>('/dma/upload-data',formData,{
                 headers:{
                     'Content-Type':'multipart/form-data',
@@ -51,6 +49,74 @@ export const dma_api={
             
         } catch (error) {
             
+        }
+    },
+
+    get_all_dma_records:async(page:number=1,page_size:number=10):Promise<PaginatedDMARecordInterface>=>{
+       try {
+        const response=await campaigns_client.get<PaginatedDMARecordInterface>("/dma-records/all",{params:{page:page,page_size:page_size}});
+        return response?.data;
+       } catch (error) {
+        if(axios.isAxiosError(error)){
+            throw error
+        }
+        throw error
+       }
+    },
+    get_total_dma_records:async():Promise<TotalNumberOfDMARecords>=>{
+        try {
+            const response=await campaigns_client.get<TotalNumberOfDMARecords>("/dma-records/total")
+            return response?.data
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                throw error;
+            }
+            throw error;
+        }
+    },
+    get_record_by_campaign_code:async(page:number=1,page_size:number=10,camp_code:string):Promise<PaginatedDMARecordInterface>=>{
+        try {
+            const response=await campaigns_client.get<PaginatedDMARecordInterface>(`/dma-records/${camp_code}`,{params:{page:page,page_size}})
+            return response?.data
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                throw error;
+            }
+            throw error
+        }
+    },
+    get_record_by_id:async(id:number):Promise<DMARecordBaseInterface>=>{
+        try {
+            const response=await campaigns_client.get<DMARecordBaseInterface>(`/dma-records/${id}`);
+            return response?.data
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                throw error;
+            }
+            throw error
+        }
+    },
+    delete_record_by_id:async(id:number):Promise<DeleteRecordResponse>=>{
+        try {
+            const response=await campaigns_client.delete<DeleteRecordResponse>(`/dma-records/${id}`)
+            return response?.data
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                throw error;
+            }
+            throw error;
+        }
+    },
+    delete_records_by_audit_id:async(audit_id:string):Promise<DeleteRecordResponse>=>{
+        try {
+            const response=await campaigns_client.delete<DeleteRecordResponse>(`/dma-records/${audit_id}`);
+            return response?.data
+
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                throw error;
+            }
+            throw error;
         }
     }
 }

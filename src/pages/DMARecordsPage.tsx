@@ -1,41 +1,10 @@
-import {
-  Alert,
-  Container,
-  Title,
-  Grid,
-  Card,
-  Text,
-  Progress,
-  Badge,
-  Group,
-  ActionIcon,
-  Modal,
-  Stack,
-  Button,
-  Paper,
-  SimpleGrid,
-  FileInput,
-  RingProgress,
-  Center,
-} from '@mantine/core';
-
-
+import {Alert,Container,Title,Grid,Card,Text,Progress,Badge,Group,ActionIcon,Modal,Stack,Button,Paper,SimpleGrid,FileInput,RingProgress,Center} from '@mantine/core';
 import { useEffect,useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDisclosure } from '@mantine/hooks';
-
-import {
-  IconBook,
-  IconCertificate,
-  IconTrophy,
-  IconClock,
-  IconPlus
-} from '@tabler/icons-react';
-
+import {IconBook,IconCertificate,IconClock,IconPlus} from '@tabler/icons-react';
 import { FilesIcon,FileSpreadsheet,UploadIcon,AlertCircle,X } from 'lucide-react';
-
 import DMARecordsTable from '../components/DMARecordsTable';
-
 import { dma_api } from '../api/dma/dma';
 import { toast } from 'react-toastify';
 
@@ -101,7 +70,7 @@ const DMARecordsPage = () => {
   
    const dma_status = [
     { title: 'DMA Credits', value: dma_credits?.credits, icon: IconBook, color: 'blue' },
-    { title: 'Email Sent', value: "biyela@gmail.com", icon: IconCertificate, color: 'green' },
+    { title: 'Email Sent', value: "icon@gmail.com", icon: IconCertificate, color: 'green' },
     { title: 'Time Sent', value: formattedDate, icon: IconClock, color: 'orange' }
   ];
 
@@ -205,14 +174,12 @@ const DMARecordsPage = () => {
                     </Group>
                  </form>
             </Modal>
-            <Button leftSection={<IconPlus size={16} />} variant='outline' onClick={open}>
+            {/* <Button leftSection={<IconPlus size={16} />} variant='outline' onClick={open}>
               ADD DMA RECORD
-            </Button>
-          </Group>
-          <Text c="dimmed" size="md">
-            Track your DMA records
-          </Text>
+            </Button> */}
 
+          </Group>
+         
         </div>
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
           {dma_status.map((stat) => (

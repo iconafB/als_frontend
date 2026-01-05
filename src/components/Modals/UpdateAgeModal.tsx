@@ -71,21 +71,6 @@ export const UpdateAgeModal=({opened,onClose,rule}:UpdateModalProps)=>{
 
     return(
         <Modal 
-            title={
-                <Text ta="center" fw={600} size="lg" w="100%" c="green">
-                    UPDATE AGE FOR CAMPAIGN RULE
-                </Text>
-            } 
-            styles={{
-                header:{
-                    justifyContent:'center'
-                },
-                title:{
-                    width:"100%",
-                    textAlign:"center",
-                    marginRight:"auto"
-                }
-            }}
             opened={opened} 
             onClose={onClose} 
             size="lg" 
@@ -103,7 +88,7 @@ export const UpdateAgeModal=({opened,onClose,rule}:UpdateModalProps)=>{
                             />
                             {rule.age.operator=="between" ? (
                                 
-                               <Flex gap={10}>
+                               <Flex gap={10} direction="row">
 
                                     <Controller
                                         name="age_lower_limit"
@@ -127,9 +112,7 @@ export const UpdateAgeModal=({opened,onClose,rule}:UpdateModalProps)=>{
 
                                 />
                             )}
-
                         </Flex>
-
                         <Box mt={25}>
                             <Flex justify="center" align="center" gap={20}>
                                 <Button c="orange" variant="light" loading={updateAge.isPending} type="submit" size="sm">

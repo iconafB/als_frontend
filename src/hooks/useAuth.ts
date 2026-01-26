@@ -1,11 +1,12 @@
 // hooks/useAuth.ts
 // hooks/useAuth.ts
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { auth_api } from "../api/auth/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
 import { useAuthContext } from "../contexts/auth-context"; // Import context
+import type { CurrentUser } from "../api/auth/types";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -51,3 +52,17 @@ export const useAuth = () => {
     registerError: registerMutation.error,
   };
 };
+
+
+export const useCurrentUserAdmin=()=>{
+  return useQuery<CurrentUser,Error>({
+    queryKey:['current-user-admin'],
+    queryFn:async()=>{
+      const user=await auth_api.get_current_user_admin()
+      return user
+    },
+    retry:false,
+    staleTime:5*60*1000,
+    refetchOnWindowFocus:false,
+  })
+}

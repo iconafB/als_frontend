@@ -10,6 +10,7 @@ export const useRules = (page: number, pageSize: number) => {
   });
 };
 
+
 export const useSearchRules = (rule_name: string, page: number, pageSize: number) => {
   return useQuery({
     queryKey: ['rules', 'search', rule_name, page, pageSize],
@@ -46,7 +47,6 @@ export const useCreateRule = () => {
   });
 };
 
-
 export const useUpdateLeadsNumber = () => {
 
   const queryClient = useQueryClient();
@@ -73,10 +73,6 @@ export const useAssignRuleToCampaign=()=>{
     mutationFn:({payload}:{payload:AssignRuleToCampaignPayload})=>ruleService.assignRuleToCampaign(payload),
     onSuccess:(data):any=>{
       queryClient.invalidateQueries({queryKey:['rules']});
-      console.log("print the message after assignment")
-      console.log(data?.message)
-      console.log("print the success message")
-      console.log(data?.success)
       toast.success(`message:${data.message}`)
     },
     onError:(error:any)=>{
@@ -146,7 +142,6 @@ export const useUpdateRule = () => {
   });
 };
 
-
 export const useActivateRule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -195,4 +190,3 @@ export const useTotalCampaignRules=()=>{
           queryFn: ()=>ruleService.totalCampaignRules()
       })
 };
-  

@@ -1,4 +1,4 @@
-import {Alert,Container,Title,Grid,Card,Text,Progress,Badge,Group,ActionIcon,Modal,Stack,Button,Paper,SimpleGrid,FileInput,RingProgress,Center} from '@mantine/core';
+import {Alert,Container,Title,Card,Text,Group,ActionIcon,Modal,Stack,Button,SimpleGrid,FileInput,RingProgress,Center} from '@mantine/core';
 import { useEffect,useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDisclosure } from '@mantine/hooks';
@@ -16,7 +16,7 @@ const DMARecordsPage = () => {
   const [selectedFile, setSelectedFile] = useState<File|null>(null);
 
   //FETCH DMA RECORDS and update dma status
-  
+
   //fetch dma credits and display every 10 seconds
   const {data:dma_credits,isLoading:isLoadingCredits,error}=useQuery({
     queryKey:["credits"],
@@ -43,6 +43,7 @@ const DMARecordsPage = () => {
     setSelectedFile(null);
     close();
   }
+
   const handleFileSelect=(file:File | null)=>{
     setSelectedFile(file)
   }
@@ -70,8 +71,8 @@ const DMARecordsPage = () => {
   
    const dma_status = [
     { title: 'DMA Credits', value: dma_credits?.credits, icon: IconBook, color: 'blue' },
-    { title: 'Email Sent', value: "icon@gmail.com", icon: IconCertificate, color: 'green' },
-    { title: 'Time Sent', value: formattedDate, icon: IconClock, color: 'orange' }
+    { title: 'EMAIL SENT', value: "icon@gmail.com", icon: IconCertificate, color: 'green' },
+    { title: 'CURRENT DATE', value: formattedDate, icon: IconClock, color: 'orange' }
   ];
 
 
@@ -97,12 +98,11 @@ const DMARecordsPage = () => {
         <div>
           <Group justify="space-between" mb="lg">
             <Title order={2} c="dark">
-              DMA RECORDS SUMMARY
+              DMA RECORDS AND LOADED CAMAPIGNS SUMMARY
             </Title>
             
             <Modal opened={opened} onClose={close} title="SUBMIT DMA RECORDS" classNames={{title: 'text-6xl font-bold text-blue-600 dark:text-blue-400 text-center'}} size="xl" radius="md" centered withCloseButton={false}>
              
-
                  <form>
                     <FileInput
                       label="DMA Records File"

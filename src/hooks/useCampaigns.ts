@@ -34,7 +34,8 @@ export const useCreateCampaign=()=>{
 
 
 export const useLoadCampaign=()=>{
-    const queryClient=useQueryClient()
+    const queryClient=useQueryClient();
+
     return useMutation({
         mutationFn:({data}:{data:LoadCampaign})=>campaigns_api.load_campaigns(data),
         onSuccess:(data:LoadCampaignResponse)=>{
@@ -62,6 +63,7 @@ export const useFetchTotalCampaigns=()=>{
 
 
 export const useSearchCampaigns = (params: SearchCampaignParams,options:SearchOptions={debouncedMs:500,minLength:1}) => {
+    
     const debounceMs=options?.debouncedMs??500;
     const minLength=options?.minLength??1;
     const {page=1,page_size=10,campaign_name="",camp_code="",branch=""}=params;
@@ -73,7 +75,7 @@ export const useSearchCampaigns = (params: SearchCampaignParams,options:SearchOp
     const dcc = debCampCode.trim();
 
     const shouldSearch = dc.length >= minLength || db.length >= minLength || dcc.length >= minLength;
-
+    
     return {
         shouldSearch,
         debounced: { campaign_name: dc, branch: db, camp_code: dcc },
@@ -92,4 +94,3 @@ export const useSearchCampaigns = (params: SearchCampaignParams,options:SearchOp
     }),
     }
 };
-

@@ -79,7 +79,7 @@ export function CreateCampaignModal({opened,onClose,onSuccess}:CreateCampaignInt
                                 {...field}
                                 placeholder="enter branch name"
                                 label="Branch"
-                                data={['HQ','P3','INVTNTDBN']} 
+                                data={['HQ','P3','INVTNTDBN','DENEXIS']} 
                                 required 
                                 clearable
                             />

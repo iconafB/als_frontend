@@ -37,7 +37,8 @@ export const LoadCampaignModal=({ opened, onClose,row }:LoadCampaignModalProps) 
     }
   },[row,reset])
  
-  
+  // load campaign 
+
   const loadCampaignMutation = useMutation({
     mutationFn: (payload:LoadCampaign)=>campaigns_api.load_campaigns(payload),
     onSuccess: () => {
@@ -49,6 +50,8 @@ export const LoadCampaignModal=({ opened, onClose,row }:LoadCampaignModalProps) 
       console.error(error);
     },
   });
+
+
    
  const onSubmit=(values:LoadCampaign)=>{
     loadCampaignMutation.mutate({
@@ -73,12 +76,14 @@ export const LoadCampaignModal=({ opened, onClose,row }:LoadCampaignModalProps) 
           <input className="border p-2 rounded w-full bg-gray-100 cursor-not-allowed" {...register("camp_code")} readOnly />
           {/* Actions */}
           <Flex justify="center" align="center" gap="sm" mt="md">
-            <Button type="submit">
+            
+            <Button type="submit" loading={loadCampaignMutation.isPending}>
               LOAD CAMPAIGN
             </Button>
             <Button type="button" variant="outline" color="red" onClick={onClose}>
               CANCEL
             </Button>
+
           </Flex>
         </Stack>
       </form>

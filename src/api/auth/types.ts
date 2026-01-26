@@ -21,3 +21,11 @@ export interface Token{
     access_token:string;
     token_type:string;
 }
+
+export interface CurrentUser{
+    user_id:number;
+    email:string;
+    first_name:string;
+    last_name:string;
+    is_admin:boolean;
+}

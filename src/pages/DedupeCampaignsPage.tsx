@@ -116,6 +116,10 @@ const DedupeCampaignsPage = () => {
   return (
     <Container size="xl" px={0}>
       <Stack gap="xl">
+        <Title order={2} c="dark">
+              DEDUPE CAMPAIGNS TABLE OVERVIEW
+        </Title>
+
         <div>
           <Group justify="space-between" mb="lg" className='md:'>
             
@@ -159,10 +163,7 @@ const DedupeCampaignsPage = () => {
             </Card>
           ))}
         </SimpleGrid> */}
-        
-        <Title order={2} c="dark">
-              DEDUPE CAMPAIGNS TABLE OVERVIEW
-        </Title>
+  
         <DedupedCampaignTable/>
       </Stack>
 

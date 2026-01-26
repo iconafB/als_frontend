@@ -63,7 +63,7 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
             <Table.Th>SALARY RANGE</Table.Th>
             <Table.Th>AGE RANGE</Table.Th>
             <Table.Th>DERIVED INCOME</Table.Th>
-            <Table.Th>DAYS LAST USED</Table.Th>
+            {/* <Table.Th>DAYS LAST USED</Table.Th> */}
             <Table.Th>LEADS</Table.Th>
             <Table.Th>ACTIONS</Table.Th>
           </Table.Tr>
@@ -113,11 +113,13 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
                     {rule?.derived_income?.operator=="between"?`R${rule?.derived_income?.lower} - R${rule?.derived_income?.upper}`:`R${rule?.derived_income?.value}`}
                   </Badge>
                 </Table.Td>
-                <Table.Td>
+
+                {/* <Table.Td>
                   <Badge> 
                     {rule.last_used} days ago
                   </Badge>
-                </Table.Td>
+                </Table.Td> */}
+
                 <Table.Td>
                   <Badge color='grape'>
                     {rule.records_loaded}

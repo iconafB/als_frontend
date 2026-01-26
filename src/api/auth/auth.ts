@@ -1,6 +1,7 @@
 import { campaigns_client } from "../campaigns_client"
+import axios from "axios";
 
-import type { UserResponse,LoginUser,RegisterUser,Token } from "./types"
+import type { UserResponse,LoginUser,RegisterUser,Token,CurrentUser } from "./types"
 
 export const auth_api={
     //register user
@@ -9,8 +10,6 @@ export const auth_api={
             const response=await campaigns_client.post("/auth/register",data);
             return response.data
        } catch (error) {
-            console.log("error printed before")
-            console.log(error);
             throw new Error(`error:${error}`)
        }
     },
@@ -26,7 +25,6 @@ export const auth_api={
             return response.data
 
         } catch (error) {
-            console.log(error)
             throw new Error("An error occurred while logging in")
         }
     },
@@ -37,9 +35,18 @@ export const auth_api={
             return user.data
 
         } catch (error) {
-            console.log(error)
             throw new Error("An error occurred while getting ")
         }
+    },
+    get_current_user_admin:async():Promise<CurrentUser>=>{
+        try {
+            const current_user=await campaigns_client.get('/auth/me')
+            return current_user?.data
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                throw error
+            }
+            throw error
+        }
     }
-
 }

@@ -112,7 +112,6 @@ export const campaigns_api={
               params: {
                 page: params.page ?? 1,
                 page_size: params.page_size ?? 10,
-
                 ...(params.campaign_name?.trim()
                   ? { campaign_name: params.campaign_name.trim() }
                   : {}),

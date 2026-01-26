@@ -5,17 +5,19 @@ import axios from "axios";
 import { dma_client } from "../dma_client"
 import { campaigns_client } from "../campaigns_client"
 
-import type { CreditsResponse, UploadDMARecordsResponse,PaginatedDMARecordInterface,TotalNumberOfDMARecords,DMARecordBaseInterface,DeleteRecordResponse } from "./types"
+import type { CreditsResponse, UploadDMARecordsResponse,PaginatedDMARecordInterface,TotalNumberOfDMARecords,DMARecordBaseInterface,DeleteRecordResponse,SearchDMAOverviewRecords } from "./types"
 
 export const dma_api={
     //check credits
     check_credits:async():Promise<CreditsResponse>=>{
         try {
-           const credits=await dma_client.get<CreditsResponse>('/dma/check-credits');
+           const credits=await campaigns_client.get<CreditsResponse>('/dma-records/credits');     
            return credits.data
         } catch (error) {
-            console.error(error)
-            throw new Error(`${error}`)
+            if(axios.isAxiosError(error)){
+                throw error
+            }
+            throw error
         }
     },
     //upload dma data
@@ -55,6 +57,8 @@ export const dma_api={
     get_all_dma_records:async(page:number=1,page_size:number=10):Promise<PaginatedDMARecordInterface>=>{
        try {
         const response=await campaigns_client.get<PaginatedDMARecordInterface>("/dma-records/all",{params:{page:page,page_size:page_size}});
+        console.log("print the dma data")
+        console.log(response?.data)
         return response?.data;
        } catch (error) {
         if(axios.isAxiosError(error)){
@@ -110,6 +114,32 @@ export const dma_api={
     delete_records_by_audit_id:async(audit_id:string):Promise<DeleteRecordResponse>=>{
         try {
             const response=await campaigns_client.delete<DeleteRecordResponse>(`/dma-records/${audit_id}`);
+            return response?.data
+
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                throw error;
+            }
+            throw error;
+        }
+    },
+
+    search_dma_records:async({page,page_size,audit_id,campaign_code}:SearchDMAOverviewRecords):Promise<PaginatedDMARecordInterface>=>{
+        
+        try {
+            const response=await campaigns_client.get<PaginatedDMARecordInterface>('/dma-records/search-dma-records',{
+              params: {
+                page: page ?? 1,
+                page_size: page_size ?? 10,
+                ...(audit_id?.trim()
+                  ? { audit_id: audit_id.trim() }
+                  : {}),
+                ...(campaign_code?.trim()
+                  ? { campaign_code: campaign_code.trim() }
+                  : {}),
+              },
+            })
+
             return response?.data
 
         } catch (error) {

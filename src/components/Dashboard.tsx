@@ -59,14 +59,15 @@ export const Dashboard: React.FC = () => {
 
       case 'campaigns':
         return <Campaigns/>
+      case 'campaign-rules':
+        return <RulesPage/>
       case 'dedupe campaigns':
         return <DedupeCampaignsPage/>
       /* case 'rules':
         return <CampaignRulesPage/> */
       case 'dma':
         return <DMARecordsPage/>
-      case 'campaign-rules':
-        return <RulesPage/>
+      
       default:
         return <HomePage />;
     }
@@ -112,6 +113,9 @@ export const Dashboard: React.FC = () => {
                   <Tabs.Tab value='campaigns' leftSection={<IconTable size={16}/>} fz="lg" fw="bold">
                     CAMPAIGNS
                   </Tabs.Tab>
+                  <Tabs.Tab value='campaign-rules' leftSection={<ScaleIcon size={16}/>} fz="lg" fw="bold">
+                    CAMPAIGN RULES
+                  </Tabs.Tab>
                   <Tabs.Tab value='dedupe campaigns' leftSection={<IconCalendar size={16}/>} fz="lg" fw="bold">
                     DEDUPE CAMPAIGNS OVERVIEW
                   </Tabs.Tab>
@@ -121,9 +125,7 @@ export const Dashboard: React.FC = () => {
                   <Tabs.Tab value='dma' leftSection={<ArchiveRestoreIcon size={16}/>} fz="lg" fw="bold">
                     DMA OVERVIEW
                   </Tabs.Tab>
-                  <Tabs.Tab value='campaign-rules' leftSection={<ScaleIcon size={16}/>} fz="lg" fw="bold">
-                    CAMPAIGN RULES
-                  </Tabs.Tab>
+                  
                 </Tabs.List>
               </Tabs>
 
@@ -166,6 +168,17 @@ export const Dashboard: React.FC = () => {
                     >
                     CAMPAIGNS
                   </Button>
+
+                  <Button
+                    variant={activePage === 'campaign-rules' ? 'filled' : 'subtle'}
+                    leftSection={<ScaleIcon size={16} />}
+                    justify="flex-start"
+                    onClick={() => setActivePage('campaign-rules')}
+                    fullWidth
+                    >
+                    CAMPAIGN RULES
+                  </Button>
+                  
                   <Button
                     variant={activePage === 'dedupe campaigns' ? 'filled' : 'subtle'}
                     leftSection={<IconCalendar size={16} />}
@@ -185,15 +198,7 @@ export const Dashboard: React.FC = () => {
                   >
                     DMA OVERVIEW
                   </Button>
-                   <Button
-                    variant={activePage === 'campaign-rules' ? 'filled' : 'subtle'}
-                    leftSection={<ScaleIcon size={16} />}
-                    justify="flex-start"
-                    onClick={() => setActivePage('campaign-rules')}
-                    fullWidth
-                    >
-                    CAMPAIGN RULES
-                  </Button>
+                   
                 </Stack>
               </div>
               <Divider/>

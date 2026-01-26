@@ -6,13 +6,17 @@ import type { create_campaign, get_all_campaigns } from "../api/campaigns/types"
 import { LoadCampaignModal } from "./Campaigns/LoadCampaignModal";
 import CreateCampaignsFlow from "./WizardModalForms/CreateCampaignsFlow";
 
-const Campaigns = () => {
+import { useCurrentUserAdmin } from "../hooks/useAuth";
 
+
+const Campaigns = () => {
+  
   const [campaignPage, setCampaignPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [campaignNameFilter, setCampaignNameFilter] = useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [campaignCodesFilter, setCampaignCodesFilter] = useState("");
+  const {data:user}=useCurrentUserAdmin()
 
   const allCampaignsQuery = useFetchCampaigns(campaignPage, pageSize);
 
@@ -26,6 +30,7 @@ const Campaigns = () => {
     },
     { debouncedMs: 500, minLength: 1 }
   );
+  
 
   const activeQuery = search.shouldSearch ? search.query : allCampaignsQuery;
 
@@ -157,7 +162,7 @@ const Campaigns = () => {
           <Text size="lg" fw={600}>
             Campaigns Table
           </Text>
-
+          {user?.is_admin &&
           <Button
             onClick={() => {
               setModalOpen(true);
@@ -168,12 +173,12 @@ const Campaigns = () => {
           >
             CREATE CAMPAIGN AND CAMPAIGN RULE
           </Button>
-
+          }
           <Group gap="sm">
-            <Badge color="blue" variant="light" p={18}>
+           {/*  <Badge color="blue" variant="light" p={18}>
               {data?.total ?? 0} Total
             </Badge>
-
+ */}
             <Select
               value={pageSize.toString()}
               onChange={(value) => {
@@ -194,6 +199,7 @@ const Campaigns = () => {
 
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
           <TextInput
             placeholder="Search by Campaign Name"
             leftSection={<Search size={16} />}
@@ -232,6 +238,7 @@ const Campaigns = () => {
               Active Filters Applied
             </Text>
             <button
+            type="button"
               onClick={clearCamapignsFilters}
               className="text-blue-500 hover:text-blue-800"
             >
@@ -268,8 +275,6 @@ const Campaigns = () => {
           </Table>
         </Table.ScrollContainer>
 
-
-
         {/* Pagination Footer */}
 
         <div className="border-t border-gray-200 px-4 py-3">
@@ -281,7 +286,6 @@ const Campaigns = () => {
               total={totalPages}
               withEdges
             />
-
           </div>
 
         </div>
@@ -294,6 +298,7 @@ const Campaigns = () => {
         onClose={() => setOpenCampaignLoadingModal(false)}
         row={selectedRow}
       />
+
     </div>
   );
 };

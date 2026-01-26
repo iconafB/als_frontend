@@ -1,8 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { data_insertion_service } from "../api/data_insertion/data_insertion";
 import type {InsertEnrichedDataResponse,InsertStatusDataResponse} from "../api/data_insertion/types"
-
 
 
 export const useInsertStatusData=()=>{
@@ -17,6 +16,7 @@ export const useInsertStatusData=()=>{
         }
    })
 }
+
 
 export const useInsertEnrichedData=()=>{
     return useMutation({

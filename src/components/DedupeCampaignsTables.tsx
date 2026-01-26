@@ -4,7 +4,7 @@ import { Loader,Stack,Paper,NumberInput ,Table,TextInput,Text,Alert,Badge,Select
 import { AlertCircle, Search } from "lucide-react"
 import { fetchDedupeCampaign } from "../api/deduped_campaigns_mock_api"
 import { useDisclosure } from "@mantine/hooks"
-import { useQuery,useMutation } from "@tanstack/react-query"
+import { useQuery} from "@tanstack/react-query"
 import { IconMoneybag,IconBuildingEstate,IconBadgeAd,IconX } from "@tabler/icons-react"
 
 import { useGetDedupeAggregatedCount } from "../hooks/useDedupe"
@@ -171,16 +171,17 @@ const DedupedCampaignTable = () => {
                         onChange={(event)=>{
                           setSearchTerm(event.currentTarget.value)
                         }}
-                        placeholder="enter campaign name,code,brach,leads number,or date"
+                        placeholder="search by campaign name"
                         w={400}
                     />
                 </div>
 
                 <Group gap="sm" justify="space-between">
                   <div className="flex gap-2 mt-6">
-                     <Badge variant="light" color="blue" p={18} w={160}>
+                    {/*  <Badge variant="light" color="blue" p={18} w={160}>
                       {filteredRecords.length} of {dma_records.length} records
-                    </Badge>
+                    </Badge> */}
+                    
                     <Select
                       value={pageSize.toString()}
                       onChange={(value)=>{

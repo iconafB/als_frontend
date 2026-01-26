@@ -1,7 +1,6 @@
 
 export interface CreditsResponse{
-     credits:string;
-    message:string;
+    credits:string;
 }
 
 export interface UploadDMARecordsResponse{
@@ -15,12 +14,14 @@ export interface UploadDMARecordsResponse{
 
 
 export interface DMARecordBaseInterface{
-    id:number;
+    pk:number;
     audit_id:string;
     number_of_records:number;
     notification_email:string;
     camp_code:string;
+    dedupe_status:string;
     created_at:string;
+    is_processed:boolean;
 }
 
 export interface PaginatedDMARecordInterface{
@@ -37,4 +38,12 @@ export interface TotalNumberOfDMARecords{
 export interface DeleteRecordResponse{
     message:string;
     message_status:boolean;
+}
+
+
+export interface SearchDMAOverviewRecords{
+    page?:number;
+    page_size?:number;
+    audit_id?:string;
+    campaign_code?:string;
 }

@@ -14,6 +14,7 @@ interface LoginFormProps {
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
+
   const { login, isLoginLoading, loginError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -100,4 +101,5 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
       </Group>
     </div>
   );
+  
 };

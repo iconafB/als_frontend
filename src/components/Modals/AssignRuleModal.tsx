@@ -1,4 +1,4 @@
-import { Modal,Flex,Button,Text,NumberInput,TextInput,Box,Container } from "@mantine/core"
+import { Modal,Flex,Button,NumberInput,TextInput,Box,Container } from "@mantine/core"
 import type { Rule } from '../../api/campaign_rules/types';
 import { useAssignRuleToCampaign } from "../../hooks/useRules";
 import type { AssignRuleToCampaignPayload } from "../../api/campaign_rules/types";

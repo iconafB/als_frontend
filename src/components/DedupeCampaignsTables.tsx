@@ -1,6 +1,6 @@
 
 import { useState,useMemo,useEffect } from "react"
-import { Loader,Stack,Paper,NumberInput ,Table,TextInput,Text,Alert,Badge,Select,Group,Pagination, Button,Modal,Flex, Grid } from "@mantine/core"
+import { Loader,Stack,Paper,NumberInput ,Table,TextInput,Text,Alert,Badge,Select,Group,Pagination, Button,Modal,Flex } from "@mantine/core"
 import { AlertCircle, Search } from "lucide-react"
 import { fetchDedupeCampaign } from "../api/deduped_campaigns_mock_api"
 import { useDisclosure } from "@mantine/hooks"
@@ -22,6 +22,8 @@ const DedupedCampaignTable = () => {
 
       const [openedLoadCampaign,{open:openLoadCampaign,close:closeLoadCampaign}]=useDisclosure(false)
      
+      console.log(openLoadCampaign)
+
       const {data:dma_records=[],error,isLoading}=useQuery({
           queryKey:['dedupe_campaign'],
           queryFn:fetchDedupeCampaign
@@ -51,14 +53,14 @@ const DedupedCampaignTable = () => {
     }, [dma_records, searchTerm, campaignNameFilter,  campaignCodeFilter, createdAtFilter, leadsFilter, branchFilter]);
 
 
-      const paginatedRecords = useMemo(() => {
+    //   const paginatedRecords = useMemo(() => {
   
-          const startIndex = (currentPage - 1) * pageSize;
-          const endIndex = startIndex + pageSize;
+    //       const startIndex = (currentPage - 1) * pageSize;
+    //       const endIndex = startIndex + pageSize;
 
-          return filteredRecords.slice(startIndex, endIndex);
+    //       return filteredRecords.slice(startIndex, endIndex);
   
-      },[filteredRecords, currentPage, pageSize]);
+    //   },[filteredRecords, currentPage, pageSize]);
   
       const totalPages = Math.ceil(filteredRecords.length / pageSize);
       
@@ -119,41 +121,41 @@ const DedupedCampaignTable = () => {
  ))
 
 
-  const rows=paginatedRecords.map((record)=>(
+//   const rows=paginatedRecords.map((record)=>(
     
-     <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={record.id}>
-         <Table.Td className="font-medium">
-          <Badge variant="light" color="blue" p={18}>
-             {record.id}
-          </Badge>
-         </Table.Td>
-         <Table.Td className="font-medium">
-             <Badge variant="light" color="purple" p={18}>
-                {record.campaign_name}
-             </Badge>
-         </Table.Td>
-         <Table.Td className="foont-medium">
-             <Badge variant="light" color="blue" p={18}>
-                 {record.campaign_code}
-             </Badge>
-         </Table.Td>
-         <Table.Td className="font-medium">
-              <Badge variant="light" color="orange" p={18} >
-                 {record.branch}
-            </Badge>
-         </Table.Td>
-         <Table.Td className="font-medium">
-              <Badge variant="light" color="green" p={18}>
-                {record.leads}
-              </Badge>
-         </Table.Td>
-         <Table.Td className="font-medium">
-             <Badge variant="light" color="purple" p={18}>
-                 {record.created_at}
-             </Badge>
-         </Table.Td>
-     </Table.Tr>
-  ));
+//      <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={record.id}>
+//          <Table.Td className="font-medium">
+//           <Badge variant="light" color="blue" p={18}>
+//              {record.id}
+//           </Badge>
+//          </Table.Td>
+//          <Table.Td className="font-medium">
+//              <Badge variant="light" color="purple" p={18}>
+//                 {record.campaign_name}
+//              </Badge>
+//          </Table.Td>
+//          <Table.Td className="foont-medium">
+//              <Badge variant="light" color="blue" p={18}>
+//                  {record.campaign_code}
+//              </Badge>
+//          </Table.Td>
+//          <Table.Td className="font-medium">
+//               <Badge variant="light" color="orange" p={18} >
+//                  {record.branch}
+//             </Badge>
+//          </Table.Td>
+//          <Table.Td className="font-medium">
+//               <Badge variant="light" color="green" p={18}>
+//                 {record.leads}
+//               </Badge>
+//          </Table.Td>
+//          <Table.Td className="font-medium">
+//              <Badge variant="light" color="purple" p={18}>
+//                  {record.created_at}
+//              </Badge>
+//          </Table.Td>
+//      </Table.Tr>
+//   ));
 
   return (
     <div className="space-y-6">

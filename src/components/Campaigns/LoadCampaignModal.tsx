@@ -1,12 +1,11 @@
-import { useState,useEffect } from "react";
+import { useEffect } from "react";
 import {Modal,Stack,Button,Flex,Text} from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useDebouncedValue } from "@mantine/hooks";
 import { campaigns_api } from "../../api/campaigns/campaigns";
-import type { PaginatedInfiniteResponse } from "../../api/campaigns/types";
+
 import { showNotification } from "@mantine/notifications";
-import type { create_campaign } from "../../api/campaigns/types";
+
 import type { LoadCampaign } from "../../api/campaigns/types";
 interface LoadCampaignModalProps {
   opened: boolean;

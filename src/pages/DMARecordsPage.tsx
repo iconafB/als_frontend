@@ -1,9 +1,9 @@
-import {Alert,Container,Title,Card,Text,Group,ActionIcon,Modal,Stack,Button,SimpleGrid,FileInput,RingProgress,Center} from '@mantine/core';
+import {Alert,Container,Title,Card,Text,Group,ActionIcon,Modal,Stack,Button,SimpleGrid,FileInput} from '@mantine/core';
 import { useEffect,useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useDisclosure } from '@mantine/hooks';
-import {IconBook,IconCertificate,IconClock,IconPlus} from '@tabler/icons-react';
-import { FilesIcon,FileSpreadsheet,UploadIcon,AlertCircle,X } from 'lucide-react';
+import {IconBook,IconCertificate,IconClock} from '@tabler/icons-react';
+import { UploadIcon,AlertCircle,X } from 'lucide-react';
 import DMARecordsTable from '../components/DMARecordsTable';
 import { dma_api } from '../api/dma/dma';
 import { toast } from 'react-toastify';
@@ -12,9 +12,13 @@ import { toast } from 'react-toastify';
 const DMARecordsPage = () => {
 
   const [opened,{open,close}]=useDisclosure(false);
+  
+  console.log(open)
   const [currentTime, setCurrentTime] = useState(new Date())
   const [selectedFile, setSelectedFile] = useState<File|null>(null);
 
+  console.log("print the set file method")
+  console.log(setSelectedFile)
   //FETCH DMA RECORDS and update dma status
 
   //fetch dma credits and display every 10 seconds
@@ -24,13 +28,18 @@ const DMARecordsPage = () => {
     refetchInterval:10000
   });
 
+  console.log("print the loading error state")
+  console.log(isLoadingCredits)
+  console.log("print the error")
+  console.log(error)
+
   //upload file upload
 
   const fileUploadMutation=useMutation({
 
     mutationFn:dma_api.upload_dma_records,
     onSuccess:(data)=>{
-      toast.success('DMA records uploaded successfully')
+      toast.success(`DMA records:${data.audit_id},${data?.number_of_records}`)
     },
     onError:(error)=>{
       toast.error('Failed to upload DMA records')
@@ -39,14 +48,14 @@ const DMARecordsPage = () => {
   });
 
 
-  const handleClose=()=>{
-    setSelectedFile(null);
-    close();
-  }
+  // const handleClose=()=>{
+  //   setSelectedFile(null);
+  //   close();
+  // }
 
-  const handleFileSelect=(file:File | null)=>{
-    setSelectedFile(file)
-  }
+  // const handleFileSelect=(file:File | null)=>{
+  //   setSelectedFile(file)
+  // }
 
   //upload dma files
   const handleRecordUpload=()=>{

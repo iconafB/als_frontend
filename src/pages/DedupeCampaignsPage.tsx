@@ -1,14 +1,9 @@
-import {Container,Title,Card,Text,Flex,Group,ActionIcon,Stack,Button,SimpleGrid,Modal,FileInput,TextInput, Center} from '@mantine/core';
+import {Container,Title,Text,Flex,Group,Stack,Button,Modal,FileInput,TextInput, Center} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {IconCalendarEvent,IconPlus,IconX, IconList, IconDatabase, IconHandClick, IconUpload, IconFileFilled, IconSpeakerphone, IconTarget} from '@tabler/icons-react';
+import {IconPlus,IconX, IconList, IconUpload, IconFileFilled, IconTarget} from '@tabler/icons-react';
 import DedupedCampaignTable from '../components/DedupeCampaignsTables';
-
 import { useUploadDedupeCampaignRecords,useAddDedupeList,useSubmitDedupeReturn } from '../hooks/useDedupe';
-
-import type { SubmitDedupeReturn } from '../api/dedupe_campaigns/types';
-
 import { useForm,Controller, type SubmitHandler } from 'react-hook-form';
-
 import { toast } from 'react-toastify';
 
 
@@ -31,12 +26,12 @@ interface AddDedupeListInterface{
 }
 const DedupeCampaignsPage = () => {
 
-  const stats = [
-    { title: 'Dedupe Campaigns', value: '12', icon: IconCalendarEvent, color: 'blue' },
-    { title: 'Manual Dedupes', value: '4', icon: IconHandClick, color: 'green' },
-    { title: 'Enriched Data', value: '6', icon: IconDatabase, color: 'purple' },
-    { title: 'Dedupe List', value: '234', icon: IconList, color: 'orange' },
-  ];
+  // const stats = [
+  //   { title: 'Dedupe Campaigns', value: '12', icon: IconCalendarEvent, color: 'blue' },
+  //   { title: 'Manual Dedupes', value: '4', icon: IconHandClick, color: 'green' },
+  //   { title: 'Enriched Data', value: '6', icon: IconDatabase, color: 'purple' },
+  //   { title: 'Dedupe List', value: '234', icon: IconList, color: 'orange' },
+  // ];
   
   const [manualOpened,{open:manualDedupeInsertOpen,close:manualDedupeInsertClose}]=useDisclosure(false)
   const [openedInsertDedupeList,{open:openInsertDedupeList,close:closeInsertDedupeList}]=useDisclosure(false)

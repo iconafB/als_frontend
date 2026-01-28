@@ -52,13 +52,6 @@ export const campaigns_api={
         }
     }
     ,
-    check_campaign_spec_levels:async(data:any):Promise<any>=>{
-        try {
-            
-        } catch (error) {
-            
-        }
-    },
     load_campaigns:async(load:LoadCampaign):Promise<LoadCampaignResponse>=>{
         try {
             const response=await campaigns_client.post("/campaigns/load-campaign",load)
@@ -70,27 +63,6 @@ export const campaigns_api={
                throw error
             }
             throw error
-        }
-    },
-    add_dedupes_manually:async(data:any):Promise<any>=>{
-        try {
-            
-        } catch (error) {
-            
-        }
-    },
-    submit_dedupe_return:async(data:any):Promise<any>=>{
-        try {
-            
-        } catch (error) {
-            
-        }
-    },
-    get_leads_count:async(data:any):Promise<any>=>{
-        try {
-            
-        } catch (error) {
-            
         }
     },
     get_total_number_of_campaigns:async():Promise<TotalNumberOfCampaignsResponse>=>{

@@ -13,8 +13,11 @@ export const ViewRuleModal = ({ opened, onClose, rule }: ViewRuleModalProps) => 
 
   const formatNumericField = (field: { operator: string; value: number; lower: number; upper: number }) => {
     if (field.operator === 'between') {
+      if(field.lower==null || field.upper==null) return "between: —";
       return `${field.lower} - ${field.upper}`;
     }
+    if(field.value==null)  return `${field.operator}: —`;
+    
     return `${field.operator}: ${field.value}`;
   };
 

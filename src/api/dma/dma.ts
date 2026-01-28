@@ -39,21 +39,6 @@ export const dma_api={
         }
     },
     //check dedupe status
-    check_dedupe_status:async(data:any):Promise<any>=>{
-        try {
-            
-        } catch (error) {
-            
-        }
-    },
-    read_dedupe_output:async(data:any):Promise<any>=>{
-        try {
-            
-        } catch (error) {
-            
-        }
-    },
-
     get_all_dma_records:async(page:number=1,page_size:number=10):Promise<PaginatedDMARecordInterface>=>{
        try {
         const response=await campaigns_client.get<PaginatedDMARecordInterface>("/dma-records/all",{params:{page:page,page_size:page_size}});

@@ -1,9 +1,9 @@
-import { useState, useEffect,useCallback,useMemo } from 'react';
-import { Button, TextInput, Container, Title, Group, Pagination, Stack } from '@mantine/core';
-import { Plus, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { TextInput, Container, Title, Group, Pagination, Stack } from '@mantine/core';
+import { Search } from 'lucide-react';
 import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
 import { RulesTable } from '../Tables/RulesTable';
-import { CreateRuleModal } from '../Modals/CreateRuleModal';
+
 import { UpdateRuleModal } from '../Modals/UpdateRuleModal';
 import { ViewRuleModal } from '../Modals/ViewRuleModal';
 import { AssignRuleToCampaignModal } from '../Modals/AssignRuleModal';

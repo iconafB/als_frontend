@@ -1,4 +1,4 @@
-import { Modal,Flex,Button,Group,NumberInput,Box,Text,Center } from "@mantine/core"
+import { Modal,Flex,Button,NumberInput,Box } from "@mantine/core"
 import type { Rule } from '../../api/campaign_rules/types';
 import { useUpdateDerivedIncome } from "../../hooks/useRules";
 import type { UpdateDerivedIncomePayload } from "../../api/campaign_rules/types";

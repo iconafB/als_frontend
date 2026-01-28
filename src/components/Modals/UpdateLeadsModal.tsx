@@ -1,4 +1,4 @@
-import { Modal,Flex,Button,Group,NumberInput,Box,Center } from "@mantine/core"
+import { Modal,Flex,Button,Group,NumberInput,Center } from "@mantine/core"
 import type { Rule } from '../../api/campaign_rules/types';
 import { useUpdateLeadsNumber } from "../../hooks/useRules";
 import type { UpdateLeadsNumber } from "../../api/campaign_rules/types";

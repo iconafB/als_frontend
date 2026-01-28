@@ -1,4 +1,4 @@
-import { Modal,Flex,Button,Text,NumberInput,Box,Container } from "@mantine/core"
+import { Modal,Flex,Button,NumberInput,Box,Container } from "@mantine/core"
 import type { Rule } from '../../api/campaign_rules/types';
 import { useUpdateAge } from "../../hooks/useRules";
 

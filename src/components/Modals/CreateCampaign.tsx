@@ -24,8 +24,11 @@ interface CreateCampaignInterface{
 
 export function CreateCampaignModal({opened,onClose,onSuccess}:CreateCampaignInterface){
 
-
-    const {control,handleSubmit,reset,formState:{errors}}=useForm<CampaignFormData>({
+    console.log("Print is opened state")
+    console.log(opened)
+    console.log("Print onClose")
+    console.log(onClose)
+    const {control,handleSubmit,formState:{errors}}=useForm<CampaignFormData>({
 
         defaultValues:{
             branch:'',

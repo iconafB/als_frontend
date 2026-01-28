@@ -1,13 +1,10 @@
 import React,{useState} from 'react';
 import { Button, Text, Group, Stack,AppShell, ActionIcon,Tabs,Tooltip, Divider } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {notifications} from '@mantine/notifications'
-import {IconDownload,IconRefresh,IconFilter,IconPlus,IconCalendar, IconLogout, IconMenu2,IconTable} from '@tabler/icons-react'
+import {IconCalendar, IconLogout, IconMenu2,IconTable} from '@tabler/icons-react'
 import { ScaleIcon, ArchiveRestoreIcon,House } from 'lucide-react';
 import DMARecordsPage from '../pages/DMARecordsPage';
 import DedupeCampaignsPage from '../pages/DedupeCampaignsPage';
-
-import CampaignRulesPage from '../pages/CampaignsRulePage';
 import HomePage from '../pages/HomePage';
 import Campaigns from './Campaigns';
 import { toast } from 'react-toastify';
@@ -31,23 +28,24 @@ export const Dashboard: React.FC = () => {
     navigate("/")
   }
 
-   const handleSidebarAction = (action: string, page: PageType) => {
-    notifications.show({
-      title: `${action} - ${page.charAt(0).toUpperCase() + page.slice(1)}`,
-      message: `${action} action triggered for ${page} page`,
-      color: 'green',
+  //  const handleSidebarAction = (action: string, page: PageType) => {
+  //   notifications.show({
+  //     title: `${action} - ${page.charAt(0).toUpperCase() + page.slice(1)}`,
+  //     message: `${action} action triggered for ${page} page`,
+  //     color: 'green',
     
-    }); 
-  };
+  //   }); 
+  // };
 
 
-    const sidebarActions = [
-    { icon: IconPlus, label: 'Create Campaign', color: 'blue' },
-    { icon: IconPlus, label: 'Create Campaign Rule', color: 'green' },
-    { icon: IconFilter, label: 'Submit DMA Record', color: 'orange' },
-    { icon: IconDownload, label: 'Create Dedupe Campaign', color: 'purple' },
-    { icon: IconRefresh, label: 'Manual Dedupe File Insert', color: 'teal' },
-  ];
+  //   const sidebarActions = [
+  //   { icon: IconPlus, label: 'Create Campaign', color: 'blue' },
+  //   { icon: IconPlus, label: 'Create Campaign Rule', color: 'green' },
+  //   { icon: IconFilter, label: 'Submit DMA Record', color: 'orange' },
+  //   { icon: IconDownload, label: 'Create Dedupe Campaign', color: 'purple' },
+  //   { icon: IconRefresh, label: 'Manual Dedupe File Insert', color: 'teal' },
+  // ];
+
 
 
     const renderPage = () => {

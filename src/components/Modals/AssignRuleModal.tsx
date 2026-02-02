@@ -54,6 +54,7 @@ export const AssignRuleToCampaignModal=({opened,onClose,rule,onSuccess}:UpdateMo
         
     
     return(
+        
         <Modal 
             opened={opened} 
             onClose={onClose} 

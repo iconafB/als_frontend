@@ -1,17 +1,8 @@
 // DMARecordsTable.tsx
 import { useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Group,
-  Loader,
-  Pagination,
-  Paper,
-  Select,
-  Table,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import {Alert,Badge,Group,Loader,Pagination,Paper,Select,Table,Text,TextInput,Stack,Divider} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+
 import { AlertCircle, Search } from "lucide-react";
 import type { PaginatedDMARecordInterface, DMARecordBaseInterface } from "../api/dma/types";
 import { useGetDMARecords, useSearchDMARecords } from "../hooks/dmaHooks";
@@ -36,6 +27,8 @@ const DMARecordsTable = () => {
   const [campaignCode, setCampaignCode] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+
+  const isMobile=useMediaQuery('(max-width: 768px)')
 
   // search query (debounced inside hook)
   const searchHook = useSearchDMARecords(
@@ -110,45 +103,46 @@ const DMARecordsTable = () => {
   }
 
   const rows = records.map((record) => (
+
     <Table.Tr key={record.pk} className="hover:bg-gray-50 transition-colors duration-200">
       <Table.Td className="font-medium">
-        <Badge variant="light" color="blue" p={18}>
+        <Badge variant="light" color="blue" size={isMobile ? "sm":"md"}>
           {record.audit_id}
         </Badge>
       </Table.Td>
 
       <Table.Td className="font-medium">
-        <Badge variant="light" color="purple" p={18}>
+        <Badge variant="light" color="purple" size={isMobile ? "sm":"md"}>
           {record.number_of_records}
         </Badge>
       </Table.Td>
 
       <Table.Td className="font-medium">
-        <Badge variant="light" color="grape" p={18}>
+        <Badge variant="light" color="grape" size={isMobile ?"sm":"md"}>
           {record.notification_email}
         </Badge>
       </Table.Td>
 
       <Table.Td className="font-medium">
-        <Badge variant="light" p={18}>
+        <Badge variant="light" size={isMobile ?"sm":"md"}>
           {record.camp_code}
         </Badge>
       </Table.Td>
 
       <Table.Td className="font-medium">
-        <Badge variant="light" color={dedupeStatusColor(record.dedupe_status)} p={18}>
+        <Badge variant="light" color={dedupeStatusColor(record.dedupe_status)} size={isMobile ? "sm":"md"}>
           {record.dedupe_status}
         </Badge>
       </Table.Td>
 
       <Table.Td className="font-medium">
-        <Badge variant="light" color="cyan" p={18}>
+        <Badge variant="light" color="cyan" size={isMobile ?"sm":"md"}>
           {formatDateOnly(record.created_at)}
         </Badge>
       </Table.Td>
 
       <Table.Td className="font-medium">
-        <Badge variant="light" color={processedColor(record.is_processed)} p={18}>
+        <Badge variant="light" color={processedColor(record.is_processed)} size={isMobile?"sm":"md"}>
           {record.is_processed ? "True" : "False"}
         </Badge>
       </Table.Td>
@@ -157,19 +151,23 @@ const DMARecordsTable = () => {
 
   return (
     <div className="space-y-6">
+
       <Paper shadow="sm" className="overflow-hidden">
         {/* Filters */}
+
         <Paper shadow="xs" p="xl">
           <Group justify="space-between" align="flex-end" wrap="wrap" gap="md">
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
               <TextInput
                 label="Audit ID"
                 leftSection={<Search size={16} />}
                 value={auditIdFilter}
                 onChange={(e) => setAuditIdFilter(e.currentTarget.value)}
                 placeholder="e.g. 9471743"
-                w={320}
-              />
+                className="w-full sm:w-80"
+                />
 
               <TextInput
                 label="Campaign Code"
@@ -177,7 +175,7 @@ const DMARecordsTable = () => {
                 value={campaignCode}
                 onChange={(e) => setCampaignCode(e.currentTarget.value)}
                 placeholder="e.g. MIWAY"
-                w={320}
+                className="w-full sm:w-80"
               />
             </div>
 
@@ -195,7 +193,7 @@ const DMARecordsTable = () => {
                 { value: "50", label: "50 per page" },
               ]}
               size="sm"
-              w={180}
+              className="w-full sm:w-44"
             />
           </Group>
 
@@ -216,55 +214,116 @@ const DMARecordsTable = () => {
         </Paper>
 
         {/* Table */}
-        <Paper>
-          <Table.ScrollContainer minWidth={1050}>
-            <Table highlightOnHover verticalSpacing="sm" mt={12}>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>AUDIT ID</Table.Th>
-                  <Table.Th>NUMBER OF RECORDS</Table.Th>
-                  <Table.Th>NOTIFICATION EMAIL</Table.Th>
-                  <Table.Th>CAMPAIGN CODE</Table.Th>
-                  <Table.Th>DEDUPE STATUS</Table.Th>
-                  <Table.Th>CREATED AT</Table.Th>
-                  <Table.Th>IS PROCESSED</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-
-              <Table.Tbody>
-                {rows.length > 0 ? (
-                  rows
-                ) : (
-                  <Table.Tr>
-                    <Table.Td colSpan={7} className="text-center py-8">
-                      <Text c="dimmed" size="sm">
-                        No results found.
+        {isMobile ?(
+          <Stack gap="sm" p="md">
+            {records.length>0?(
+              records?.map((record)=>(
+                <Paper key={record.pk} withBorder p="md" className="shadow-sm">
+                  <Group justify="space-between" align="flex-start" wrap="nowrap" className="min-w-0">
+                    <div className="min-w-0">
+                      <Text fw={700} className="truncate">
+                        {record?.audit_id}
                       </Text>
-                    </Table.Td>
+                      <Text size="sm" c="dimmed" className="truncate">
+                        {record?.notification_email}
+                      </Text>
+                    </div>
+                    <Badge variant="light" color={dedupeStatusColor(record.dedupe_status)} size="sm">
+                      {record.dedupe_status}
+                    </Badge>
+                  </Group>
+                  <Divider my="sm"/>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="min-w-0">
+                      <Text size="xs" c="dimmed">
+                        TOTAL RECORDS
+                      </Text>
+                      <Text fw={600} className="truncate">
+                        {record?.number_of_records}
+                      </Text>
+                    </div>
+                    <div className="min-w-0">
+                      <Text size="xs" c="dimmed">
+                        Campaign Code
+                      </Text>
+                      <Text fw={600} className="truncate">
+                        {record.camp_code}
+                      </Text>
+                    </div>
+                    <div className="min-w-0">
+                      <Text size="xs" c="dimmed">
+                        Created
+                      </Text>
+                      <Text fw={600} className="truncate">
+                         {formatDateOnly(record.created_at)}
+                      </Text>
+                    </div>
+                    <div className="min-w-0">
+                      <Text size="xs" c="dimmed">
+                        IS Processed
+                      </Text>
+                      <Badge variant="light" color={processedColor(record.is_processed)} size="sm">
+                        {record.is_processed ? "True" : "False"}
+                      </Badge>
+                    </div>
+
+                  </div>
+                </Paper>
+              ))
+            ):(
+              <Paper withBorder p="md" radius="md">
+                 <Text c="dimmed" size="sm" ta="center">
+                  No results found.
+                </Text>
+              </Paper>
+            )}
+          </Stack>
+        ):(
+          <Paper>
+            <Table.ScrollContainer minWidth={1050}>
+              <Table highlightOnHover verticalSpacing="sm" mt={12}>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>AUDIT ID</Table.Th>
+                    <Table.Th>NUMBER OF RECORDS</Table.Th>
+                    <Table.Th>NOTIFICATION EMAIL</Table.Th>
+                    <Table.Th>CAMPAIGN CODE</Table.Th>
+                    <Table.Th>DEDUPE STATUS</Table.Th>
+                    <Table.Th>CREATED AT</Table.Th>
+                    <Table.Th>IS PROCESSED</Table.Th>
                   </Table.Tr>
-                )}
-              </Table.Tbody>
-            </Table>
-          </Table.ScrollContainer>
+                </Table.Thead>
+                <Table.Tbody>
+                  {rows?.length >0 ?(rows):(
+                    <Table.Tr>
+                      <Table.Td colSpan={7} className="text-center py-8">
+                        <Text c="dimmed" size="sm">
+                          No results found.
+                        </Text>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
+                </Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
+          </Paper>
+        )}
+        <div className="border-t border-gray-200 px-4 py-3">
+          <Group justify="center">
+            <Pagination
+              value={currentPage}
+              onChange={setCurrentPage}
+              total={totalPages}
+              withEdges
+              disabled={totalPages <=1}
 
-          {/* Pagination */}
-          <div className="border-t border-gray-200 px-4 py-3">
-            <Group justify="center">
-              <Pagination
-                value={currentPage}
-                onChange={setCurrentPage}
-                total={totalPages}
-                withEdges
-                disabled={totalPages <= 1}
-              />
-            </Group>
-
-            <Text size="sm" c="dimmed" ta="center" mt="xs">
-              Page {currentPage} of {totalPages} — total {data?.total ?? 0} records
+            />
+          </Group>
+          <Text size="sm" c="dimmed" ta="center" mt="xs">
+             Page {currentPage} of {totalPages} — total {data?.total ?? 0} records
               {isFetching ? " (updating…)" : ""}
-            </Text>
-          </div>
-        </Paper>
+          </Text>
+        </div> 
       </Paper>
     </div>
   );

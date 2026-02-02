@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
-import { Button, Text, Group, Stack,AppShell, ActionIcon,Tabs,Tooltip, Divider } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Stack,Button,Text, Group,AppShell, ActionIcon,Tabs,Tooltip,Divider} from '@mantine/core';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import {IconCalendar, IconLogout, IconMenu2,IconTable} from '@tabler/icons-react'
 import { ScaleIcon, ArchiveRestoreIcon,House } from 'lucide-react';
 import DMARecordsPage from '../pages/DMARecordsPage';
@@ -13,13 +13,9 @@ import { RulesPage } from './CampaignRules/RulesPage';
 
 type PageType='home'|'campaigns'|'dedupe campaigns'|'rules'|'dma'|'campaign-rules'
 
-
 export const Dashboard: React.FC = () => {
-
   const [opened,{toggle}]=useDisclosure(false)
-
   const [activePage, setActivePage] = useState<PageType>('home')
-
   const navigate=useNavigate()
 
   const handleLogout=()=>{
@@ -28,28 +24,21 @@ export const Dashboard: React.FC = () => {
     navigate("/")
   }
 
-  //  const handleSidebarAction = (action: string, page: PageType) => {
-  //   notifications.show({
-  //     title: `${action} - ${page.charAt(0).toUpperCase() + page.slice(1)}`,
-  //     message: `${action} action triggered for ${page} page`,
-  //     color: 'green',
-    
-  //   }); 
-  // };
+  const isXs = useMediaQuery('(max-width: 36em)');
+  const isSm = useMediaQuery('(max-width: 48em)');
+  const titleSizeClass = 'text-lg sm:text-xl md:text-2xl';
+  const tabFontSize = isXs ? 'xs' : isSm ? 'sm' : 'md';
+  const tabIconSize = isXs ? 14 : isSm ? 16 : 18;
 
+  // Navbar sizing (UI-only, keeps functionality intact)
 
-  //   const sidebarActions = [
-  //   { icon: IconPlus, label: 'Create Campaign', color: 'blue' },
-  //   { icon: IconPlus, label: 'Create Campaign Rule', color: 'green' },
-  //   { icon: IconFilter, label: 'Submit DMA Record', color: 'orange' },
-  //   { icon: IconDownload, label: 'Create Dedupe Campaign', color: 'purple' },
-  //   { icon: IconRefresh, label: 'Manual Dedupe File Insert', color: 'teal' },
-  // ];
-
-
+  const navButtonSize = isXs ? 'xs' : isSm ? 'sm' : 'md';
+  const navIconSize = isXs ? 14 : isSm ? 16 : 18;
+  const navLabelClass = 'truncate text-xs sm:text-sm md:text-base';
+  const navSectionLabelSize = isXs ? 'xs' : 'sm';
+  const navPadding = isXs ? 'xs' : 'md';
 
     const renderPage = () => {
-
 
     switch (activePage) {
       case 'home':
@@ -75,36 +64,34 @@ export const Dashboard: React.FC = () => {
   return (
   
         <AppShell
-
-          header={{height:70}}
+         header={{ height: { base: 56, sm: 70 } }}
           navbar={{
-            width:280,
+            width: { base: 240, sm: 280, md: 320 },
             breakpoint:'sm',
             collapsed:{mobile:!opened}
           }}
           
           padding="md"
         >
-          <div className='p-40'>
             <AppShell.Header>
-              <Group h="100%" justify='space-between'>
-                <div className='px-18'>
-                <Group>
+              <Group  h="100%" px="md" justify='space-between' className="min-w-0">
+                <Group className="min-w-0">
                   <ActionIcon variant='subtle' color='gray' onClick={toggle} hiddenFrom='sm'>
                     <IconMenu2 size={18}/>
                   </ActionIcon>
-                    <Text size="xl" fw={700} c="blue">
+                   <Text fw={700} c="blue" className={`truncate ${titleSizeClass}`}>
                       ALS Dashboard
                     </Text>
                 </Group>
-                </div>
               <Tabs
                 value={activePage}
                 onChange={(value)=>setActivePage(value as PageType)}
                 variant='pills'
                 visibleFrom='xs'
+
               >
-                <Tabs.List>
+                {/* <div className="scroll-x max-w-full">
+                  <Tabs.List className="flex-nowrap">
                   <Tabs.Tab value='home' leftSection={<House size={16}/>} fz="lg" fw="bold">
                     HOME
                   </Tabs.Tab>
@@ -117,14 +104,31 @@ export const Dashboard: React.FC = () => {
                   <Tabs.Tab value='dedupe campaigns' leftSection={<IconCalendar size={16}/>} fz="lg" fw="bold">
                     DEDUPE CAMPAIGNS OVERVIEW
                   </Tabs.Tab>
-                 {/*  <Tabs.Tab value='rules' leftSection={<ScaleIcon size={16}/>} fz="lg" fw="bold">
-                    CAMPAIGN RULES
-                  </Tabs.Tab> */}
+                 
                   <Tabs.Tab value='dma' leftSection={<ArchiveRestoreIcon size={16}/>} fz="lg" fw="bold">
                     DMA OVERVIEW
                   </Tabs.Tab>
-                  
-                </Tabs.List>
+                  </Tabs.List>
+                </div> */}
+                  <div className="scroll-x max-w-full">
+                  <Tabs.List className="flex-nowrap">
+                  <Tabs.Tab value='home' className="whitespace-nowrap" leftSection={<House size={tabIconSize}/>} fz={tabFontSize} fw="bold">
+                    <span className={navLabelClass}>HOME</span>
+                  </Tabs.Tab>
+                  <Tabs.Tab value='campaigns' className="whitespace-nowrap" leftSection={<IconTable size={tabIconSize}/>} fz={tabFontSize} fw="bold">
+                    <span className={navLabelClass}>CAMPAIGNS</span>
+                  </Tabs.Tab>
+                  <Tabs.Tab value='campaign-rules' className="whitespace-nowrap" leftSection={<ScaleIcon size={tabIconSize}/>} fz={tabFontSize} fw="bold">
+                    <span className="hidden sm:inline">CAMPAIGN RULES</span><span className="sm:hidden">RULES</span>
+                  </Tabs.Tab>
+                  <Tabs.Tab value='dedupe campaigns' className="whitespace-nowrap" leftSection={<IconCalendar size={tabIconSize}/>} fz={tabFontSize} fw="bold">
+                    <span className="hidden sm:inline">DEDUPE CAMPAIGNS OVERVIEW</span><span className="sm:hidden">DEDUPE</span>
+                  </Tabs.Tab>
+                  <Tabs.Tab value='dma' className="whitespace-nowrap" leftSection={<ArchiveRestoreIcon size={tabIconSize}/>} fz={tabFontSize} fw="bold">
+                    <span className="hidden sm:inline">DMA OVERVIEW</span><span className="sm:hidden">DMA</span>
+                  </Tabs.Tab>
+                  </Tabs.List>
+                </div>
               </Tabs>
 
               <Group gap="sm" mr={20}>
@@ -137,64 +141,68 @@ export const Dashboard: React.FC = () => {
               </Group>
             </Group>
           </AppShell.Header>
-
-          <AppShell.Navbar p="md">
+          
+          <AppShell.Navbar p={navPadding}>
             <Stack gap="lg">
               <div>
-                <Text size='sm' fw={500} c="dimmed" mb="xs">
-                  NAVIGATION
+                <Text size={navSectionLabelSize} fw={500} c="dimmed" mb="xs">
+                  <span className="tracking-wide">NAVIGATION</span>
                 </Text>
                 <Stack gap="xs">
 
                   <Button 
                      variant={activePage === 'home' ? 'filled' : 'subtle'}
-                      leftSection={<House size={16} />}
+                    size={navButtonSize}
+                      leftSection={<House size={navIconSize} />}
                       justify="flex-start"
                       onClick={() => setActivePage('home')}
                       fullWidth
                   >
-                    HOME
+                    <span className={navLabelClass}>HOME</span>
                   </Button>
-
 
                   <Button
                     variant={activePage === 'campaigns' ? 'filled' : 'subtle'}
-                    leftSection={<IconTable size={16} />}
+                    size={navButtonSize}
+                    leftSection={<IconTable size={navIconSize} />}
                     justify="flex-start"
                     onClick={() => setActivePage('campaigns')}
                     fullWidth
                     >
-                    CAMPAIGNS
+                    <span className={navLabelClass}>CAMPAIGNS</span>
                   </Button>
 
                   <Button
                     variant={activePage === 'campaign-rules' ? 'filled' : 'subtle'}
-                    leftSection={<ScaleIcon size={16} />}
+                    size={navButtonSize}
+                    leftSection={<ScaleIcon size={navIconSize} />}
                     justify="flex-start"
                     onClick={() => setActivePage('campaign-rules')}
                     fullWidth
                     >
-                    CAMPAIGN RULES
+                    <span className={navLabelClass}><span className="hidden sm:inline">CAMPAIGN RULES</span><span className="sm:hidden">RULES</span></span>
                   </Button>
                   
                   <Button
                     variant={activePage === 'dedupe campaigns' ? 'filled' : 'subtle'}
-                    leftSection={<IconCalendar size={16} />}
+                    size={navButtonSize}
+                    leftSection={<IconCalendar size={navIconSize} />}
                     justify="flex-start"
                     onClick={() => setActivePage('dedupe campaigns')}
                     fullWidth
                   >
-                    DEDUPE CAMPAIGNS OVERVIEW
+                    <span className={navLabelClass}><span className="hidden sm:inline">DEDUPE CAMPAIGNS OVERVIEW</span><span className="sm:hidden">DEDUPE</span></span>
                   </Button>
                  
                   <Button
                     variant={activePage ==='dma'?'filled':'subtle'}
-                    leftSection={<ArchiveRestoreIcon size={16}/>}
+                    size={navButtonSize}
+                    leftSection={<ArchiveRestoreIcon size={navIconSize}/>}
                     justify='flex-start'
                     onClick={()=>setActivePage('dma')}
                     fullWidth
                   >
-                    DMA OVERVIEW
+                    <span className={navLabelClass}><span className="hidden sm:inline">DMA OVERVIEW</span><span className="sm:hidden">DMA</span></span>
                   </Button>
                    
                 </Stack>
@@ -202,7 +210,7 @@ export const Dashboard: React.FC = () => {
               <Divider/>
 {/* 
               <div>
-                <Text size='sm' fw={500} c="dimmed" mb="xs">
+                <Text size={navSectionLabelSize} fw={500} c="dimmed" mb="xs">
                   QUCIK ACTIONS
                 </Text>
                 <Stack gap="xs">
@@ -239,7 +247,6 @@ export const Dashboard: React.FC = () => {
           <AppShell.Main>
             {renderPage()}
           </AppShell.Main>
-        </div>
           
         </AppShell>
   );

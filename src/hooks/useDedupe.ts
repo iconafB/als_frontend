@@ -1,4 +1,4 @@
-import { useMutation,useQuery,useQueryClient } from "@tanstack/react-query";
+import { useMutation,useQuery,useQueryClient,keepPreviousData } from "@tanstack/react-query";
 import type { AddDedupeListResponse,SubmitDedupeReturn,SubmitDedupeReturnResponse,AddManualDedupeList,AddManualDedupeListResponse} from "../api/dedupe_campaigns/types";
 import { toast } from "react-toastify";
 import { dedupe_service } from "../api/dedupe_campaigns/dedupe_campaigns";
@@ -19,7 +19,6 @@ export const useAddDedupeList=()=>{
         mutationFn:({camp_code}:{camp_code:string})=>dedupe_service.add_dedupe_list(camp_code),
         onSuccess:(data:AddDedupeListResponse)=>{
             queryClient.invalidateQueries({queryKey:['add-dedupe-list']})
-
             toast.success(`File Name produced:${data?.FileName},total records inserted:${data?.TotalRecordsInserted}, total batches:${data?.TotalBatches},total time taken:${data?.TotalTimeTaken} and dedupe key:${data?.DedupeKey}`)
         },
         onError:(error:any)=>{
@@ -76,7 +75,8 @@ export const useUploadDedupeCampaignRecords=()=>{
 export const useGetDedupeAggregatedCount=(page:number,page_size:number)=>{
     return useQuery({
         queryKey:['dedupe',page,page_size],
-        queryFn:()=>dedupe_service.get_aggregated_count(page,page_size)
+        queryFn:()=>dedupe_service.get_aggregated_count(page,page_size),
+        placeholderData:keepPreviousData
     })
 };
 
@@ -95,4 +95,3 @@ export const useAddManualDedupeList2=()=>{
         }
     })
 };
-

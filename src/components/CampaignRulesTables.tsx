@@ -1,11 +1,14 @@
 import { useState,useMemo,useEffect } from "react"
 import { Loader, Paper, Table,TextInput,Text,Alert,Badge,Select,Group,Pagination } from "@mantine/core"
+import { useMediaQuery } from "@mantine/hooks";
 import { AlertCircle, Search } from "lucide-react"
 import { fetchMockRules } from "../api/campaign_rules_mock_api";
 import { useQuery } from "@tanstack/react-query"
 
 
 const CampaignRulesTable = () => {
+
+      const isMobile = useMediaQuery("(max-width: 768px)");
 
       const [searchTerm, setSearchTerm] = useState('')
       const [ruleCodeFilter, setRuleCodeFilter] = useState('')
@@ -92,17 +95,21 @@ const CampaignRulesTable = () => {
     };
 
 
+
   if(isLoading){
     
         return(
+
             <div className="flex justify-center items-center h-64">
                 <div className="text-center">
                     <Loader size="lg" color="green"/>
-                    <Text mt="md" c="dimmed">Loading Campaign rules....</Text>
+                    <Text mt="md" c="dimmed">
+                      Loading Campaign rules....
+                    </Text>
                 </div>
             </div>
         )
-    
+  
    }
 
 
@@ -117,59 +124,60 @@ const CampaignRulesTable = () => {
   const rows=paginatedRecords.map((record)=>(
     
      <Table.Tr className="hover:bg-gray-50 transition-colors duration-200" key={record.id}>
+
          <Table.Td className="font-medium">
-          <Badge variant="light" color="blue" p={18}>
+          <Badge variant="light" color="blue">
              {record.id}
           </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-             <Badge variant="light" color="purple" p={18}>
+             <Badge variant="light" color="purple">
                 {record.rule_code}
              </Badge>
          </Table.Td>
          <Table.Td className="foont-medium">
-             <Badge variant="light" color="blue" p={18}>
+             <Badge variant="light" color="blue">
                  {record.camp_code}
              </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-              <Badge variant="light" color="blue" p={18}>
+              <Badge variant="light" color="blue">
                  {record.min_salary}
               </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-            <Badge variant="light" color="orange" p={18}>
+            <Badge variant="light" color="orange">
                  {record.max_salary}
             </Badge>
          </Table.Td>
 
          <Table.Td className="font-medium">
-              <Badge variant="light" color="green" p={18}>
+              <Badge variant="light" color="green">
                 {record.min_age}
               </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-             <Badge variant="light" color="red" p={18}>
+             <Badge variant="light" color="red">
                  {record.max_age}
              </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-             <Badge variant="light" color="purple" p={18}>
+             <Badge variant="light" color="purple">
                  {record.gender}
              </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-             <Badge variant="light" color="green" p={18}>
+             <Badge variant="light" color="green">
                  {record.city}
              </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-             <Badge variant="light"  p={18}>
+             <Badge variant="light">
                  {record.province}
              </Badge>
          </Table.Td>
          <Table.Td className="font-medium">
-            <Badge variant="light" color="purple" p={20}>
+            <Badge variant="light" color="purple">
                 {record.created_at}
             </Badge>
          </Table.Td>
@@ -185,33 +193,32 @@ const CampaignRulesTable = () => {
             <Group mb="mb" justify="space-between">
               <div className="flex justify-between items-center">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shadow-xs">
+
                     <TextInput
                       label="Search Records"
                       leftSection={<Search size={16}/>}
-                      className="col-span-full lg:col-span-1 -mt-0"
+                      className="col-span-full lg:col-span-1 -mt-0 w-full sm:w-96"
                       value={searchTerm}
                       onChange={(event)=>{
                         console.log(event.currentTarget.value)
                         setSearchTerm(event.currentTarget.value)
                       }}
                       placeholder="enter audit id,notification email, or created at"
-                      w={400}
                     />
 
                 </div>
 
                 <Group gap="sm" justify="space-between">
                   <div className="flex gap-2 mt-6">
-                     <Badge variant="light" color="blue" p={18} w={160}>
+                     <Badge variant="light" color="blue" className="w-full sm:w-40">
                       {filteredRecords.length} of {dma_records.length} records
                     </Badge>
                     <Select
                       value={pageSize.toString()}
                       onChange={(value)=>{
-                    setPageSize(Number(value))
-                    setCurrentPage(1)
-                        }}
-
+                      setPageSize(Number(value))
+                      setCurrentPage(1)
+                      }}
                       data={[
                       {value:'5',label:'5 per page'},
                       {value:'10',label:'10 per page'},
@@ -220,7 +227,7 @@ const CampaignRulesTable = () => {
                         ]}
 
                         size="sm"
-                        w={180}
+                        className="w-full sm:w-44"
                       />
                   </div>
                 </Group>
@@ -240,9 +247,8 @@ const CampaignRulesTable = () => {
           </Paper>
 
           <Paper>
-              <Table.ScrollContainer minWidth={500}>
-                <Table verticalSpacing="sm" highlightOnHover mt={12}>
-
+              <Table.ScrollContainer minWidth={isMobile ? 520 : 1100}>
+                <Table highlightOnHover mt={12} horizontalSpacing={isMobile? "xs":"md"} verticalSpacing={isMobile?"xs":"sm"}  className="text-xs sm:text-sm">
                     <Table.Thead>
                       <Table.Tr className="bg-gray-500">
                         <Table.Th className="text-gray-500 font-semibold">
@@ -300,7 +306,8 @@ const CampaignRulesTable = () => {
                 </Table>
               </Table.ScrollContainer>
               {/**Pagination Section */}
-                {filteredRecords.length > 0 && (
+
+              {filteredRecords.length > 0 && (
               <div className="border-t border-gray-200 px-4 bg-gray-50 mt-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                    <div className="flex items-center gap-2">

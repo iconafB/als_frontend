@@ -3,6 +3,7 @@ import { MantineProvider } from "@mantine/core"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import { AuthProvider } from "./contexts/auth-context"
 import { ProtectedRoute } from "./components/ProtectedRoutes"
@@ -30,24 +31,40 @@ const AppContent: React.FC = () => {
 
 function App(){
   return(
-    <MantineProvider theme={{
-          primaryColor: 'blue',
-          colors: {
-            blue: [
-              '#e7f5ff',
-              '#d0ebff',
-              '#a5d8ff',
-              '#74c0fc',
-              '#339af0',
-              '#228be6',
-              '#1c7ed6',
-              '#1971c2',
-              '#1864ab',
-              '#0c5aa6'
-            ]
-          },
-        }} 
-        >
+    <MantineProvider
+      theme={{
+        primaryColor: 'blue',
+        defaultRadius: 'md',
+        fontFamily:
+          'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"',
+        headings: {
+          fontFamily:
+            'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"',
+          fontWeight: '700',
+        },
+        breakpoints: {
+          xs: '36em',
+          sm: '48em',
+          md: '62em',
+          lg: '75em',
+          xl: '88em',
+        },
+        colors: {
+          blue: [
+            '#e7f5ff',
+            '#d0ebff',
+            '#a5d8ff',
+            '#74c0fc',
+            '#339af0',
+            '#228be6',
+            '#1c7ed6',
+            '#1971c2',
+            '#1864ab',
+            '#0c5aa6',
+          ],
+        },
+      }}
+    >
       <Notifications/>
       <ToastContainer/>
       <QueryClientProvider client={queryClient}>

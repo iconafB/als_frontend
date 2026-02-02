@@ -21,6 +21,7 @@ export default function CreateCampaignsFlow({ opened, onClose }: RulesFlowsProps
   }, [opened]);
 
   // Open assign modal automatically after rule is set
+
   useEffect(() => {
     if (rule) setAssignModalOpen(true);
   }, [rule]);
@@ -45,7 +46,6 @@ export default function CreateCampaignsFlow({ opened, onClose }: RulesFlowsProps
           setRuleModalOpen(true);
         }}
       />
-
       <CreateRuleModal
         opened={ruleModalOpen}
         onClose={resetFlow}
@@ -59,7 +59,6 @@ export default function CreateCampaignsFlow({ opened, onClose }: RulesFlowsProps
           setRuleModalOpen(false);
         }}
       />
-
       <AssignRuleToCampaignModal
         opened={assignModalOpen}
         rule={rule}

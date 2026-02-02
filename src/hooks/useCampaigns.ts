@@ -7,12 +7,12 @@ import { useDebouncedValue } from "@mantine/hooks";
 export const useFetchCampaigns=(page:number,page_size:number)=>{
     return useQuery({
         queryKey:['campaigns',page,page_size],
-        queryFn: ()=>campaigns_api.get_all_campaigns(page,page_size)
+        queryFn: ()=>campaigns_api.get_all_campaigns(page,page_size),
+        placeholderData:keepPreviousData
     })
 };
 
 export const useCreateCampaign=()=>{
-
     const queryClient=useQueryClient()
     return useMutation({
         mutationFn:({data}:{data:create_campaign})=>campaigns_api.create_campaign(data),

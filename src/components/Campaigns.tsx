@@ -1,22 +1,23 @@
 import { useState, useMemo, useEffect } from "react";
-import {Table,TextInput,Loader,Alert,Paper,Group,Text,Badge,Select,Pagination,Container,Button,Modal, Stack,} from "@mantine/core";
+import {Table,TextInput,Loader,Alert,Paper,Group,Text,Badge,Select,Pagination,Container,Button,Modal, Stack,Divider} from "@mantine/core";
 import { AlertCircle, Search } from "lucide-react";
 import { useFetchCampaigns,useSearchCampaigns } from "../hooks/useCampaigns";
 import type { create_campaign, get_all_campaigns } from "../api/campaigns/types";
 import { LoadCampaignModal } from "./Campaigns/LoadCampaignModal";
 import CreateCampaignsFlow from "./WizardModalForms/CreateCampaignsFlow";
-
 import { useCurrentUserAdmin } from "../hooks/useAuth";
+import { useMediaQuery } from "@mantine/hooks";
 
 
 const Campaigns = () => {
-  
   const [campaignPage, setCampaignPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [campaignNameFilter, setCampaignNameFilter] = useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [campaignCodesFilter, setCampaignCodesFilter] = useState("");
   const {data:user}=useCurrentUserAdmin()
+
+  const isMobile= useMediaQuery('(max-width: 768px)');
 
   const allCampaignsQuery = useFetchCampaigns(campaignPage, pageSize);
 
@@ -32,6 +33,7 @@ const Campaigns = () => {
   );
   
 
+
   const activeQuery = search.shouldSearch ? search.query : allCampaignsQuery;
 
   const { data, isLoading, error } = activeQuery as unknown as {
@@ -39,7 +41,7 @@ const Campaigns = () => {
     isLoading: boolean;
     error: Error | null;
   };
-
+  
   useEffect(() => {
     if (search.shouldSearch) setCampaignPage(1);
   }, [
@@ -49,6 +51,8 @@ const Campaigns = () => {
     search.shouldSearch,
   ]);
   
+
+
   const campaigns = data?.results ?? [];
 
   const totalPages = useMemo(() => {
@@ -81,9 +85,6 @@ const Campaigns = () => {
       <div className="flex justify-center items-center h-64">
         <Stack>
           <Loader size="lg" color="green" />
-          {/* <Text mt="md" c="dimmed">
-            Loading Campaign Data...
-          </Text> */}
         </Stack>
       </div>
     );
@@ -103,19 +104,19 @@ const Campaigns = () => {
       className="hover:bg-gray-50 transition-colors"
     >
       <Table.Td>
-        <Badge variant="light" color="purple" p={18}>
+        <Badge variant="light" color="purple" size={isMobile ? "sm": "md"}>
           {campaign.campaign_name}
         </Badge>
       </Table.Td>
 
       <Table.Td>
-        <Badge variant="light" color="green" p={18}>
+        <Badge variant="light" color="green" size={isMobile ? "sm": "md"}>
           {campaign.camp_code}
         </Badge>
       </Table.Td>
 
       <Table.Td>
-        <Badge variant="light" color="blue">
+        <Badge variant="light" color="blue" size={isMobile ? "sm": "md"}>
           {campaign.branch}
         </Badge>
       </Table.Td>
@@ -144,6 +145,7 @@ const Campaigns = () => {
 
       {/* Search & Create Section */}
       <Paper p="md" shadow="sm" className="bg-white">
+
         <Container className="flex justify-start items-start gap-2">
           {/* Parent Modal */}
           <Modal opened={modalOpen} onClose={() => setModalOpen(false)}>
@@ -175,10 +177,7 @@ const Campaigns = () => {
           </Button>
           }
           <Group gap="sm">
-           {/*  <Badge color="blue" variant="light" p={18}>
-              {data?.total ?? 0} Total
-            </Badge>
- */}
+          
             <Select
               value={pageSize.toString()}
               onChange={(value) => {
@@ -192,7 +191,7 @@ const Campaigns = () => {
                 { value: "50", label: "50 per page" },
               ]}
               size="sm"
-              w={180}
+              className="w-full sm:w-44"
             />
           </Group>
         </Group>
@@ -238,7 +237,7 @@ const Campaigns = () => {
               Active Filters Applied
             </Text>
             <button
-            type="button"
+              type="button"
               onClick={clearCamapignsFilters}
               className="text-blue-500 hover:text-blue-800"
             >
@@ -249,50 +248,95 @@ const Campaigns = () => {
       </Paper>
 
       {/* Table */}
-      <Paper shadow="sm">
-        <Table.ScrollContainer minWidth={500}>
-          <Table highlightOnHover verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr className="bg-gray-500">
-                <Table.Th>CAMPAIGN NAME</Table.Th>
-                <Table.Th>CAMPAIGN CODES</Table.Th>
-                <Table.Th>BRANCH</Table.Th>
-                <Table.Th>LOAD CAMPAIGN</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
 
-            <Table.Tbody>
-              {rows.length > 0 ? (
-                rows
-              ) : (
-                <Table.Tr>
-                  <Table.Td colSpan={4} className="text-center py-8">
-                    <Text c="dimmed">No result found</Text>
-                  </Table.Td>
-                </Table.Tr>
-              )}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
+      {isMobile ? (
+        <Stack gap="sm">
+          {campaigns.length > 0 ? (
+            campaigns.map((campaign: create_campaign) => (
+              <Paper key={campaign.camp_code} withBorder p="md" radius="md" className="shadow-sm">
+                <Group justify="space-between" align="flex-start" wrap="nowrap" className="min-w-0">
+                  <div className="min-w-0">
+                    <Text fw={700} className="truncate">
+                      {campaign.campaign_name}
+                    </Text>
+                    <Text size="sm" c="dimmed" className="truncate">
+                      {campaign.branch}
+                    </Text>
+                  </div>
+                  <Badge variant="light" color="green" size="sm">
+                    {campaign.camp_code}
+                  </Badge>
+                </Group>
 
-        {/* Pagination Footer */}
+                <Divider my="sm" />
 
-        <div className="border-t border-gray-200 px-4 py-3">
+                <Group justify="space-between">
+                  <Text size="sm" c="dimmed">
+                    Load campaign
+                  </Text>
+                  <Button
+                    size="xs"
+                    onClick={() => {
+                      setSelectedRow(campaign);
+                      setOpenCampaignLoadingModal(true);
+                    }}
+                  >
+                    Load
+                  </Button>
+                </Group>
+              </Paper>
+            ))
+          ) : (
+            <Paper withBorder p="md" radius="md">
+              <Text c="dimmed" ta="center">
+                No result found
+              </Text>
+            </Paper>
+          )}
 
-          <div className="flex justify-center w-full">
-            <Pagination
-              value={campaignPage}
-              onChange={setCampaignPage}
-              total={totalPages}
-              withEdges
-            />
+          <div className="border-t border-gray-200 px-4 py-3">
+            <div className="flex justify-center w-full">
+              <Pagination value={campaignPage} onChange={setCampaignPage} total={totalPages} withEdges />
+            </div>
           </div>
+        </Stack>
+      ): (
+         <Paper shadow="sm">
+          <Table.ScrollContainer minWidth={500}>
+            <Table highlightOnHover verticalSpacing="sm">
+              <Table.Thead>
+                <Table.Tr className="bg-gray-500">
+                  <Table.Th>CAMPAIGN NAME</Table.Th>
+                  <Table.Th>CAMPAIGN CODES</Table.Th>
+                  <Table.Th>BRANCH</Table.Th>
+                  <Table.Th>LOAD CAMPAIGN</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
 
-        </div>
+              <Table.Tbody>
+                {rows.length > 0 ? (
+                  rows
+                ) : (
+                  <Table.Tr>
+                    <Table.Td colSpan={4} className="text-center py-8">
+                      <Text c="dimmed">No result found</Text>
+                    </Table.Td>
+                  </Table.Tr>
+                )}
+              </Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
 
-      </Paper>
+          {/* Pagination Footer */}
+          <div className="border-t border-gray-200 px-4 py-3">
+            <div className="flex justify-center w-full">
+              <Pagination value={campaignPage} onChange={setCampaignPage} total={totalPages} withEdges />
+            </div>
+          </div>
+        </Paper>
+      )}
 
-      {/* Load Campaign Modal */}
+       {/* Load Campaign Modal */}
       <LoadCampaignModal
         opened={openCampaignLoadingModal}
         onClose={() => setOpenCampaignLoadingModal(false)}
@@ -304,3 +348,56 @@ const Campaigns = () => {
 };
 
 export default Campaigns;
+
+
+
+//  <Paper shadow="sm">
+//         <Table.ScrollContainer minWidth={500}>
+//           <Table highlightOnHover verticalSpacing="sm">
+//             <Table.Thead>
+//               <Table.Tr className="bg-gray-500">
+//                 <Table.Th>CAMPAIGN NAME</Table.Th>
+//                 <Table.Th>CAMPAIGN CODES</Table.Th>
+//                 <Table.Th>BRANCH</Table.Th>
+//                 <Table.Th>LOAD CAMPAIGN</Table.Th>
+//               </Table.Tr>
+//             </Table.Thead>
+
+//             <Table.Tbody>
+//               {rows.length > 0 ? (
+//                 rows
+//               ) : (
+//                 <Table.Tr>
+//                   <Table.Td colSpan={4} className="text-center py-8">
+//                     <Text c="dimmed">No result found</Text>
+//                   </Table.Td>
+//                 </Table.Tr>
+//               )}
+//             </Table.Tbody>
+//           </Table>
+//         </Table.ScrollContainer>
+
+//         {/* Pagination Footer */}
+
+//         <div className="border-t border-gray-200 px-4 py-3">
+
+//           <div className="flex justify-center w-full">
+//             <Pagination
+//               value={campaignPage}
+//               onChange={setCampaignPage}
+//               total={totalPages}
+//               withEdges
+//             />
+//           </div>
+
+//         </div>
+
+//   </Paper>
+
+
+ {/* Load Campaign Modal */}
+      {/* <LoadCampaignModal
+        opened={openCampaignLoadingModal}
+        onClose={() => setOpenCampaignLoadingModal(false)}
+        row={selectedRow}
+      /> */}

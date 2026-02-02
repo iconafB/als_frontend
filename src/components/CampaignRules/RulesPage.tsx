@@ -94,10 +94,7 @@ export const RulesPage = () => {
     setSelectedRule(rule);
     openAssignModal();
   };
-
-
-
-
+  
   const totalPages = data ? Math.ceil(data.total / pageSize) : 0;
 
   return (
@@ -159,7 +156,6 @@ export const RulesPage = () => {
     </Container>
   );
 
-  
 };
 
 

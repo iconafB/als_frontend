@@ -1,4 +1,5 @@
 import { Table, ActionIcon, Menu, Badge, Loader, Text,Button } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { ChevronDown, Eye, Edit, Power, PowerOff,DollarSignIcon,User2Icon,PenIcon,Trash } from 'lucide-react';
 import type { NumericField, Rule } from '../../api/campaign_rules/types';
 import { useActivateRule, useDeactivateRule,useDeleteCampaignRule } from '../../hooks/useRules';
@@ -19,7 +20,8 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
   
     const activateRule = useActivateRule();
     const deactivateRule = useDeactivateRule();
-
+    //const isMobile = useMediaQuery('(max-width: 768px)');
+    const isMobile = useMediaQuery('(max-width: 48em)');
     const deleteRule=useDeleteCampaignRule();
 
     const formatNumericField = (field: NumericField) => {
@@ -51,8 +53,8 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
 
 
   return (
-    <div className="overflow-x-auto">
-      <Table striped highlightOnHover>
+    <Table.ScrollContainer minWidth={isMobile ? 1000 : 1200} className="scroll-x">
+      <Table striped highlightOnHover horizontalSpacing={isMobile ? "xs" : "md"} verticalSpacing={isMobile ? "xs" : "sm"} className="text-xs sm:text-sm">
         <Table.Thead>
           <Table.Tr>
             <Table.Th>RULE CODE</Table.Th>
@@ -63,38 +65,38 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
             <Table.Th>SALARY RANGE</Table.Th>
             <Table.Th>AGE RANGE</Table.Th>
             <Table.Th>DERIVED INCOME</Table.Th>
-            {/* <Table.Th>DAYS LAST USED</Table.Th> */}
             <Table.Th>LEADS</Table.Th>
             <Table.Th>ACTIONS</Table.Th>
           </Table.Tr>
         </Table.Thead>
 
         <Table.Tbody>
+         
           {rules.map((rule) => { 
             return (
               <Table.Tr key={rule.rule_code}>
                 <Table.Td>
-                  <Badge size='lg'>
+                  <Badge size={isMobile ? 'xs' : 'sm'}>
                      {rule.rule_code}
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge size='sm'>
+                  <Badge size={isMobile ? 'xs' : 'sm'}>
                      {rule.rule_name}
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge color={rule.is_active ? 'green' : 'red'} size="sm">
+                  <Badge color={rule.is_active ? 'green' : 'red'} size={isMobile ? 'xs' : 'sm'}>
                     {rule.is_active ? 'Yes' : 'No'}
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge color='purple'>
+                  <Badge color='purple' size={isMobile ? 'xs' : 'sm'}>
                      {rule.gender??"None"}
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Badge>
+                  <Badge size={isMobile ? 'xs' : 'sm'}>
                     {rule.typedata}
                   </Badge>
                 </Table.Td>
@@ -187,9 +189,10 @@ export const RulesTable = ({ rules, isLoading, onUpdateRule,onUpdateAge,onUpdate
               </Table.Tr>
             );
           })}
+          
         </Table.Tbody>
       </Table>
-    </div>
+    </Table.ScrollContainer>
   );
 
 };

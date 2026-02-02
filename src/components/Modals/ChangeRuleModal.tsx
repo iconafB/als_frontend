@@ -31,6 +31,7 @@ export const ChangeRuleModal = ({ opened, onClose }: ChangeRuleModalProps) => {
     }));
   }, [rulesData]);
 
+
   const onSubmit = (data: ChangeRuleFormData) => {
     setIsSubmitting(true);
     try {
@@ -42,8 +43,11 @@ export const ChangeRuleModal = ({ opened, onClose }: ChangeRuleModalProps) => {
     }
   };
 
+
   return (
+
     <Modal opened={opened} onClose={onClose} title="Change Rule" size="md">
+      
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap="md">
           <div>

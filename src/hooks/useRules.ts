@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient,keepPreviousData } from '@tanstack/react-query';
 import { ruleService } from '../api/campaign_rules/campaign_rules';
 import type { CreateRulePayload, UpdateRulePayload,UpdateLeadsNumber,UpdateSalaryPayload,UpdateDerivedIncomePayload,UpdateAgePayload,AssignRuleToCampaignPayload } from '../api/campaign_rules/types';
 import { toast } from 'react-toastify';
@@ -7,6 +7,7 @@ export const useRules = (page: number, pageSize: number) => {
   return useQuery({
     queryKey: ['rules', page, pageSize],
     queryFn: () => ruleService.getRules(page, pageSize),
+    placeholderData:keepPreviousData
   });
 };
 

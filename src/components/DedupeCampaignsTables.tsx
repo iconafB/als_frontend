@@ -52,16 +52,7 @@ const DedupedCampaignTable = () => {
 
     }, [dma_records, searchTerm, campaignNameFilter,  campaignCodeFilter, createdAtFilter, leadsFilter, branchFilter]);
 
-
-    //   const paginatedRecords = useMemo(() => {
-  
-    //       const startIndex = (currentPage - 1) * pageSize;
-    //       const endIndex = startIndex + pageSize;
-
-    //       return filteredRecords.slice(startIndex, endIndex);
-  
-    //   },[filteredRecords, currentPage, pageSize]);
-  
+    
       const totalPages = Math.ceil(filteredRecords.length / pageSize);
       
      useEffect(() => {

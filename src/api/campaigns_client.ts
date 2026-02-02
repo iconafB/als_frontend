@@ -1,7 +1,8 @@
 import axios from "axios";
-
 const token=localStorage.getItem('token')
-const campaigns_base_url="http://127.0.0.1:8000"
+
+const campaigns_base_url="http://102.67.139.133:8005/"
+//const campaigns_base_url = "/api";
 // create axios campaigns_client
 export const campaigns_client=axios.create({
     baseURL:campaigns_base_url,

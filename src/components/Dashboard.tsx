@@ -142,108 +142,8 @@ export const Dashboard: React.FC = () => {
             </Group>
           </AppShell.Header>
           
-          <AppShell.Navbar p={navPadding}>
-            <Stack gap="lg">
-              <div>
-                <Text size={navSectionLabelSize} fw={500} c="dimmed" mb="xs">
-                  <span className="tracking-wide">NAVIGATION</span>
-                </Text>
-                <Stack gap="xs">
-
-                  <Button 
-                     variant={activePage === 'home' ? 'filled' : 'subtle'}
-                    size={navButtonSize}
-                      leftSection={<House size={navIconSize} />}
-                      justify="flex-start"
-                      onClick={() => setActivePage('home')}
-                      fullWidth
-                  >
-                    <span className={navLabelClass}>HOME</span>
-                  </Button>
-
-                  <Button
-                    variant={activePage === 'campaigns' ? 'filled' : 'subtle'}
-                    size={navButtonSize}
-                    leftSection={<IconTable size={navIconSize} />}
-                    justify="flex-start"
-                    onClick={() => setActivePage('campaigns')}
-                    fullWidth
-                    >
-                    <span className={navLabelClass}>CAMPAIGNS</span>
-                  </Button>
-
-                  <Button
-                    variant={activePage === 'campaign-rules' ? 'filled' : 'subtle'}
-                    size={navButtonSize}
-                    leftSection={<ScaleIcon size={navIconSize} />}
-                    justify="flex-start"
-                    onClick={() => setActivePage('campaign-rules')}
-                    fullWidth
-                    >
-                    <span className={navLabelClass}><span className="hidden sm:inline">CAMPAIGN RULES</span><span className="sm:hidden">RULES</span></span>
-                  </Button>
-                  
-                  <Button
-                    variant={activePage === 'dedupe campaigns' ? 'filled' : 'subtle'}
-                    size={navButtonSize}
-                    leftSection={<IconCalendar size={navIconSize} />}
-                    justify="flex-start"
-                    onClick={() => setActivePage('dedupe campaigns')}
-                    fullWidth
-                  >
-                    <span className={navLabelClass}><span className="hidden sm:inline">DEDUPE CAMPAIGNS OVERVIEW</span><span className="sm:hidden">DEDUPE</span></span>
-                  </Button>
-                 
-                  <Button
-                    variant={activePage ==='dma'?'filled':'subtle'}
-                    size={navButtonSize}
-                    leftSection={<ArchiveRestoreIcon size={navIconSize}/>}
-                    justify='flex-start'
-                    onClick={()=>setActivePage('dma')}
-                    fullWidth
-                  >
-                    <span className={navLabelClass}><span className="hidden sm:inline">DMA OVERVIEW</span><span className="sm:hidden">DMA</span></span>
-                  </Button>
-                   
-                </Stack>
-              </div>
-              <Divider/>
-{/* 
-              <div>
-                <Text size={navSectionLabelSize} fw={500} c="dimmed" mb="xs">
-                  QUCIK ACTIONS
-                </Text>
-                <Stack gap="xs">
-                  {
-                    sidebarActions.map((action)=>(
-                      <Button key={action.label} variant='subtle' color={action.color} leftSection={<action.icon size={16}/>} justify='flex-start' onClick={() => handleSidebarAction(action.label, activePage)} fullWidth size="sm">
-                        {action.label}
-                      </Button>
-                    ))
-                  }
-                </Stack>
-              </div>
-               */}
-
-              {/* <Divider/> */}
-              <div>
-                <Text size="sm" fw={500} c="dimmed" mb="xs">
-                  Recent Activity
-                </Text>
-                <Stack gap="xs">
-                  <Text size='xs' c="dimmed">
-                    CAMPAIGNS LOADED
-                  </Text>
-                   <Text size='xs' c="dimmed">
-                    DMA RECORDS READY
-                  </Text>
-                   <Text size='xs' c="dimmed">
-                    DEDUPED CAMPAIGNS UPLOAD
-                  </Text>
-                </Stack>
-              </div>
-            </Stack>
-          </AppShell.Navbar>
+       
+          
           <AppShell.Main>
             {renderPage()}
           </AppShell.Main>
@@ -251,3 +151,92 @@ export const Dashboard: React.FC = () => {
         </AppShell>
   );
 };
+
+
+
+  //  <AppShell.Navbar p={navPadding}>
+            
+  //           <Stack gap="lg">
+  //             <div>
+  //               <Text size={navSectionLabelSize} fw={500} c="dimmed" mb="xs">
+  //                 <span className="tracking-wide">NAVIGATION</span>
+  //               </Text>
+  //               <Stack gap="xs">
+
+  //                 <Button 
+  //                    variant={activePage === 'home' ? 'filled' : 'subtle'}
+  //                   size={navButtonSize}
+  //                     leftSection={<House size={navIconSize} />}
+  //                     justify="flex-start"
+  //                     onClick={() => setActivePage('home')}
+  //                     fullWidth
+  //                 >
+  //                   <span className={navLabelClass}>HOME</span>
+  //                 </Button>
+
+  //                 <Button
+  //                   variant={activePage === 'campaigns' ? 'filled' : 'subtle'}
+  //                   size={navButtonSize}
+  //                   leftSection={<IconTable size={navIconSize} />}
+  //                   justify="flex-start"
+  //                   onClick={() => setActivePage('campaigns')}
+  //                   fullWidth
+  //                   >
+  //                   <span className={navLabelClass}>CAMPAIGNS</span>
+  //                 </Button>
+
+  //                 <Button
+  //                   variant={activePage === 'campaign-rules' ? 'filled' : 'subtle'}
+  //                   size={navButtonSize}
+  //                   leftSection={<ScaleIcon size={navIconSize} />}
+  //                   justify="flex-start"
+  //                   onClick={() => setActivePage('campaign-rules')}
+  //                   fullWidth
+  //                   >
+  //                   <span className={navLabelClass}><span className="hidden sm:inline">CAMPAIGN RULES</span><span className="sm:hidden">RULES</span></span>
+  //                 </Button>
+                  
+  //                 <Button
+  //                   variant={activePage === 'dedupe campaigns' ? 'filled' : 'subtle'}
+  //                   size={navButtonSize}
+  //                   leftSection={<IconCalendar size={navIconSize} />}
+  //                   justify="flex-start"
+  //                   onClick={() => setActivePage('dedupe campaigns')}
+  //                   fullWidth
+  //                 >
+  //                   <span className={navLabelClass}><span className="hidden sm:inline">DEDUPE CAMPAIGNS OVERVIEW</span><span className="sm:hidden">DEDUPE</span></span>
+  //                 </Button>
+                 
+  //                 <Button
+  //                   variant={activePage ==='dma'?'filled':'subtle'}
+  //                   size={navButtonSize}
+  //                   leftSection={<ArchiveRestoreIcon size={navIconSize}/>}
+  //                   justify='flex-start'
+  //                   onClick={()=>setActivePage('dma')}
+  //                   fullWidth
+  //                 >
+  //                   <span className={navLabelClass}><span className="hidden sm:inline">DMA OVERVIEW</span><span className="sm:hidden">DMA</span></span>
+  //                 </Button>
+                   
+  //               </Stack>
+  //             </div>
+  //             <Divider/>
+
+  //             <div>
+  //               <Text size="sm" fw={500} c="dimmed" mb="xs">
+  //                 Recent Activity
+  //               </Text>
+  //               <Stack gap="xs">
+  //                 <Text size='xs' c="dimmed">
+  //                   CAMPAIGNS LOADED
+  //                 </Text>
+  //                  <Text size='xs' c="dimmed">
+  //                   DMA RECORDS READY
+  //                 </Text>
+  //                  <Text size='xs' c="dimmed">
+  //                   DEDUPED CAMPAIGNS UPLOAD
+  //                 </Text>
+  //               </Stack>
+  //             </div>
+  //           </Stack>
+  //         </AppShell.Navbar>
